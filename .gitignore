@@ -12,7 +12,6 @@ migrations/
 db.sqlite3
 media/
 staticfiles/
-static/
 
 # Backup files
 *.bak
