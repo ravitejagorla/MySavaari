@@ -1,0 +1,109 @@
+# =========================
+# Django / Python
+# =========================
+*.log
+*.pot
+*.py[cod]
+*$py.class
+__pycache__/
+migrations/
+
+# Django database and generated files
+db.sqlite3
+media/
+staticfiles/
+
+# Backup files
+*.bak
+
+# =========================
+# Virtual Environments
+# =========================
+.env
+.env.*
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# =========================
+# Python Distribution
+# =========================
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.whl
+*.egg-info/
+.installed.cfg
+*.egg
+*.manifest
+*.spec
+
+# =========================
+# Testing / Coverage
+# =========================
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.mypy_cache/
+
+# =========================
+# Jupyter
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# PyCharm / IntelliJ
+# =========================
+.idea/
+*.iws
+out/
+
+# =========================
+# VS Code
+# =========================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/
+
+# =========================
+# Celery
+# =========================
+celerybeat-schedule
+celerybeat-schedule.*
+
+# =========================
+# Node / Angular
+# =========================
+node_modules/
+dist/
+.angular/
+coverage/
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
