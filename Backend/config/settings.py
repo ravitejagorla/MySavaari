@@ -2,12 +2,9 @@ from pathlib import Path
 from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 SECRET_KEY = config('SECRET_KEY')
-
-DEBUG = config('DEBUG', default=True, cast=bool)
-
-ALLOWED_HOSTS = ['*']
+DEBUG = config('DEBUG', cast=bool)
+ALLOWED_HOSTS = [host.strip() for host in config('HOST_DOMAIN', default='').split(',') if host]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -51,6 +48,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+USE_SECONDARY_DB = config("USE_SECONDARY_DB", cast=bool, default=False,)
 DATABASES = {
     'default': {
         'ENGINE': config('DB_ENGINE'),
@@ -59,8 +57,17 @@ DATABASES = {
         'PASSWORD': config('DB_PASSWORD'),
         'HOST': config('DB_HOST'),
         'PORT': config('DB_PORT'),
-    }
+    },
 }
+if USE_SECONDARY_DB:
+    DATABASES['mysql'] = {
+        'ENGINE': config('DB_ENGINE2'),
+        'NAME': config('DB_NAME2'),
+        'USER': config('DB_USER2'),
+        'PASSWORD': config('DB_PASSWORD2'),
+        'HOST': config('DB_HOST2'),
+        'PORT': config('DB_PORT2'),
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
@@ -69,20 +76,26 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Asia/Kolkata'
-USE_I18N = True
-USE_TZ = True
+LANGUAGE_CODE = config('LANGUAGE_CODE')
+TIME_ZONE = config('TIME_ZONE')
+USE_I18N = config('USE_I18N', cast=bool)
+USE_TZ = config('USE_TZ', cast=bool)
 
 
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = config('STATIC_URL', default='static/')
+STATIC_ROOT = BASE_DIR / config('STATIC_ROOT', default='staticfiles/')
 STATICFILES_DIRS = [BASE_DIR / 'static',]
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = config('MEDIA_URL', default='media/')
+MEDIA_ROOT = BASE_DIR / config('MEDIA_ROOT', default='media/')
 
 CRYPTOGRAPHY_ENCRYPTION_ID = config('CRYPTOGRAPHY_ENCRYPTION_ID')
+
+EMAIL_HOST = config("EMAIL_HOST", default="")
+EMAIL_PORT = config("EMAIL_PORT", cast=int, default=587)
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="",)
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool, default=True,)
 
 ZEPTO_MAIN_API_KEY = config('ZEPTO_MAIN_API_KEY', default='')
 ZEPTO_MAIL_ID = config('ZEPTO_MAIL_ID', default='')
@@ -99,7 +112,4 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
-CORS_ALLOWED_ORIGINS = [
-     "http://localhost:4200",
-     "http://127.0.0.1:4200",
-]
+CORS_ALLOWED_ORIGINS = [origin.strip() for origin in config("CORS_ALLOWED_ORIGINS", default="",).split(",") if origin.strip()]

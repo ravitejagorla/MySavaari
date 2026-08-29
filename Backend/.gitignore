@@ -20,7 +20,7 @@ staticfiles/
 # Virtual Environments
 # =========================
 .env
-.env.*
+# .env.*
 .venv/
 env/
 venv/

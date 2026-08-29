@@ -1,14 +1,14 @@
 #!/bin/bash
-# Start Django backend
-echo "Starting Django backend..."
-cd backend
+# Start Django Backend
+echo "Starting Django Backend..."
+cd Backend
 source venv/bin/activate
 python manage.py runserver &
 BACKEND_PID=$!
 
-# Start Angular frontend
-echo "Starting Angular frontend..."
-cd ../frontend
+# Start Angular Frontend
+echo "Starting Angular Frontend..."
+cd ../Frontend
 npm start &
 FRONTEND_PID=$!
 
