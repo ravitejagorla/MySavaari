@@ -1,5 +1,6 @@
 from pathlib import Path
 from decouple import config
+from celery.schedules import crontab
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
@@ -16,6 +17,10 @@ INSTALLED_APPS = [
     'rest_framework',
     "drf_spectacular",
     'corsheaders',
+    'channels',
+    # Apps
+    'apps.accounts',
+    'apps.datamanagement',
 ]
 
 MIDDLEWARE = [
@@ -113,3 +118,23 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [origin.strip() for origin in config("CORS_ALLOWED_ORIGINS", default="",).split(",") if origin.strip()]
+
+CELERY_BROKER_URL = config("CELERY_BROKER_URL", default="redis://redis:6379/10")
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="redis://redis:6379/11")
+CELERY_ACCEPT_CONTENT = [config("CELERY_ACCEPT_CONTENT", default="json")]
+CELERY_TASK_SERIALIZER = config("CELERY_TASK_SERIALIZER", default="json")
+CELERY_RESULT_SERIALIZER = config("CELERY_RESULT_SERIALIZER", default="json")
+CELERY_TIMEZONE = config("CELERY_TIMEZONE", default="Asia/Kolkata")
+
+CELERY_BEAT_SCHEDULE = {
+    
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [('redis', 6379)],
+        },
+    },
+}
