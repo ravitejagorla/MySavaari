@@ -4,7 +4,7 @@ from celery.schedules import crontab
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', cast=bool)
+DEBUG = config('PROJECT_PHASE', default='development') == 'development'
 ALLOWED_HOSTS = [host.strip() for host in config('HOST_DOMAIN', default='').split(',') if host]
 
 INSTALLED_APPS = [
@@ -87,9 +87,10 @@ USE_I18N = config('USE_I18N', cast=bool)
 USE_TZ = config('USE_TZ', cast=bool)
 
 
-STATIC_URL = config('STATIC_URL', default='static/')
-STATIC_ROOT = BASE_DIR / config('STATIC_ROOT', default='staticfiles/')
-STATICFILES_DIRS = [BASE_DIR / 'static',]
+_static_url = config('STATIC_URL', default='static').strip('/')
+STATIC_URL = f'/{_static_url}/' if _static_url else '/static/'
+STATIC_ROOT = BASE_DIR / config('STATIC_ROOT', default='staticfiles').strip('/')
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 MEDIA_URL = config('MEDIA_URL', default='media/')
 MEDIA_ROOT = BASE_DIR / config('MEDIA_ROOT', default='media/')
@@ -119,22 +120,27 @@ REST_FRAMEWORK = {
 
 CORS_ALLOWED_ORIGINS = [origin.strip() for origin in config("CORS_ALLOWED_ORIGINS", default="",).split(",") if origin.strip()]
 
-CELERY_BROKER_URL = config("CELERY_BROKER_URL", default="redis://redis:6379/10")
-CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="redis://redis:6379/11")
+REDIS_HOST = config("REDIS_HOST", default="localhost")
+REDIS_PORT = config("REDIS_PORT", cast=int, default=6379)
+REDIS_CHANNEL_LAYER_DB = config("REDIS_CHANNEL_LAYER_DB", cast=int, default=0)
+REDIS_CELERY_BROKER_DB = config("REDIS_CELERY_BROKER_DB", cast=int, default=10)
+REDIS_CELERY_RESULT_DB = config("REDIS_CELERY_RESULT_DB", cast=int, default=11)
+REDIS_CHANNEL_LAYER_URL = config("REDIS_CHANNEL_LAYER_URL", default="") or (f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CHANNEL_LAYER_DB}")
+
+CELERY_BROKER_URL = config("CELERY_BROKER_URL", default="") or (f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CELERY_BROKER_DB}")
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="") or (f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CELERY_RESULT_DB}")
 CELERY_ACCEPT_CONTENT = [config("CELERY_ACCEPT_CONTENT", default="json")]
 CELERY_TASK_SERIALIZER = config("CELERY_TASK_SERIALIZER", default="json")
 CELERY_RESULT_SERIALIZER = config("CELERY_RESULT_SERIALIZER", default="json")
 CELERY_TIMEZONE = config("CELERY_TIMEZONE", default="Asia/Kolkata")
-
 CELERY_BEAT_SCHEDULE = {
     
 }
-
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [('redis', 6379)],
+            "hosts": [REDIS_CHANNEL_LAYER_URL],
         },
     },
 }

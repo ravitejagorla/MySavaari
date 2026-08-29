@@ -6,7 +6,6 @@
 *.py[cod]
 *$py.class
 __pycache__/
-migrations/
 
 # Django database and generated files
 db.sqlite3
