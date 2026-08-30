@@ -25,7 +25,8 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/assets/styles.scss",
+              "src/assets/tailwind.css"
             ],
             "server": "src/main.server.ts",
             "outputMode": "server",

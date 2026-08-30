@@ -1,0 +1,91 @@
+<div class="flex min-h-screen items-center justify-center px-4">
+    <div class="w-full max-w-md">
+
+        <div class="mb-8 text-center">
+
+            <div class="mb-4 flex justify-center">
+                <div class="flex h-16 w-16 items-center justify-center rounded-xl bg-primary">
+                    <i class="pi pi-user-plus text-3xl text-white"></i>
+                </div>
+            </div>
+
+            <h1 class="text-3xl font-bold">
+                Create your MySavaari account
+            </h1>
+
+            <p class="mt-2 text-surface-500">
+                Start your journey with us
+            </p>
+
+        </div>
+
+        <div class="surface-card rounded-xl p-8 shadow-sm">
+
+            <form (ngSubmit)="register()">
+
+                <div class="mb-5">
+                    <label for="name" class="mb-2 block font-medium">
+                        Full Name
+                    </label>
+
+                    <input id="name" name="name" type="text" pInputText placeholder="Enter your full name"
+                        class="w-full" required />
+                </div>
+
+                <div class="mb-5">
+                    <label for="email" class="mb-2 block font-medium">
+                        Email
+                    </label>
+
+                    <input id="email" name="email" type="email" pInputText placeholder="Enter your email" class="w-full"
+                        required />
+                </div>
+
+                <div class="mb-5">
+                    <label for="mobile" class="mb-2 block font-medium">
+                        Mobile Number
+                    </label>
+
+                    <input id="mobile" name="mobile" type="tel" pInputText placeholder="Enter your mobile number"
+                        class="w-full" required />
+                </div>
+
+                <div class="mb-5">
+                    <label for="password" class="mb-2 block font-medium">
+                        Password
+                    </label>
+
+                    <input id="password" name="password" type="password" pInputText placeholder="Create a password"
+                        class="w-full" required />
+                </div>
+
+                <div class="mb-6">
+                    <label for="confirmPassword" class="mb-2 block font-medium">
+                        Confirm Password
+                    </label>
+
+                    <input id="confirmPassword" name="confirmPassword" type="password" pInputText
+                        placeholder="Confirm your password" class="w-full" required />
+                </div>
+
+                <button pButton type="submit" label="Create Account" icon="pi pi-user-plus" class="w-full">
+                </button>
+
+            </form>
+
+            <div class="mt-6 text-center">
+
+                <span class="text-surface-600">
+                    Already have an account?
+                </span>
+
+                <a routerLink="/auth/login" class="ml-1 font-medium text-primary">
+                    Sign in
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>

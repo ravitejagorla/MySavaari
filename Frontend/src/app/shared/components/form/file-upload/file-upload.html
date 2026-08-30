@@ -1,0 +1,48 @@
+<div class="flex flex-col mb-4">
+
+  <label class="font-medium mb-2">{{ label }} *</label>
+
+  <div class="border-2 border-dashed rounded-xl p-4 relative h-60 flex items-center justify-center">
+
+    <input type="file" accept="image/*"
+      class="absolute inset-0 opacity-0 cursor-pointer"
+      (change)="onFileSelect($event)" />
+
+    @if (preview) {
+      <div class="flex flex-col items-center">
+        <img [src]="preview" class="h-40 w-40 object-cover rounded-lg mb-2" />
+        <button pButton class="p-button-danger p-button-sm" (click)="removeImage()">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+    }
+    @else {
+      <div class="text-center text-gray-500">
+        <i class="pi pi-upload text-3xl"></i>
+        <p class="text-sm mt-2">Click to upload</p>
+      </div>
+    }
+  </div>
+
+  <!-- ACTION BUTTONS -->
+  <div class="flex gap-4 mt-4">
+
+    <p-button styleClass="bg-brand-500" icon="pi pi-qrcode"
+      label="QR Upload" (click)="generateUploadLink()">
+    </p-button>
+
+    <p-button styleClass="bg-green-500" icon="pi pi-camera"
+      label="Camera" (click)="openCamera()">
+    </p-button>
+
+    <p-button styleClass="bg-blue-500" icon="pi pi-whatsapp"
+      label="WhatsApp" [disabled]="!uploadLink"
+      (click)="sendWhatsappLink()">
+    </p-button>
+
+  </div>
+
+  @if (control?.touched && control?.invalid) {
+    <p class="text-red-500 text-sm mt-1">Image is required</p>
+  }
+</div>
