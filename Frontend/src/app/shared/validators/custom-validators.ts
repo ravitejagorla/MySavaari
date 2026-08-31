@@ -36,13 +36,13 @@ export class CustomValidators {
     };
   }
   static decimalNumbers(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const value = control.value;
-    if (!value) return null;
-    const valid = /^[0-9]+(\.[0-9]+)?$/.test(value); // Allows: 123, 123.45
-    return valid ? null : { decimalNumbers: true };
-  };
-}
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (!value) return null;
+      const valid = /^[0-9]+(\.[0-9]+)?$/.test(value); // Allows: 123, 123.45
+      return valid ? null : { decimalNumbers: true };
+    };
+  }
   // Allows letters, single spaces, dots, and hyphens (no consecutive special chars or double spaces)
   static noSpecialCharsWithDotHyphen(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -161,23 +161,19 @@ export class CustomValidators {
   }
 
   static phoneValidator(): ValidatorFn {
-    return (control: AbstractControl) => {
+    return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
-      if (!value) return null;
 
-      // Must be exactly 10 digits
-      if (value.length !== 10) {
-        return { invalidPhoneLength: true };
+      if (!value) {
+        return null;
       }
 
-      // Must be only digits
-      if (!/^[0-9]*$/.test(value)) {
-        return { invalidPhoneChars: true };
-      }
-
-      // Must start with 6, 7, 8, or 9
       if (!/^[6-9]/.test(value)) {
         return { invalidPhoneStart: true };
+      }
+
+      if (!/^\d{10}$/.test(value)) {
+        return { invalidPhoneLength: true };
       }
 
       return null;
@@ -724,43 +720,43 @@ export class CustomValidators {
     };
   }
 
-static dateOrderValidator(fromDateKey: string, toDateKey: string): ValidatorFn {
+  static dateOrderValidator(fromDateKey: string, toDateKey: string): ValidatorFn {
     return (group: AbstractControl): ValidationErrors | null => {
-        if (!(group instanceof FormGroup)) {
-            return null;
-        }
+      if (!(group instanceof FormGroup)) {
+        return null;
+      }
 
-        const fromControl = group.get(fromDateKey);
-        const toControl = group.get(toDateKey);
+      const fromControl = group.get(fromDateKey);
+      const toControl = group.get(toDateKey);
 
-        if (!fromControl || !toControl || !fromControl.value || !toControl.value) {
-            CustomValidators.clearSpecificError(fromControl, 'dateOrderInvalid');
-            CustomValidators.clearSpecificError(toControl, 'dateOrderInvalid');
-            return null;
-        }
+      if (!fromControl || !toControl || !fromControl.value || !toControl.value) {
+        CustomValidators.clearSpecificError(fromControl, 'dateOrderInvalid');
+        CustomValidators.clearSpecificError(toControl, 'dateOrderInvalid');
+        return null;
+      }
 
-        const fromDate = new Date(fromControl.value);
-        const toDate = new Date(toControl.value);
+      const fromDate = new Date(fromControl.value);
+      const toDate = new Date(toControl.value);
 
-        fromDate.setHours(0, 0, 0, 0);
-        toDate.setHours(0, 0, 0, 0);
+      fromDate.setHours(0, 0, 0, 0);
+      toDate.setHours(0, 0, 0, 0);
 
-        if (fromDate.getTime() >= toDate.getTime()) {
-            const error = { dateOrderInvalid: true };
+      if (fromDate.getTime() >= toDate.getTime()) {
+        const error = { dateOrderInvalid: true };
 
-            fromControl.setErrors({ ...fromControl.errors, ...error });
-            toControl.setErrors({ ...toControl.errors, ...error });
+        fromControl.setErrors({ ...fromControl.errors, ...error });
+        toControl.setErrors({ ...toControl.errors, ...error });
 
-            return { dateOrderInvalid: true };
+        return { dateOrderInvalid: true };
 
-        } else {
+      } else {
 
-            CustomValidators.clearSpecificError(fromControl, 'dateOrderInvalid');
-            CustomValidators.clearSpecificError(toControl, 'dateOrderInvalid');
+        CustomValidators.clearSpecificError(fromControl, 'dateOrderInvalid');
+        CustomValidators.clearSpecificError(toControl, 'dateOrderInvalid');
 
-            return null;
-        }
+        return null;
+      }
     };
-}
+  }
 
 }

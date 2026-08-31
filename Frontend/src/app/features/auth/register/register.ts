@@ -6,13 +6,13 @@ import { Destroyer } from '../../../reusable/destroyer/destroyer';
 import { LabelComponent } from "../../../shared/components/form/label/label.component";
 import { InputFieldComponent } from '../../../shared/components/form/input/input-field.component';
 import { CheckboxComponent } from '../../../shared/components/form/input/checkbox.component';
-import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { RouterLink } from '@angular/router';
-import { BasicCard } from "../../../shared/components/ui/cards/basic-card/basic-card";
+import { ButtonModule } from "primeng/button";
+import { AppConfigService } from '../../../core/services/app-config.service';
 
 @Component({
   standalone: true,
-  imports: [LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, BasicCard],
+  imports: [LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink, ButtonModule],
   selector: 'app-register',
   styleUrl: './register.css',
   templateUrl: './register.html',
@@ -21,11 +21,12 @@ export class Register extends Destroyer implements OnInit {
   private readonly baseUrl = environment.apiUrl;
   showPassword = false;
   showConfirmPassword = false;
-
   isLoading: boolean = true;
+
   constructor(
+    protected readonly appConfig: AppConfigService,
     private fb: FormBuilder,
-  ) {super(); }
+  ) { super(); }
 
   adminRegisterForm!: FormGroup;
 
@@ -40,7 +41,7 @@ export class Register extends Destroyer implements OnInit {
         '',
         [
           Validators.required,
-          Validators.minLength(1),
+          Validators.minLength(3),
           Validators.maxLength(20),
           CustomValidators.noDoubleSpaces(),
           CustomValidators.noSpecialCharsWithDotHyphen(),
@@ -58,7 +59,7 @@ export class Register extends Destroyer implements OnInit {
         '',
         [
           Validators.required,
-          Validators.minLength(1),
+          Validators.minLength(3),
           Validators.maxLength(20),
           CustomValidators.noDoubleSpaces(),
           CustomValidators.noSpecialCharsWithDotHyphen(),
@@ -70,7 +71,6 @@ export class Register extends Destroyer implements OnInit {
           Validators.required,
           CustomValidators.emailPattern(),
           CustomValidators.noDoubleSpaces(),
-          CustomValidators.noSpecialCharsWithDotHyphen(),
         ],
       ],
       phone: [
@@ -79,7 +79,6 @@ export class Register extends Destroyer implements OnInit {
           Validators.required,
           CustomValidators.phoneValidator(),
           CustomValidators.noDoubleSpaces(),
-          CustomValidators.noSpecialCharsWithDotHyphen(),
         ],
       ],
       password: [
@@ -95,18 +94,23 @@ export class Register extends Destroyer implements OnInit {
         '',
         [
           Validators.required,
-          Validators.minLength(6),
-          Validators.maxLength(20),
-          CustomValidators.matchPasswords('password', 'confirm_password'),
         ],
       ],
       terms_and_conditions: [
-        '',
+        false,
         [
           Validators.requiredTrue,
         ],
       ],
-    });
+    },
+      {
+        validators: [
+          CustomValidators.matchPasswords(
+            'password',
+            'confirm_password'
+          ),
+        ],
+      });
   }
 
   onFormSubmit(): void {

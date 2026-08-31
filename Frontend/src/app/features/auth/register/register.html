@@ -1,31 +1,216 @@
 @if (isLoading) {
-}@else {
-<ras-basic-card >
-  <form action="" class="flex flex-wrap" [formGroup]="adminRegisterForm">
-    <div class="w-full md:w-4/12 lg:w-3/12 p-1 mb-2">
-      <app-label [isRequired]="false">First Name </app-label>
-      <app-input-field type="text" placeholder="Ex: RAVI" [onlyCaps]="true" [onlyAlphabets]="true"
-        formControlName="first_name" />
-      @if((adminRegisterForm.get('first_name')?.touched &&
-      adminRegisterForm.get('first_name')?.invalid)){
-      <div class="text-error-500 text-sm mt-1">
-        @if(getControl('first_name')?.errors?.['required']){
-        }@else if(getControl('first_name')?.errors?.['doubleSpaces']){
-        No Double spaces are allowed
-        }@else if(getControl('first_name')?.errors?.['minlength']){
-        Please enter at least 3 characters
-        }@else if(getControl('first_name')?.errors?.['maxlength']){
-        Please enter at most 20 characters
-        }@else if(getControl('first_name')?.errors?.['invalidOnlyNumbersOrSpecialChars']){
-        Please enter atleast one alphabet.
-        }
+<div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
+  <div class="text-sm text-gray-500 dark:text-gray-400">
+    Creating your account...
+  </div>
+</div>
+} @else {
+<div class="min-h-screen bg-gray-50 dark:bg-gray-950 px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mx-auto w-full max-w-5xl">
+    <!-- Header -->
+    <div class="mb-8 text-center">
+      <div class="mx-auto mb-4 flex h-12 w-40 items-center justify-center rounded-xl bg-brand-500 text-white shadow-sm">
+        <span class="text-xl font-bold">{{ appConfig.title() }}</span>
       </div>
-      }
+      <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl dark:text-white">Create your account</h1>
+      <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Sign up to continue to {{ appConfig.title() }}.</p>
     </div>
-  </form>
-</ras-basic-card>
+    <div>
+      <form class="flex flex-wrap" [formGroup]="adminRegisterForm" (ngSubmit)="onFormSubmit()">
+        <div class="w-full mb-5">
+          <div class="border-b border-gray-200 pb-3 dark:border-gray-800">
+            <h2 class="text-base font-semibold text-gray-900 dark:text-white">Personal Information</h2>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Enter your basic account information.</p>
+          </div>
+        </div>
+
+        <div class="w-full md:w-4/12 lg:w-4/12 p-1 mb-3">
+          <app-label [isRequired]="true">First Name</app-label>
+          <app-input-field type="text" placeholder="Ex: Kiran" formControlName="first_name" [onlyCaps]="true"
+            [onlyAlphabets]="true" [required]="true" />
+          @if (getControl('first_name')?.touched && getControl('first_name')?.invalid) {
+          <div class="text-error-500 text-sm mt-1">
+            @if (getControl('first_name')?.errors?.['required']) {
+            Please enter your first name.
+            } @else if (getControl('first_name')?.errors?.['minlength']) {
+            Please enter at least 3 character.
+            } @else if (getControl('first_name')?.errors?.['maxlength']) {
+            Please enter at most 20 characters.
+            } @else if (getControl('first_name')?.errors?.['doubleSpaces']) {
+            No double spaces are allowed.
+            } @else if (getControl('first_name')?.errors?.['invalidCharsDotHyphen']) {
+            No special characters are allowed.
+            }
+          </div>
+          }
+        </div>
+
+        <div class="w-full md:w-4/12 lg:w-4/12 p-1 mb-3">
+          <app-label [isRequired]="false">Middle Name</app-label>
+          <app-input-field type="text" placeholder="Ex: Kumar" formControlName="middle_name" [onlyCaps]="true"
+            [onlyAlphabets]="true" />
+          @if (getControl('middle_name')?.touched && getControl('middle_name')?.invalid) {
+          <div class="text-error-500 text-sm mt-1">
+            @if (getControl('middle_name')?.errors?.['maxlength']) {
+            Please enter at most 20 characters.
+            }@else if (getControl('middle_name')?.errors?.['doubleSpaces']) {
+            No double spaces are allowed.
+            }@else if (getControl('middle_name')?.errors?.['invalidCharsDotHyphen']) {
+            No special characters are allowed.
+            }
+          </div>
+          }
+        </div>
+
+        <div class="w-full md:w-4/12 lg:w-4/12 p-1 mb-3">
+          <app-label [isRequired]="true">Last Name</app-label>
+          <app-input-field type="text" placeholder="Ex: Kumar" formControlName="last_name" [onlyCaps]="true"
+            [onlyAlphabets]="true" [required]="true" />
+          @if (getControl('last_name')?.touched && getControl('last_name')?.invalid) {
+          <div class="text-error-500 text-sm mt-1">
+            @if (getControl('last_name')?.errors?.['required']) {
+            Please enter your last name.
+            }@else if (getControl('last_name')?.errors?.['minlength']) {
+            Please enter at least 3 character.
+            }@else if (getControl('last_name')?.errors?.['maxlength']) {
+            Please enter at most 20 characters.
+            }@else if (getControl('last_name')?.errors?.['doubleSpaces']) {
+            No double spaces are allowed.
+            }@else if (getControl('last_name')?.errors?.['invalidCharsDotHyphen']) {
+            No special characters are allowed.
+            }
+          </div>
+          }
+        </div>
+
+        <div class="w-full md:w-6/12 lg:w-6/12 p-1 mb-3">
+          <app-label [isRequired]="true">Email Address</app-label>
+          <app-input-field type="email" placeholder="Ex: kiran@gmail.com" formControlName="email" [required]="true" />
+          @if (getControl('email')?.touched && getControl('email')?.invalid) {
+          <div class="text-error-500 text-sm mt-1">
+            @if (getControl('email')?.errors?.['required']) {
+            Please enter your email address.
+            }@else if (getControl('email')?.errors?.['invalidEmail']) {
+            Please enter a valid email address.
+            }@else if (getControl('email')?.errors?.['doubleSpaces']) {
+            No double spaces are allowed.
+            }
+          </div>
+          }
+        </div>
+
+        <div class="w-full md:w-6/12 lg:w-6/12 p-1 mb-3">
+          <app-label [isRequired]="true">Phone Number</app-label>
+          <app-input-field type="text" placeholder="Ex: 8899887788" formControlName="phone" [onlyNumbers]="true"
+            [maxlength]="10" [minlength]="10" [required]="true" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+          @if (getControl('phone')?.touched && getControl('phone')?.invalid) {
+          <div class="text-error-500 text-sm mt-1">
+            @if (getControl('phone')?.errors?.['required']) {
+            Please enter your phone number.
+            }@else if (getControl('phone')?.errors?.['invalidPhoneStart']) {
+            Phone number should start with 6, 7, 8 or 9.
+            }@else if (getControl('phone')?.errors?.['invalidPhoneLength']) {
+            Phone number should be 10 digits long.
+            }
+          </div>
+          }
+        </div>
+
+        <div class="w-full mt-6 mb-5">
+          <div class="border-b border-gray-200 pb-3 dark:border-gray-800">
+            <h2 class="text-base font-semibold text-gray-900 dark:text-white">Account Security</h2>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Create a secure password for your account.</p>
+          </div>
+        </div>
+        <div class="w-full md:w-6/12 lg:w-6/12 p-1 mb-3">
+          <app-label [isRequired]="true">Password</app-label>
+          <div class="relative">
+            <app-input-field [type]="showPassword ? 'text' : 'password'" placeholder="Enter your password"
+              formControlName="password" [required]="true" />
+            <button type="button" (click)="togglePasswordVisibility()"
+              class="absolute right-3 top-1/2 z-30 -translate-y-1/2 p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              aria-label="Toggle password visibility">
+              @if (showPassword) {
+              <i class="pi pi-eye text-sm"></i>
+              } @else {
+              <i class="pi pi-eye-slash text-sm"></i>
+              }
+            </button>
+          </div>
+          @if (getControl('password')?.touched && getControl('password')?.invalid) {
+          <div class="text-error-500 text-sm mt-1">
+            @if (getControl('password')?.errors?.['required']) {
+            Please enter your password.
+            }@else if (getControl('password')?.errors?.['minlength']) {
+            Password must be at least 6 characters.
+            }@else if (getControl('password')?.errors?.['maxlength']) {
+            Password must be less than 20 characters.
+            }@else if (getControl('password')?.errors?.['weakPassword']) {
+            Password must contain uppercase, lowercase, number and special character.
+            }
+          </div>
+          }
+        </div>
+
+        <div class="w-full md:w-6/12 lg:w-6/12 p-1 mb-3">
+          <app-label [isRequired]="true">Confirm Password</app-label>
+          <div class="relative">
+            <app-input-field [type]="showConfirmPassword ? 'text' : 'password'" placeholder="Re-enter your password"
+              formControlName="confirm_password" [required]="true" />
+            <button type="button" (click)="toggleConfirmPasswordVisibility()"
+              class="absolute right-3 top-1/2 z-30 -translate-y-1/2 p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              aria-label="Toggle confirm password visibility">
+              @if (showConfirmPassword) {
+              <i class="pi pi-eye text-sm"></i>
+              } @else {
+              <i class="pi pi-eye-slash text-sm"></i>
+              }
+            </button>
+          </div>
+          @if (getControl('confirm_password')?.touched && getControl('confirm_password')?.invalid) {
+          <div class="text-error-500 text-sm mt-1">
+            @if (getControl('confirm_password')?.errors?.['required']) {
+            Please confirm your password.
+            }@else if (getControl('confirm_password')?.errors?.['passwordsMismatch']) {
+            Passwords do not match.
+            }
+          </div>
+          }
+        </div>
+
+        <div class="w-full mt-5 p-1">
+          <div class="flex items-start gap-3">
+            <input id="terms_and_conditions" type="checkbox" formControlName="terms_and_conditions"
+              class="mt-1 h-4 w-4 cursor-pointer rounded border-gray-300 text-brand-500 focus:ring-brand-500 dark:border-gray-600 dark:bg-gray-800" />
+            <label for="terms_and_conditions" class="cursor-pointer text-sm text-gray-600 dark:text-gray-400">I agree to the 
+              <span class="font-medium text-brand-500 hover:text-brand-600 dark:text-brand-400">Terms and Conditions</span>
+            </label>
+          </div>
+          @if (getControl('terms_and_conditions')?.touched && getControl('terms_and_conditions')?.invalid) {
+          <div class="text-error-500 text-sm mt-1">
+            @if (getControl('terms_and_conditions')?.errors?.['required']) {
+            You must accept the terms and conditions.
+            }@else if (getControl('terms_and_conditions')?.errors?.['requiredTrue']) {
+            You must accept the terms and conditions.
+            }
+          </div>
+          }
+        </div>
+
+        <div class="w-full mt-8">
+          <p-button type="submit" styleClass="w-full" size="small">Create Account</p-button>
+        </div>
+      </form>
+      <div class="mt-6 text-center">
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+          Already have an account?
+          <a [routerLink]="['/auth/login']"
+            class="ml-1 font-medium text-brand-500 transition-colors hover:text-brand-600 dark:text-brand-400 dark:hover:text-brand-300 cursor-pointer">
+            Sign In
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 }
-<p class="text-blue-600 dark:text-sky-400">The quick brown fox...</p>
-<h1 class="text-3xl font-bold underline">
-  Hello world!
-</h1>
