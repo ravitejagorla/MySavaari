@@ -951,7 +951,7 @@ pre[class*="language-"].line-numbers {
   .table-body-cell {
     @apply px-2 py-1 text-gray-700 whitespace-nowrap text-theme-sm dark:text-gray-400;
   }
-  .pulse-card {
+  .ras-card {
     @apply rounded-xl border border-gray-200 bg-white pt-4 dark:border-white/[0.05] dark:bg-white/[0.03] shadow-xl; 
   }
 }

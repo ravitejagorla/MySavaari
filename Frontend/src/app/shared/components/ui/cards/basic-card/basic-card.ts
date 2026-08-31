@@ -10,13 +10,13 @@ export interface CardButton {
 }
 
 @Component({
-  selector: 'pulse-basic-card',
+  selector: 'ras-basic-card',
   standalone: true,
   imports: [CommonModule, ButtonModule],
   template: `
-    <div class="pulse-card {{ className }} bg-white dark:bg-gray-900 shadow-xl rounded-lg mb-4">
+    <div class="ras-card {{ className }} bg-white dark:bg-gray-900 shadow-xl rounded-lg mb-4">
 
-      <ng-content select="[pulseCardHeader]"></ng-content>
+      <ng-content select="[rasCardHeader]"></ng-content>
 
       @if (!headerNotRequired && title) {
         <div class="px-4 py-2 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">

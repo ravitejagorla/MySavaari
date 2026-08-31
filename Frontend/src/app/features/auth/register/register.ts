@@ -8,10 +8,11 @@ import { InputFieldComponent } from '../../../shared/components/form/input/input
 import { CheckboxComponent } from '../../../shared/components/form/input/checkbox.component';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
 import { RouterLink } from '@angular/router';
+import { BasicCard } from "../../../shared/components/ui/cards/basic-card/basic-card";
 
 @Component({
   standalone: true,
-  imports: [LabelComponent, InputFieldComponent, CheckboxComponent, ButtonComponent, RouterLink, FormsModule, ReactiveFormsModule],
+  imports: [LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, BasicCard],
   selector: 'app-register',
   styleUrl: './register.css',
   templateUrl: './register.html',

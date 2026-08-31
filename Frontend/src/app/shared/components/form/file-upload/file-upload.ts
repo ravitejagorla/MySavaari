@@ -4,13 +4,13 @@ import { Button } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'pulse-image-upload',
+  selector: 'ras-image-upload',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, Button],
   templateUrl: './file-upload.html',
 
 })
-export class PulseImageUploadComponent {
+export class RAsImageUploadComponent {
 
   @Input() form!: FormGroup;
   @Input() controlName!: string;

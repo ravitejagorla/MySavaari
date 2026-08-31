@@ -11,7 +11,7 @@
       "schematics": {},
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "ras",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
@@ -25,7 +25,8 @@
               }
             ],
             "styles": [
-              "src/assets/styles.scss"
+              "src/styles.css",
+              "node_modules/primeicons/primeicons.css"
             ],
             "server": "src/main.server.ts",
             "outputMode": "server",

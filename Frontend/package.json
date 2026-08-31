@@ -21,10 +21,13 @@
     "@angular/router": "^22.0.0",
     "@angular/ssr": "^22.0.8",
     "@primeuix/themes": "^3.0.0",
+    "@tailwindcss/postcss": "^4.3.3",
     "express": "^5.1.0",
+    "postcss": "^8.5.26",
     "primeicons": "^8.0.0",
     "primeng": "^22.1.0",
     "rxjs": "~7.8.0",
+    "swiper": "^14.2.0",
     "tailwindcss": "^4.3.3",
     "tslib": "^2.3.0"
   },

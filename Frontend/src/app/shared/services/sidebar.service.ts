@@ -18,7 +18,7 @@ export class SidebarService {
   }
 
   toggleExpanded() {
-    this.isExpandedSubject.next(!this.isExpandedSubject.value);
+    this.isExpandedSubject.next(!this.isExpandedSubject.value);/*  */
   }
 
   setMobileOpen(val: boolean) {

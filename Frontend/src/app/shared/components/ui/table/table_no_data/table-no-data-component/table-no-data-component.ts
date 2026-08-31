@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'tr[pulseTableNoData]',
+  selector: 'tr[rasTableNoData]',
   template: `
     <td [attr.colspan]="colspanNumber" class="px-2 py-10 text-center">
       <div class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">

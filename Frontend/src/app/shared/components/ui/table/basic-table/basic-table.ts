@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'pulse-basic-table',
+  selector: 'ras-basic-table',
   imports: [],
   template:`
      <div class="overflow-hidden">
