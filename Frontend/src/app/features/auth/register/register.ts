@@ -118,6 +118,7 @@ export class Register extends Destroyer implements OnInit {
       this.adminRegisterForm.markAllAsTouched();
       return;
     }
+    console.log(this.adminRegisterForm.value);
   }
 
   togglePasswordVisibility() {

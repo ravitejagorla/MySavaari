@@ -102,7 +102,7 @@
         <div class="w-full md:w-6/12 lg:w-6/12 p-1 mb-3">
           <app-label [isRequired]="true">Phone Number</app-label>
           <app-input-field type="text" placeholder="Ex: 8899887788" formControlName="phone" [onlyNumbers]="true"
-            [maxlength]="10" [minlength]="10" [required]="true" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+            [maxlength]="10" [minlength]="10" [required]="true"/>
           @if (getControl('phone')?.touched && getControl('phone')?.invalid) {
           <div class="text-error-500 text-sm mt-1">
             @if (getControl('phone')?.errors?.['required']) {
