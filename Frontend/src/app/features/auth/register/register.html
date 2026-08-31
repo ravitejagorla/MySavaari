@@ -1,20 +1,26 @@
 <div class="flex flex-col flex-1 px-4 sm:px-6 lg:px-8">
 
   <!-- Form container -->
-  <div class="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
-    @if(isLoading){
 
+  <div class="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
+
+
+    @if (isLoading) {
 
     <div class="card flex justify-center">
-      <!-- <p-progress-spinner ariaLabel="loading" /> -->
+      <!-- Loading spinner -->
     </div>
-    }@else {
+
+    } @else {
+
     <div>
+
       <!-- Heading -->
       <div class="mb-6 text-center sm:text-left">
         <h1 class="mb-2 font-semibold text-gray-800 text-xl sm:text-2xl dark:text-white/90">
           Sign Up
         </h1>
+
         <p class="text-sm text-gray-500 dark:text-gray-400">
           Sign up to continue to Pulse Engine.
         </p>
@@ -22,175 +28,338 @@
 
       <!-- Form -->
       <form [formGroup]="adminRegisterForm" (ngSubmit)="onFormSubmit()">
-        <!-- Full Name -->
-        <div class="sm:col-span-2">
-          <app-label [isRequired]="true">Full Name</app-label>
-          <app-input-field type="text" placeholder="Ex: Kiran Kumar" formControlName="full_name"
-            class="form-input w-full" required [onlyCaps]="true" [onlyAlphabets]="true" id="full_name" />
-          @if((adminRegisterForm.get('full_name')?.touched && adminRegisterForm.get('full_name')?.invalid)){
+
+        <!-- First Name -->
+        <div>
+          <app-label [isRequired]="true">
+            First Name
+          </app-label>
+
+          <app-input-field type="text" placeholder="Ex: Kiran" formControlName="first_name" class="form-input w-full"
+            [required]="true" [onlyCaps]="true" [onlyAlphabets]="true" id="first_name" />
+
+          @if (getControl('first_name')?.touched && getControl('first_name')?.invalid) {
+
           <div class="text-error-500 text-sm">
-            @if(getControl('full_name')?.errors?.['required']){
-            Please enter your Full Name.
-            }@else if(getControl('full_name')?.errors?.['invalidChars']){
-            No Special characters are allowed
-            }@else if(getControl('full_name')?.errors?.['doubleSpaces']){
-            No Double spaces are allowed
-            }@else if(getControl('full_name')?.errors?.['minlength']){
-            Please enter at least 4 characters
-            }@else if(getControl('full_name')?.errors?.['maxlength']){
-            Please enter at most 20 characters
+
+            @if (getControl('first_name')?.errors?.['required']) {
+            Please enter your first name.
+            } @else if (getControl('first_name')?.errors?.['invalidChars']) {
+            No special characters are allowed.
+            } @else if (getControl('first_name')?.errors?.['doubleSpaces']) {
+            No double spaces are allowed.
+            } @else if (getControl('first_name')?.errors?.['minlength']) {
+            Please enter at least 1 character.
+            } @else if (getControl('first_name')?.errors?.['maxlength']) {
+            Please enter at most 20 characters.
             }
+
           </div>
+
           }
+
         </div>
 
-        <!-- Phone -->
+
+        <!-- Middle Name -->
         <div>
-          <app-label [isRequired]="true">Phone</app-label>
-          <app-input-field type="text" placeholder="Ex: 8899887788" formControlName="phone" class="form-input w-full"
-            [onlyNumbers]="true" [maxlength]="10" required id="phone" />
-          @if((adminRegisterForm.get('phone')?.touched && adminRegisterForm.get('phone')?.invalid)){
+          <app-label>
+            Middle Name
+          </app-label>
+
+          <app-input-field type="text" placeholder="Ex: Kumar" formControlName="middle_name" class="form-input w-full"
+            [onlyCaps]="true" [onlyAlphabets]="true" id="middle_name" />
+
+          @if (getControl('middle_name')?.touched && getControl('middle_name')?.invalid) {
+
           <div class="text-error-500 text-sm">
-            @if(getControl('phone')?.errors?.['required']){
-            Please enter phone number
-            }@else if(getControl('phone')?.errors?.['invalidPhoneStart']){
-            Phone number should start with 6,7,8 or 9
-            }@else if(getControl('phone')?.errors?.['invalidPhoneLength']){
-            Phone number should be 10 digits long
+
+            @if (getControl('middle_name')?.errors?.['invalidChars']) {
+            No special characters are allowed.
+            } @else if (getControl('middle_name')?.errors?.['doubleSpaces']) {
+            No double spaces are allowed.
+            } @else if (getControl('middle_name')?.errors?.['maxlength']) {
+            Please enter at most 20 characters.
             }
+
           </div>
+
           }
+
         </div>
+
+
+        <!-- Last Name -->
+        <div>
+          <app-label [isRequired]="true">
+            Last Name
+          </app-label>
+
+          <app-input-field type="text" placeholder="Ex: Kumar" formControlName="last_name" class="form-input w-full"
+            [required]="true" [onlyCaps]="true" [onlyAlphabets]="true" id="last_name" />
+
+          @if (getControl('last_name')?.touched && getControl('last_name')?.invalid) {
+
+          <div class="text-error-500 text-sm">
+
+            @if (getControl('last_name')?.errors?.['required']) {
+            Please enter your last name.
+            } @else if (getControl('last_name')?.errors?.['invalidChars']) {
+            No special characters are allowed.
+            } @else if (getControl('last_name')?.errors?.['doubleSpaces']) {
+            No double spaces are allowed.
+            } @else if (getControl('last_name')?.errors?.['minlength']) {
+            Please enter at least 1 character.
+            } @else if (getControl('last_name')?.errors?.['maxlength']) {
+            Please enter at most 20 characters.
+            }
+
+          </div>
+
+          }
+
+        </div>
+
 
         <!-- Email -->
         <div>
-          <app-label [isRequired]="true">Email Id</app-label>
+          <app-label [isRequired]="true">
+            Email Id
+          </app-label>
+
           <app-input-field type="email" placeholder="Ex: pulseengine@gmail.com" formControlName="email"
-            class="form-input w-full" required id="email" />
-          @if((adminRegisterForm.get('email')?.touched && adminRegisterForm.get('email')?.invalid)){
+            class="form-input w-full" [required]="true" id="email" />
+
+          @if (getControl('email')?.touched && getControl('email')?.invalid) {
+
           <div class="text-error-500 text-sm">
-            @if(getControl('email')?.errors?.['required']){
-            Please enter email number
-            }@else if(getControl('email')?.errors?.['invalidEmail']){
-            Please enter a valid email address
+
+            @if (getControl('email')?.errors?.['required']) {
+            Please enter your email address.
+            } @else if (getControl('email')?.errors?.['invalidEmail']) {
+            Please enter a valid email address.
+            } @else if (getControl('email')?.errors?.['doubleSpaces']) {
+            No double spaces are allowed.
+            } @else if (getControl('email')?.errors?.['invalidChars']) {
+            Invalid characters are not allowed.
             }
+
           </div>
+
           }
+
         </div>
+
+
+        <!-- Phone -->
+        <div>
+          <app-label [isRequired]="true">
+            Phone
+          </app-label>
+
+          <app-input-field type="text" placeholder="Ex: 8899887788" formControlName="phone" class="form-input w-full"
+            [onlyNumbers]="true" [maxlength]="10" [required]="true" id="phone" />
+
+          @if (getControl('phone')?.touched && getControl('phone')?.invalid) {
+
+          <div class="text-error-500 text-sm">
+
+            @if (getControl('phone')?.errors?.['required']) {
+            Please enter phone number.
+            } @else if (getControl('phone')?.errors?.['invalidPhoneStart']) {
+            Phone number should start with 6, 7, 8 or 9.
+            } @else if (getControl('phone')?.errors?.['invalidPhoneLength']) {
+            Phone number should be 10 digits long.
+            } @else if (getControl('phone')?.errors?.['doubleSpaces']) {
+            No double spaces are allowed.
+            } @else if (getControl('phone')?.errors?.['invalidChars']) {
+            Invalid characters are not allowed.
+            }
+
+          </div>
+
+          }
+
+        </div>
+
 
         <!-- Password -->
         <div>
-          <app-label [isRequired]="true">Password</app-label>
+          <app-label [isRequired]="true">
+            Password
+          </app-label>
+
           <div class="relative">
+
             <app-input-field [type]="showPassword ? 'text' : 'password'" placeholder="Enter your password"
-              formControlName="password" class="form-input w-full" required id="password" [ariaAutoComplete]="false" />
+              formControlName="password" class="form-input w-full" [required]="true" id="password"
+              [ariaAutoComplete]="false" />
+
             <span (click)="togglePasswordVisibility()"
               class="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2">
+
               @if (showPassword) {
+
               <!-- Eye Icon -->
               <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
                 class="fill-gray-500 dark:fill-gray-400 size-5">
                 <path fill-rule="evenodd" clip-rule="evenodd"
-                  d="M10.0002 13.8619C7.23361 13.8619 4.86803 12.1372 3.92328 9.70241C4.86804 7.26761 7.23361 5.54297 10.0002 5.54297C12.7667 5.54297 15.1323 7.26762 16.0771 9.70243C15.1323 12.1372 12.7667 13.8619 10.0002 13.8619ZM10.0002 4.04297C6.48191 4.04297 3.49489 6.30917 2.4155 9.4593C2.3615 9.61687 2.3615 9.78794 2.41549 9.94552C3.49488 13.0957 6.48191 15.3619 10.0002 15.3619C13.5184 15.3619 16.5055 13.0957 17.5849 9.94555C17.6389 9.78797 17.6389 9.6169 17.5849 9.45932C16.5055 6.30919 13.5184 4.04297 10.0002 4.04297ZM9.99151 7.84413C8.96527 7.84413 8.13333 8.67606 8.13333 9.70231C8.13333 10.7286 8.96527 11.5605 9.99151 11.5605H10.0064C11.0326 11.5605 11.8646 10.7286 11.8646 9.70231C11.8646 8.67606 11.0326 7.84413 10.0064 7.84413H9.99151Z">
-                </path>
+                  d="M10.0002 13.8619C7.23361 13.8619 4.86803 12.1372 3.92328 9.70241C4.86804 7.26761 7.23361 5.54297 10.0002 5.54297C12.7667 5.54297 15.1323 7.26762 16.0771 9.70243C15.1323 12.1372 12.7667 13.8619 10.0002 13.8619ZM10.0002 4.04297C6.48191 4.04297 3.49489 6.30917 2.4155 9.4593C2.3615 9.61687 2.3615 9.78794 2.41549 9.94552C3.49488 13.0957 6.48191 15.3619 10.0002 15.3619C13.5184 15.3619 16.5055 13.0957 17.5849 9.94555C17.6389 9.78797 17.6389 9.6169 17.5849 9.45932C16.5055 6.30919 13.5184 4.04297 10.0002 4.04297ZM9.99151 7.84413C8.96527 7.84413 8.13333 8.67606 8.13333 9.70231C8.13333 10.7286 8.96527 11.5605 9.99151 11.5605H10.0064C11.0326 11.5605 11.8646 10.7286 11.8646 9.70231C11.8646 8.67606 11.0326 7.84413 10.0064 7.84413H9.99151Z" />
               </svg>
+
               } @else {
+
               <!-- Eye Off Icon -->
               <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
                 class="fill-gray-500 dark:fill-gray-400 size-5">
                 <path fill-rule="evenodd" clip-rule="evenodd"
-                  d="M4.63803 3.57709C4.34513 3.2842 3.87026 3.2842 3.57737 3.57709C3.28447 3.86999 3.28447 4.34486 3.57737 4.63775L4.85323 5.91362C3.74609 6.84199 2.89363 8.06395 2.4155 9.45936C2.3615 9.61694 2.3615 9.78801 2.41549 9.94558C3.49488 13.0957 6.48191 15.3619 10.0002 15.3619C11.255 15.3619 12.4422 15.0737 13.4994 14.5598L15.3625 16.4229C15.6554 16.7158 16.1302 16.7158 16.4231 16.4229C16.716 16.13 16.716 15.6551 16.4231 15.3622L4.63803 3.57709ZM12.3608 13.4212L10.4475 11.5079C10.3061 11.5423 10.1584 11.5606 10.0064 11.5606H9.99151C8.96527 11.5606 8.13333 10.7286 8.13333 9.70237C8.13333 9.5461 8.15262 9.39434 8.18895 9.24933L5.91885 6.97923C5.03505 7.69015 4.34057 8.62704 3.92328 9.70247C4.86803 12.1373 7.23361 13.8619 10.0002 13.8619C10.8326 13.8619 11.6287 13.7058 12.3608 13.4212ZM16.0771 9.70249C15.7843 10.4569 15.3552 11.1432 14.8199 11.7311L15.8813 12.7925C16.6329 11.9813 17.2187 11.0143 17.5849 9.94561C17.6389 9.78803 17.6389 9.61696 17.5849 9.45938C16.5055 6.30925 13.5184 4.04303 10.0002 4.04303C9.13525 4.04303 8.30244 4.17999 7.52218 4.43338L8.75139 5.66259C9.1556 5.58413 9.57311 5.54303 10.0002 5.54303C12.7667 5.54303 15.1323 7.26768 16.0771 9.70249Z">
-                </path>
+                  d="M4.63803 3.57709C4.34513 3.2842 3.87026 3.2842 3.57737 3.57709C3.28447 3.86999 3.28447 4.34486 3.57737 4.63775L4.85323 5.91362C3.74609 6.84199 2.89363 8.06394 2.4155 9.45936C2.3615 9.61694 2.3615 9.78801 2.41549 9.94558C3.49488 13.0957 6.48191 15.3619 10.0002 15.3619C11.255 15.3619 12.4422 15.0737 13.4994 14.5598L15.3625 16.4229C15.6554 16.7158 16.1302 16.7158 16.4231 16.4229C16.716 16.13 16.716 15.6551 16.4231 15.3622L4.63803 3.57709ZM12.3608 13.4212L10.4475 11.5079C10.3061 11.5423 10.1584 11.5606 10.0064 11.5606H9.99151C8.96527 11.5606 8.13333 10.7286 8.13333 9.70237C8.13333 9.5461 8.15262 9.39434 8.18895 9.24933L5.91885 6.97923C5.03505 7.69015 4.34057 8.62704 3.92328 9.70247C4.86803 12.1373 7.23361 13.8619 10.0002 13.8619C10.8326 13.8619 11.6287 13.7058 12.3608 13.4212ZM16.0771 9.70249C15.7843 10.4569 15.3552 11.1432 14.8199 11.7311L15.8813 12.7925C16.6329 11.9813 17.2187 11.0143 17.5849 9.94561C17.6389 9.78803 17.6389 9.61696 17.5849 9.45938C16.5055 6.30925 13.5184 4.04303 10.0002 4.04303C9.13525 4.04303 8.30244 4.17999 7.52218 4.43338L8.75139 5.66259C9.1556 5.58413 9.57311 5.54303 10.0002 5.54303C12.7667 5.54303 15.1323 7.26768 16.0771 9.70249Z" />
               </svg>
+
               }
+
             </span>
+
           </div>
-          @if((adminRegisterForm.get('password')?.touched && adminRegisterForm.get('password')?.invalid)){
+
+          @if (getControl('password')?.touched && getControl('password')?.invalid) {
+
           <div class="text-error-500 text-sm">
-            @if(getControl('password')?.errors?.['required']){
-            Please enter the password
-            }@else if(getControl('password')?.errors?.['minLength']){
-            Password must be at least 6 characters
-            }@else if(getControl('password')?.errors?.['maxLength']){
-            Password must be less than 20 characters
-            }@else if(getControl('password')?.errors?.['weakPassword']){
-            Password strength (at least one upper, lower, number, special char)
+
+            @if (getControl('password')?.errors?.['required']) {
+            Please enter the password.
+            } @else if (getControl('password')?.errors?.['minlength']) {
+            Password must be at least 6 characters.
+            } @else if (getControl('password')?.errors?.['maxlength']) {
+            Password must be less than 20 characters.
+            } @else if (getControl('password')?.errors?.['weakPassword']) {
+            Password must contain at least one uppercase letter, lowercase letter, number and special character.
             }
+
           </div>
+
           }
+
         </div>
+
 
         <!-- Confirm Password -->
         <div>
-          <app-label [isRequired]="true">Confirm Password </app-label>
+          <app-label [isRequired]="true">
+            Confirm Password
+          </app-label>
+
           <div class="relative">
-            <app-input-field formControlName="isChecked" [type]="showConfirmPassword ? 'text' : 'password'"
-              placeholder="Re-enter password" formControlName="confirm_password" class="form-input w-full" required
-              [ariaAutoComplete]="false" id="confirm_password" />
+
+            <app-input-field [type]="showConfirmPassword ? 'text' : 'password'" placeholder="Re-enter password"
+              formControlName="confirm_password" class="form-input w-full" [required]="true" [ariaAutoComplete]="false"
+              id="confirm_password" />
+
             <span (click)="toggleConfirmPasswordVisibility()"
               class="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2">
+
               @if (showConfirmPassword) {
+
               <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
                 class="fill-gray-500 dark:fill-gray-400 size-5">
                 <path fill-rule="evenodd" clip-rule="evenodd"
-                  d="M10.0002 13.8619C7.23361 13.8619 4.86803 12.1372 3.92328 9.70241C4.86804 7.26761 7.23361 5.54297 10.0002 5.54297C12.7667 5.54297 15.1323 7.26762 16.0771 9.70243C15.1323 12.1372 12.7667 13.8619 10.0002 13.8619ZM10.0002 4.04297C6.48191 4.04297 3.49489 6.30917 2.4155 9.4593C2.3615 9.61687 2.3615 9.78794 2.41549 9.94552C3.49488 13.0957 6.48191 15.3619 10.0002 15.3619C13.5184 15.3619 16.5055 13.0957 17.5849 9.94555C17.6389 9.78797 17.6389 9.6169 17.5849 9.45932C16.5055 6.30919 13.5184 4.04297 10.0002 4.04297ZM9.99151 7.84413C8.96527 7.84413 8.13333 8.67606 8.13333 9.70231C8.13333 10.7286 8.96527 11.5605 9.99151 11.5605H10.0064C11.0326 11.5605 11.8646 10.7286 11.8646 9.70231C11.8646 8.67606 11.0326 7.84413 10.0064 7.84413H9.99151Z">
-                </path>
+                  d="M10.0002 13.8619C7.23361 13.8619 4.86803 12.1372 3.92328 9.70241C4.86804 7.26761 7.23361 5.54297 10.0002 5.54297C12.7667 5.54297 15.1323 7.26762 16.0771 9.70243C15.1323 12.1372 12.7667 13.8619 10.0002 13.8619ZM10.0002 4.04297C6.48191 4.04297 3.49489 6.30917 2.4155 9.4593C2.3615 9.61687 2.3615 9.78794 2.41549 9.94552C3.49488 13.0957 6.48191 15.3619 10.0002 15.3619C13.5184 15.3619 16.5055 13.0957 17.5849 9.94555C17.6389 9.78797 17.6389 9.6169 17.5849 9.45932C16.5055 6.30919 13.5184 4.04297 10.0002 4.04297ZM9.99151 7.84413C8.96527 7.84413 8.13333 8.67606 8.13333 9.70231C8.13333 10.7286 8.96527 11.5605 9.99151 11.5605H10.0064C11.0326 11.5605 11.8646 10.7286 11.8646 9.70231C11.8646 8.67606 11.0326 7.84413 10.0064 7.84413H9.99151Z" />
               </svg>
 
               } @else {
-              <!-- Eye Off Icon -->
+
               <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
                 class="fill-gray-500 dark:fill-gray-400 size-5">
                 <path fill-rule="evenodd" clip-rule="evenodd"
-                  d="M4.63803 3.57709C4.34513 3.2842 3.87026 3.2842 3.57737 3.57709C3.28447 3.86999 3.28447 4.34486 3.57737 4.63775L4.85323 5.91362C3.74609 6.84199 2.89363 8.06395 2.4155 9.45936C2.3615 9.61694 2.3615 9.78801 2.41549 9.94558C3.49488 13.0957 6.48191 15.3619 10.0002 15.3619C11.255 15.3619 12.4422 15.0737 13.4994 14.5598L15.3625 16.4229C15.6554 16.7158 16.1302 16.7158 16.4231 16.4229C16.716 16.13 16.716 15.6551 16.4231 15.3622L4.63803 3.57709ZM12.3608 13.4212L10.4475 11.5079C10.3061 11.5423 10.1584 11.5606 10.0064 11.5606H9.99151C8.96527 11.5606 8.13333 10.7286 8.13333 9.70237C8.13333 9.5461 8.15262 9.39434 8.18895 9.24933L5.91885 6.97923C5.03505 7.69015 4.34057 8.62704 3.92328 9.70247C4.86803 12.1373 7.23361 13.8619 10.0002 13.8619C10.8326 13.8619 11.6287 13.7058 12.3608 13.4212ZM16.0771 9.70249C15.7843 10.4569 15.3552 11.1432 14.8199 11.7311L15.8813 12.7925C16.6329 11.9813 17.2187 11.0143 17.5849 9.94561C17.6389 9.78803 17.6389 9.61696 17.5849 9.45938C16.5055 6.30925 13.5184 4.04303 10.0002 4.04303C9.13525 4.04303 8.30244 4.17999 7.52218 4.43338L8.75139 5.66259C9.1556 5.58413 9.57311 5.54303 10.0002 5.54303C12.7667 5.54303 15.1323 7.26768 16.0771 9.70249Z">
-                </path>
+                  d="M4.63803 3.57709C4.34513 3.2842 3.87026 3.2842 3.57737 3.57709C3.28447 3.86999 3.28447 4.34486 3.57737 4.63775C3.57737 4.34486 3.28447 3.86999 3.57737 3.57709L4.85323 5.91362C3.74609 6.84199 2.89363 8.06394 2.4155 9.45936C2.3615 9.61694 2.3615 9.78801 2.41549 9.94558C3.49488 13.0957 6.48191 15.3619 10.0002 15.3619C11.255 15.3619 12.4422 15.0737 13.4994 14.5598L15.3625 16.4229C15.6554 16.7158 16.1302 16.7158 16.4231 16.4229L4.63803 3.57709Z" />
               </svg>
 
               }
+
             </span>
+
           </div>
-          @if((adminRegisterForm.get('confirm_password')?.touched && adminRegisterForm.get('confirm_password')?.invalid)){
-          <div class="text-red-500 text-sm">
-            @if(getControl('confirm_password')?.errors?.['required']){
+
+          @if (getControl('confirm_password')?.touched && getControl('confirm_password')?.invalid) {
+
+          <div class="text-error-500 text-sm">
+
+            @if (getControl('confirm_password')?.errors?.['required']) {
             Please enter confirm password.
-            }@else if(getControl('confirm_password')?.errors?.['passwordsMismatch']){
-            Passwords do not match
+            } @else if (getControl('confirm_password')?.errors?.['passwordsMismatch']) {
+            Passwords do not match.
+            } @else if (getControl('confirm_password')?.errors?.['minlength']) {
+            Password must be at least 6 characters.
+            } @else if (getControl('confirm_password')?.errors?.['maxlength']) {
+            Password must be less than 20 characters.
             }
+
           </div>
+
           }
+
         </div>
 
-        <!-- Keep me logged in -->
+
+        <!-- Terms and Conditions -->
         <div class="sm:col-span-2 flex flex-col">
-          <app-checkbox formControlName="isChecked" label="Terms and conditions" [isRequired]="true" />
+
+          <app-checkbox formControlName="terms_and_conditions" label="Terms and conditions" [isRequired]="true" />
+
         </div>
 
-        @if(adminRegisterForm.get('isChecked')?.touched && adminRegisterForm.get('isChecked')?.invalid){
+        @if (
+        getControl('terms_and_conditions')?.touched &&
+        getControl('terms_and_conditions')?.invalid
+        ) {
+
         <div class="sm:col-span-2 flex flex-col sm:flex-row items-center justify-between">
+
           <div class="text-error-500 text-sm w-full">
+
+            @if (getControl('terms_and_conditions')?.errors?.['required']) {
             You must accept the terms and conditions.
+            }
+
           </div>
+
         </div>
+
         }
+
 
         <!-- Submit button -->
         <div class="sm:col-span-2">
+
           <app-button type="submit" className="w-full" size="sm">
             Sign up
           </app-button>
+
         </div>
+
       </form>
+
 
       <!-- Footer -->
       <div class="mt-6 text-center">
+
         <p class="text-sm text-gray-700 dark:text-gray-400">
+
           Already have an account?
+
           <a [routerLink]="['/auth/sign-in']" class="text-brand-500 hover:text-brand-600 dark:text-brand-400">
             Sign In
           </a>
+
         </p>
+
       </div>
+
     </div>
+
     }
+
+
   </div>
+
 </div>
