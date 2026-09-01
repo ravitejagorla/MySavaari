@@ -129,7 +129,6 @@ export class Register extends Destroyer implements OnInit {
           if (response.status === 'success') {
             const data = response.data;
             sessionStorage.setItem('user_id', data.user_id);
-            sessionStorage.setItem('admin_id', data.admin_id);
             this.adminRegisterForm.reset();
             this.toast.fromResponse(response);
             this.router.navigate(['/auth/email-verify']);

@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from django.db.models import Q
 from django.db import transaction
 from django.utils import timezone
@@ -50,6 +50,25 @@ def admin_register(request):
             return Response({'status':'error','subject':'Terms and Conditions','message': 'You must accept the terms and conditions.'}, status=status.HTTP_200_OK)
         email_exists = User.objects.filter(email=email, role=role).exists()
         phone_exists = User.objects.filter(phone=phone, role=role).exists()
+        # existing_user = User.objects.filter(role="ADMIN").filter(Q(email=email) | Q(phone=phone)).first()
+        # if existing_user:
+        #     if existing_user.is_email_verified and existing_user.is_phone_verified:
+        #         return Response({
+        #             "status": "error",
+        #             "subject": "Already Registered",
+        #             "message": "An account with this email or phone number is already registered."
+        #         }, status=status.HTTP_200_OK)
+
+        #     return Response({
+        #         "status": "success",
+        #         "subject": "Registration",
+        #         "message": "Registration already exists. Continue verification.",
+        #         "data": {
+        #             "user_id": encrypt(str(existing_user.id)),
+        #             "is_email_verified": existing_user.is_email_verified,
+        #             "is_phone_verified": existing_user.is_phone_verified
+        #         }
+        #     }, status=status.HTTP_200_OK)
         if email_exists and phone_exists:
             return Response({'status':'error','subject':'Email and Phone','message': 'Email and Phone number already exists.'}, status=status.HTTP_200_OK)
         if email_exists:
@@ -199,3 +218,32 @@ def resend_otp(request):
         print("Error", str(e))
         return Response({'status':'error','subject':'OTP','message': 'OTP resend failed.'}, status=status.HTTP_200_OK)
 
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+@transaction.atomic
+def admin_login(request):
+    try:
+        data = request.data
+        print("================================================================================")
+        print("data", data)
+        print("================================================================================")
+        username = data.get("username", "").strip().lower()
+        password = data.get("password", "").strip()
+        if not all([username, password]):
+            return Response({'status':'error','subject':'Login','message': 'All fields are required.'}, status=status.HTTP_200_OK)
+        user = User.objects.filter(Q(email=username) | Q(phone=username)).first()
+        if not user:
+            return Response({'status':'error','subject':'Login','message': 'Invalid username or password.'}, status=status.HTTP_200_OK)
+        if not user.is_active:
+            return Response({'status':'error','subject':'Login','message': 'Account is inactive.'}, status=status.HTTP_200_OK)
+        if not check_password(password, user.password):
+            return Response({'status':'error','subject':'Login','message': 'Invalid username or password.'}, status=status.HTTP_200_OK)
+        if not user.is_email_verified and not user.is_phone_verified:
+            return Response({'status':'error','subject':'Login','message': 'Email or phone verification is required.'}, status=status.HTTP_200_OK)
+
+        token = generate_login_jwt(encrypt(str(user.id)))
+        return Response({ "status": "success", "subject": "Login", "message": "Login successful.", "data": {"token": token}})
+    except Exception as e:
+        print("Error", str(e))
+        return Response({'status':'error','subject':'Login','message': 'Login failed.'}, status=status.HTTP_200_OK)

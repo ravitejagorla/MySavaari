@@ -1,3 +1,32 @@
-<router-outlet></router-outlet>
+<p-progressbar
+  *ngIf="loading"
+  mode="indeterminate"
+  styleClass="top-progress-bar">
+</p-progressbar>
+
 <p-toast></p-toast>
-<p-toast key="alertToast"></p-toast>
+
+<p-toast
+  key="alertToast"
+  position="bottom-right">
+
+  <ng-template let-message pTemplate="message">
+
+    <div class="custom-alert-toast">
+
+      <div class="header-section">
+        <i class="pi pi-bell"></i>
+        <span>{{ message.summary }}</span>
+      </div>
+
+      <div class="body-content">
+        <p>{{ message.detail }}</p>
+      </div>
+
+    </div>
+
+  </ng-template>
+
+</p-toast>
+
+<router-outlet></router-outlet>
