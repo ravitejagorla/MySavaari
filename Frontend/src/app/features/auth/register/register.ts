@@ -1,14 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomValidators } from '../../../shared/validators/custom-validators';
-import { environment } from '../../../../environments/environment';
 import { Destroyer } from '../../../reusable/destroyer/destroyer';
 import { LabelComponent } from "../../../shared/components/form/label/label.component";
 import { InputFieldComponent } from '../../../shared/components/form/input/input-field.component';
-import { CheckboxComponent } from '../../../shared/components/form/input/checkbox.component';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ButtonModule } from "primeng/button";
 import { AppConfigService } from '../../../core/services/app-config.service';
+import { ApiService } from '../../../core/services/api.service';
+import { GlobalToastService } from '../../../core/services/global-toast.service';
 
 @Component({
   standalone: true,
@@ -18,7 +18,6 @@ import { AppConfigService } from '../../../core/services/app-config.service';
   templateUrl: './register.html',
 })
 export class Register extends Destroyer implements OnInit {
-  private readonly baseUrl = environment.apiUrl;
   showPassword = false;
   showConfirmPassword = false;
   isLoading: boolean = true;
@@ -26,6 +25,9 @@ export class Register extends Destroyer implements OnInit {
   constructor(
     protected readonly appConfig: AppConfigService,
     private fb: FormBuilder,
+    private apiService: ApiService,
+    private router: Router,
+    private toast: GlobalToastService,
   ) { super(); }
 
   adminRegisterForm!: FormGroup;
@@ -118,7 +120,29 @@ export class Register extends Destroyer implements OnInit {
       this.adminRegisterForm.markAllAsTouched();
       return;
     }
-    console.log(this.adminRegisterForm.value);
+    this.isLoading = true;
+    this.apiService
+      .post('accounts/register/', this.adminRegisterForm.value)
+      .subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          if (response.status === 'success') {
+            const data = response.data;
+            sessionStorage.setItem('user_id', data.user_id);
+            sessionStorage.setItem('admin_id', data.admin_id);
+            this.adminRegisterForm.reset();
+            this.toast.fromResponse(response);
+            this.router.navigate(['/auth/email-verify']);
+            return;
+          }
+          this.toast.fromResponse(response);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          console.error('Registration failed:', error);
+          this.toast.show('error', 'Error', 'Registration failed. Please try again.');
+        }
+      });
   }
 
   togglePasswordVisibility() {
@@ -132,5 +156,4 @@ export class Register extends Destroyer implements OnInit {
   getControl(name: string): AbstractControl | null {
     return this.adminRegisterForm.get(name);
   }
-
 }

@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import make_password
 from django.db.models import Q
 from django.db import transaction
 from django.utils import timezone
-from core.utilities.helper_functions import generate_otp
+from core.utilities.helper_functions import generate_otp, expires_at
 from core.utilities.encryption import encrypt, decrypt
 from core.services.sms_services import send_otp_sms
 from core.services.email_services import send_otp_email
@@ -56,9 +56,7 @@ def admin_register(request):
             return Response({'status':'error','subject':'Email','message': 'Email already exists.'}, status=status.HTTP_200_OK)
         if phone_exists:
             return Response({'status':'error','subject':'Phone','message': 'Phone number already exists.'}, status=status.HTTP_200_OK)
-
-        email_otp = generate_otp()
-        phone_otp = generate_otp()
+        
         hashed_password = make_password(password)
 
         user = User.objects.create(
@@ -76,34 +74,22 @@ def admin_register(request):
             user=user,
             admin_id=admin_id
         )
-        expires_at = timezone.now() + timezone.timedelta(minutes=5)
+        email_otp = generate_otp()
         OTP.objects.create(
             user=user,
             otp=email_otp,
             otp_type="EMAIL",
-            expires_at=expires_at
+            expires_at=expires_at(5)
         )
         send_otp_email(user.email, email_otp, f"{user.last_name if user.last_name else user.first_name}", purpose="Email OTP", expiry_minutes=5)
-        OTP.objects.create(
-            user=user,
-            otp=phone_otp,
-            otp_type="PHONE",
-            expires_at=expires_at
-        )
-        send_otp_sms(
-                recipient_phone=user.phone,
-                otp=phone_otp,
-                purpose="Admin Registration",
-                expiry_minutes=5,
-            )
+        
         return Response(
             {
                 "status": "success",
                 "subject": "Registration",
                 "message": "Registration successful. OTP sent to your email and phone.",
                 "data": {
-                    "user_id": str(user.id),
-                    "admin_id": admin_id,
+                    "user_id": encrypt(str(user.id)),
                 }
             }
         )
@@ -120,7 +106,7 @@ def otp_verification(request):
         print("================================================================================")
         print("data", data)
         print("================================================================================")
-        user_id = data.get("user_id", "").strip()
+        user_id = decrypt(data.get("user_id", "").strip())
         entered_otp = data.get("otp", "").strip()
         otp_type = data.get("otp_type", "").strip().upper()
         if not all([user_id, entered_otp, otp_type]):
@@ -138,7 +124,16 @@ def otp_verification(request):
             otp.save()
             user.is_email_verified = True
             user.save()
-            return Response({'status':'success','subject':'OTP','message': 'OTP verified.'}, status=status.HTTP_200_OK)
+            if user.role == "ADMIN":
+                phone_otp = generate_otp()
+                OTP.objects.create(
+                    user=user,
+                    otp=phone_otp,
+                    otp_type="PHONE",
+                    expires_at=expires_at(5)
+                )
+                send_otp_sms(recipient_phone=user.phone, otp=phone_otp, purpose="Admin Registration", expiry_minutes=5,)
+            return Response({'status':'success','subject':'OTP','message': 'OTP verified.', 'data' : {"user_id" : encrypt(str(user.id))}}, status=status.HTTP_200_OK)
         elif otp_type == 'PHONE':
             otp = OTP.objects.get(user=user, otp_type='PHONE', otp_used='ACTIVE')
             if otp.expires_at < timezone.now():
@@ -151,7 +146,7 @@ def otp_verification(request):
             otp.save()
             user.is_phone_verified = True
             user.save()
-            return Response({'status':'success','subject':'OTP','message': 'OTP verified.'}, status=status.HTTP_200_OK)
+            return Response({'status':'success','subject':'OTP','message': 'OTP verified.', 'data' : {"user_id" : encrypt(str(user.id))}}, status=status.HTTP_200_OK)
         else:
             return Response({'status':'error','subject':'OTP','message': 'Invalid OTP type.'}, status=status.HTTP_200_OK)
 
@@ -168,13 +163,17 @@ def resend_otp(request):
         print("================================================================================")
         print("data", data)
         print("================================================================================")
-        user_id = data.get("user_id", "").strip()
+        user_id = decrypt(data.get("user_id", "").strip())
         otp_type = data.get("otp_type", "").strip().upper()
         if not all([user_id, otp_type]):
             return Response({'status':'error','subject':'OTP','message': 'Somthing went wrong.'}, status=status.HTTP_200_OK)
-        if otp_type not in ["EMAIL", "PHONE"]:
+        elif otp_type not in ["EMAIL", "PHONE"]:
             return Response({"status": "error", "subject": "OTP", "message": "Invalid OTP type."}, status=status.HTTP_200_OK)
         user = User.objects.get(id=user_id)
+        if otp_type == "EMAIL" and user.is_email_verified:
+            return Response({"status": "error", "subject": "OTP", "message": "OTP already verified."}, status=status.HTTP_200_OK)
+        elif otp_type == "PHONE" and user.is_phone_verified:
+            return Response({"status": "error", "subject": "OTP", "message": "OTP already verified."}, status=status.HTTP_200_OK)
         current_otp = OTP.objects.filter(
             user=user,
             otp_used="ACTIVE",
@@ -184,14 +183,17 @@ def resend_otp(request):
         if current_otp:
             current_otp.otp_used = "EXPIRED"
             current_otp.save(update_fields=["otp_used"])
-        expires_at = timezone.now() + timezone.timedelta(minutes=5)
         otp = generate_otp()
         OTP.objects.create(
             user=user,
             otp=otp,
             otp_type=otp_type,
-            expires_at=expires_at
+            expires_at=expires_at(5)
         )
+        if otp_type == "EMAIL":
+            send_otp_email(user.email, otp, f"{user.last_name if user.last_name else user.first_name}", purpose="Email OTP", expiry_minutes=5)
+        elif otp_type == "PHONE":
+            send_otp_sms(recipient_phone=user.phone, otp=otp, purpose="Admin Registration", expiry_minutes=5,)
         return Response({ "status": "success", "subject": "OTP", "message": "OTP resent successfully."}, status=status.HTTP_200_OK)
     except Exception as e:
         print("Error", str(e))
