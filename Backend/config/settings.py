@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     # Apps
     'apps.accounts',
     'apps.datamanagement',
+    'apps.generalservices',
 ]
 
 MIDDLEWARE = [
