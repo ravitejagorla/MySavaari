@@ -16,16 +16,12 @@ class User(models.Model):
     is_email_verified = models.BooleanField(default=False)
     is_phone_verified = models.BooleanField(default=False)
     password = models.CharField(max_length=255, blank=True, null=True)
+    terms_and_conditions = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.phone}"
-
-    class Meta:
-        db_table = 'user'
-        verbose_name = 'User'
-        verbose_name_plural = 'Users'
 
 class UserAdmin(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)

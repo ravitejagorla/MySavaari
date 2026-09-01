@@ -2,6 +2,8 @@ from pathlib import Path
 from decouple import config
 from celery.schedules import crontab
 
+PROJECT_NAME = config("PROJECT_NAME", default="MySavaari")
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('PROJECT_PHASE', default='development') == 'development'
@@ -98,11 +100,13 @@ MEDIA_ROOT = BASE_DIR / config('MEDIA_ROOT', default='media/')
 
 CRYPTOGRAPHY_ENCRYPTION_ID = config('CRYPTOGRAPHY_ENCRYPTION_ID')
 
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = config("EMAIL_HOST", default="")
 EMAIL_PORT = config("EMAIL_PORT", cast=int, default=587)
 EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="",)
-EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool, default=True,)
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool, default=True)
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default=EMAIL_HOST_USER)
 
 ZEPTO_MAIN_API_KEY = config('ZEPTO_MAIN_API_KEY', default='')
 ZEPTO_MAIL_ID = config('ZEPTO_MAIL_ID', default='')
