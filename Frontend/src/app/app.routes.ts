@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
     {
@@ -12,8 +13,13 @@ export const routes: Routes = [
             }
         ]
     },
-
-    { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
-
-    { path: '**', redirectTo: 'auth/login' }
+    {
+        path: '',
+        canActivate: [authGuard], 
+        loadComponent: () => 
+            import('./layouts/landing-page/landing-page')
+        .then(m => m.LandingPage),
+        title: 'Home',
+    },
+    { path: '**', redirectTo: 'auth/login' },
 ];

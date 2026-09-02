@@ -9,7 +9,6 @@ import { CustomValidators } from '../../../shared/validators/custom-validators';
 import { ButtonModule } from 'primeng/button';
 import { InputFieldComponent } from '../../../shared/components/form/input/input-field.component';
 import { LabelComponent } from '../../../shared/components/form/label/label.component';
-import { ThemeService } from '../../../shared/services/theme.service';
 import { ThemeToggleButtonComponent } from "../../../shared/components/common/theme-toggle/theme-toggle-button.component";
 @Component({
   standalone: true,
@@ -30,7 +29,6 @@ export class Login extends Destroyer implements OnInit {
     private apiService: ApiService,
     private router: Router,
     private toast: GlobalToastService,
-    // public themeService: ThemeService,
   ) { super(); }
 
   ngOnInit(): void {
@@ -63,9 +61,10 @@ export class Login extends Destroyer implements OnInit {
               return; 
             }
             sessionStorage.setItem('access_token', token);
+            console.log('token', token);
             this.loginForm.reset();
             this.toast.fromResponse(response);
-            this.router.navigate(['/auth/dashboard']);
+            this.router.navigate(['/']);
             return;
           }
           this.toast.fromResponse(response);
