@@ -1,7 +1,12 @@
-<ras-header />
-<ras-sidebar />
-<main>
-  <router-outlet />
-</main>
-
-<ras-footer />
+<div class="min-h-screen bg-gray-50 dark:bg-gray-950">
+  <ras-header />
+  <div class="flex">
+    <ras-sidebar />
+    <main class="min-w-0 flex-1">
+      <div class="min-h-[calc(100vh-64px)] p-4 md:p-6">
+        <router-outlet />
+      </div>
+    </main>
+  </div>
+  <ras-footer />
+</div>
