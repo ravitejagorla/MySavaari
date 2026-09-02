@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { Header } from "./header/header";
-import { Sidebar } from "./sidebar/sidebar";
-import { Footer } from "./footer/footer";
-import { RouterOutlet } from "@angular/router";
+import { RouterOutlet } from '@angular/router';
+import { ScrollTopModule } from 'primeng/scrolltop';
+import { Header } from './header/header';
+import { Sidebar } from './sidebar/sidebar';
+import { Footer } from './footer/footer';
 
 @Component({
-  imports: [Header, Sidebar, Footer, RouterOutlet],
+  imports: [Header, Sidebar, Footer, RouterOutlet, ScrollTopModule],
   selector: 'ras-app-layout',
   styleUrl: './app-layout.css',
   templateUrl: './app-layout.html',
