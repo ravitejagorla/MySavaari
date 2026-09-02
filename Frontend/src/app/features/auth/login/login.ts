@@ -9,9 +9,11 @@ import { CustomValidators } from '../../../shared/validators/custom-validators';
 import { ButtonModule } from 'primeng/button';
 import { InputFieldComponent } from '../../../shared/components/form/input/input-field.component';
 import { LabelComponent } from '../../../shared/components/form/label/label.component';
+import { ThemeService } from '../../../shared/services/theme.service';
+import { ThemeToggleButtonComponent } from "../../../shared/components/common/theme-toggle/theme-toggle-button.component";
 @Component({
   standalone: true,
-  imports: [LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink, ButtonModule],
+  imports: [LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink, ButtonModule, ThemeToggleButtonComponent],
   selector: 'app-login',
   styleUrl: './login.css',
   templateUrl: './login.html',
@@ -28,6 +30,7 @@ export class Login extends Destroyer implements OnInit {
     private apiService: ApiService,
     private router: Router,
     private toast: GlobalToastService,
+    // public themeService: ThemeService,
   ) { super(); }
 
   ngOnInit(): void {

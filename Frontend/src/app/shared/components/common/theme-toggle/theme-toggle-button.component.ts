@@ -1,21 +1,24 @@
 import { Component } from '@angular/core';
-import { ThemeService } from '../../../services/theme.service';
 import { CommonModule } from '@angular/common';
+import { ThemeService } from '../../../services/theme.service';
 
 @Component({
   selector: 'app-theme-toggle-button',
-  templateUrl: './theme-toggle-button.component.html',
-  imports:[CommonModule]
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './theme-toggle-button.component.html'
 })
 export class ThemeToggleButtonComponent {
-  
+
   theme$;
 
-  constructor(private themeService: ThemeService) {
+  constructor(
+    private themeService: ThemeService
+  ) {
     this.theme$ = this.themeService.theme$;
   }
 
-  toggleTheme() {
+  toggleTheme(): void {
     this.themeService.toggleTheme();
   }
 }
