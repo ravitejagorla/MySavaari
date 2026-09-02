@@ -1,10 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { AppConfigService } from '../../../core/services/app-config.service';
 import { SidebarWidget } from './sidebar-widget';
+import { AppConfigService } from '../../../core/services/app-config.service';
 import { SidebarService } from '../../../shared/services/sidebar.service';
-import { AsyncPipe } from '@angular/common';
 
 type SubNavItem = {
   name: string;
@@ -27,15 +27,35 @@ type NavSection = {
 @Component({
   selector: 'ras-sidebar',
   standalone: true,
-  imports: [ RouterModule, SidebarWidget, AsyncPipe],
+  imports: [RouterModule, SidebarWidget, AsyncPipe],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })
 export class Sidebar {
-
   protected readonly appConfig = inject(AppConfigService);
   protected readonly sidebarService = inject(SidebarService);
   readonly expandedMenu = signal<string | null>(null);
+  isExpanded = true;
+  constructor() {
+    this.sidebarService.isExpanded$.subscribe(value => {
+      this.isExpanded = value;
+      if (value) {
+        this.sidebarService.setHovered(false);
+      }
+    });
+  }
+
+  onMouseEnter(): void {
+    if (!this.isExpanded) {
+      this.sidebarService.setHovered(true);
+    }
+  }
+
+  onMouseLeave(): void {
+    if (!this.isExpanded) {
+      this.sidebarService.setHovered(false);
+    }
+  }
 
   toggleMenu(name: string): void {
     this.expandedMenu.update(current =>

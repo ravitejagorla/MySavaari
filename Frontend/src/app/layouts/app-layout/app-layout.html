@@ -2,14 +2,10 @@
   <ras-header />
   <div class="flex">
     <ras-sidebar />
-    <main class="pt-16 transition-all duration-300 ease-in-out"
-    [class.ml-[280px]]="
-      (sidebarService.isExpanded$ | async)
-    "
-    [class.ml-20]="
-      !(sidebarService.isExpanded$ | async)
-    ">
-      <div class="min-h-[calc(100vh-64px)] p-4 md:p-6">
+    <main class="transition-all duration-300 ease-in-out"
+      [class.ml-[280px]]="(sidebarService.isExpanded$ | async) || (sidebarService.isHovered$ | async)"
+      [class.ml-20]="!(sidebarService.isExpanded$ | async) && !(sidebarService.isHovered$ | async)">
+      <div class="min-h-[calc(100vh-4rem)] p-4 md:p-6">
         <router-outlet />
       </div>
     </main>
@@ -19,4 +15,3 @@
   </div>
   <ras-footer />
 </div>
-\
