@@ -17,8 +17,8 @@ export const routes: Routes = [
         path: '',
         canActivate: [authGuard], 
         loadComponent: () => 
-            import('./layouts/landing-page/landing-page')
-        .then(m => m.LandingPage),
+            import('./layouts/app-layout/app-layout')
+        .then(m => m.AppLayout),
         title: 'Home',
     },
     { path: '**', redirectTo: 'auth/login' },

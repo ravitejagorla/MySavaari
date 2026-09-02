@@ -230,32 +230,19 @@ def admin_login(request):
         print("================================================================================")
         username = data.get("username", "").strip().lower()
         password = data.get("password", "").strip()
-        print("a")
         if not all([username, password]):
             return Response({'status':'error','subject':'Login','message': 'All fields are required.'}, status=status.HTTP_200_OK)
-        print("b")
         user = User.objects.filter(Q(email=username) | Q(phone=username)).first()
         if not user:
             return Response({'status':'error','subject':'Login','message': 'Invalid username or password.'}, status=status.HTTP_200_OK)
         if not user.is_active:
             return Response({'status':'error','subject':'Login','message': 'Account is inactive.'}, status=status.HTTP_200_OK)
-        print("c")
         if not check_password(password, user.password):
             return Response({'status':'error','subject':'Login','message': 'Invalid username or password.'}, status=status.HTTP_200_OK)
-        print("d")
-        print("USER:", user)
-        print("EMAIL:", user.email)
-        print("PHONE:", user.phone)
-        print("IS EMAIL VERIFIED:", user.is_email_verified)
-        print("IS PHONE VERIFIED:", user.is_phone_verified)
-        print("IS ACTIVE:", user.is_active)
         if not user.is_email_verified or not user.is_phone_verified:
-            print("VERIFICATION CHECK FAILED")
             return Response({'status':'error','subject':'Login','message': 'Email or phone verification is required.'}, status=status.HTTP_200_OK)
-        print("e")
         token = generate_login_jwt(encrypt(str(user.id)))
         return Response({ "status": "success", "subject": "Login", "message": "Login successful.", "data": {"token": token}})
     except Exception as e:
-        print("f")
         print("Error", str(e))
         return Response({'status':'error','subject':'Login','message': 'Login failed.'}, status=status.HTTP_200_OK)

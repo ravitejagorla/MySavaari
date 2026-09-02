@@ -60,9 +60,7 @@ export class Login extends Destroyer implements OnInit {
       })
     )
     .subscribe({
-      next: (response) => {
-        console.log('Login response:', response);
-        
+      next: (response) => {        
         if (response.status === 'success') {
           const token = response.data?.token;
 
