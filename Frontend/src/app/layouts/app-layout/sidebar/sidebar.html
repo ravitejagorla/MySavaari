@@ -1,18 +1,17 @@
-<aside class="fixed left-0 top-16 z-40 h-[calc(100vh-4rem)] border-r border-gray-200 bg-white text-gray-900 transition-all duration-300 ease-in-out dark:border-gray-800 dark:bg-gray-900 dark:text-white"
+<aside class="fixed left-0 top-16 z-40 h-[calc(100vh-4rem)] border-r border-gray-200 bg-white text-gray-900 transition-[width] duration-300 ease-in-out dark:border-gray-800 dark:bg-gray-900 dark:text-white"
   [class.w-[280px]]="(sidebarService.isExpanded$ | async) || (sidebarService.isHovered$ | async)"
   [class.w-20]="!(sidebarService.isExpanded$ | async) && !(sidebarService.isHovered$ | async)"
   (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
 
   <div class="flex h-full flex-col overflow-y-auto px-3 py-5">
-    <nav class="space-y-6">
+    <nav class="space-y-8">
       @for (section of sections; track section.title) {
       <div>
         <!-- Section title -->
         @if ((sidebarService.isExpanded$ | async) || (sidebarService.isHovered$ | async)) {
-        <h2 class="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">{{
-          section.title }}</h2>
+        <h2 class="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">{{ section.title }}</h2>
         }
-        <ul class="space-y-1">
+        <ul class="space-y-2">
           @for (item of section.items; track item.name) {
           <li>
             <!-- Dropdown menu -->
@@ -35,7 +34,7 @@
             </button>
             <!-- Dropdown children -->
             @if (((sidebarService.isExpanded$ | async) || (sidebarService.isHovered$ | async)) && expandedMenu() ===item.name) {
-            <ul class="mt-1 space-y-1 pl-4">
+            <ul class="mt-2 space-y-1 pl-4">
               @for (subItem of item.subItems; track subItem.name) {
               <li>
                 <a [routerLink]="subItem.path"
@@ -74,7 +73,9 @@
     </nav>
     <!-- Sidebar widget -->
     @if ((sidebarService.isExpanded$ | async) || (sidebarService.isHovered$ | async)) {
-    <ras-sidebar-widget />
+      <div class="mt-auto pt-8">
+        <ras-sidebar-widget />
+      </div>
     }
   </div>
 </aside>

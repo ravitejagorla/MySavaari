@@ -1,3 +1,45 @@
-<div class="layout-footer">
-        Design and developed by <a href="https://www.ravitejagorla.com" target="_blank">RA's Farms</a>
-</div>
+<footer
+  class="border-t border-gray-200 bg-white
+         dark:border-gray-800 dark:bg-gray-900"
+>
+  <div
+    class="flex flex-col gap-3 px-4 py-4
+           text-sm text-gray-500
+           md:flex-row md:items-center md:justify-between
+           md:px-6"
+  >
+
+    <!-- Left -->
+    <div class="flex items-center gap-2">
+      <span>© {{ currentYear }} MySavaari</span>
+      <span class="text-gray-300 dark:text-gray-700">•</span>
+      <span>All rights reserved.</span>
+    </div>
+
+    <!-- Right -->
+    <div class="flex items-center gap-4">
+      <a
+        href="#"
+        class="transition-colors hover:text-brand-500"
+      >
+        Privacy
+      </a>
+
+      <a
+        href="#"
+        class="transition-colors hover:text-brand-500"
+      >
+        Terms
+      </a>
+
+      <span
+        class="rounded-md bg-gray-100 px-2 py-1 text-xs
+               font-medium text-gray-500
+               dark:bg-gray-800 dark:text-gray-400"
+      >
+        v1.0.0
+      </span>
+    </div>
+
+  </div>
+</footer>
