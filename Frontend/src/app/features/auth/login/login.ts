@@ -10,6 +10,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputFieldComponent } from '../../../shared/components/form/input/input-field.component';
 import { LabelComponent } from '../../../shared/components/form/label/label.component';
 import { ThemeToggleButtonComponent } from "../../../shared/components/common/theme-toggle/theme-toggle-button.component";
+import { finalize } from 'rxjs';
 @Component({
   standalone: true,
   imports: [LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink, ButtonModule, ThemeToggleButtonComponent],
@@ -19,8 +20,8 @@ import { ThemeToggleButtonComponent } from "../../../shared/components/common/th
 })
 export class Login extends Destroyer implements OnInit {
   showPassword = false;
-  isLoading: boolean = true;
-
+  isSubmitting: boolean = false;
+  isPageLoading: boolean = true;
   loginForm!: FormGroup;
 
   constructor(
@@ -33,10 +34,10 @@ export class Login extends Destroyer implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.isLoading = false;
+    this.isPageLoading = false;
   }
 
-  private initForm(): void{
+  private initForm(): void {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required, CustomValidators.noDoubleSpaces(),]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20), CustomValidators.strongPassword(),],]
@@ -44,38 +45,53 @@ export class Login extends Destroyer implements OnInit {
   }
 
   onFormSubmit(): void {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
-    }
-    this.isLoading = true;
-    this.apiService
-      .post('accounts/login/', this.loginForm.value)
-      .subscribe({
-        next: (response) => {
-          this.isLoading = false;
-          if (response.status === 'success') {
-            const token = response.data?.token;
-            if (!token) { 
-              this.toast.show( 'error', 'Login', 'Login token was not received.' ); 
-              return; 
-            }
-            sessionStorage.setItem('access_token', token);
-            console.log('token', token);
-            this.loginForm.reset();
-            this.toast.fromResponse(response);
-            this.router.navigate(['/']);
+  if (this.loginForm.invalid) {
+    this.loginForm.markAllAsTouched();
+    return;
+  }
+
+  this.isSubmitting = true;
+
+  this.apiService
+    .post('accounts/login/', this.loginForm.value)
+    .pipe(
+      finalize(() => {
+        this.isSubmitting = false;
+      })
+    )
+    .subscribe({
+      next: (response) => {
+        console.log('Login response:', response);
+        
+        if (response.status === 'success') {
+          const token = response.data?.token;
+
+          if (!token) {
+            this.toast.show(
+              'error',
+              'Login',
+              'Login token was not received.'
+            );
             return;
           }
+          sessionStorage.setItem('access_token', token);
+          this.loginForm.reset();
           this.toast.fromResponse(response);
-        },
-        error: (error) => {
-          this.isLoading = false;
-          console.error('Login failed:', error);
-          this.toast.show('error', 'Error', 'Login failed. Please try again.');
+          this.router.navigate(['/']);
+          return;
         }
-      });
-  }
+        this.toast.fromResponse(response);
+      },
+      error: (error) => {
+        console.error('Login failed:', error);
+        this.toast.show(
+          'error',
+          'Error',
+          'Login failed. Please try again.'
+        );
+      }
+    });
+}
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
