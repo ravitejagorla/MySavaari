@@ -4,6 +4,7 @@ import { ThemeToggleButtonComponent } from '../../../shared/components/common/th
 import { AuthService } from '../../../core/services/auth.service';
 import { AppConfigService } from '../../../core/services/app-config.service';
 import { MyComponent } from "../../../shared/components/common/Full-Screen/full-screen";
+import { SidebarService } from '../../../shared/services/sidebar.service';
 
 @Component({
   selector: 'ras-header',
@@ -15,10 +16,19 @@ import { MyComponent } from "../../../shared/components/common/Full-Screen/full-
 export class Header {
 
   readonly router = inject(Router);
+
   private readonly authService = inject(AuthService);
-  constructor(protected readonly appConfig: AppConfigService,){}
+
+  protected readonly sidebarService = inject(SidebarService);
+  constructor(
+    protected readonly appConfig: AppConfigService
+  ) {}
 
   isUserMenuOpen = false;
+
+  toggleSidebar(): void {
+    this.sidebarService.toggleExpanded();
+  }
 
   toggleUserMenu(): void {
     this.isUserMenuOpen = !this.isUserMenuOpen;

@@ -1,254 +1,66 @@
-<aside
-  class="fixed left-0 top-0 z-50 h-screen w-[280px]
-         border-r border-gray-200 bg-white text-gray-900
-         transition-all duration-300 ease-in-out
-         dark:border-gray-800 dark:bg-gray-900 dark:text-white"
->
-
+<aside class="fixed left-0 top-16 z-40 h-[calc(100vh-4rem)] border-r border-gray-200 bg-white text-gray-900 transition-all duration-300 ease-in-out dark:border-gray-800 dark:bg-gray-900 dark:text-white"
+  [class.w-[280px]]="(sidebarService.isExpanded$ | async)" [class.w-20]="!(sidebarService.isExpanded$ | async)">
   <!-- Sidebar Header / Logo -->
-  <div
-    class="flex h-20 items-center justify-center
-           border-b border-gray-200
-           dark:border-gray-800"
-  >
-
-    <a
-      routerLink="/"
-      class="flex items-center gap-3"
-    >
-
-      <!-- Logo -->
-      <div
-        class="flex h-10 w-10 items-center justify-center
-               rounded-xl bg-brand-500 text-white"
-      >
+  <!-- <div class="flex h-20 items-center justify-center border-b border-gray-200 dark:border-gray-800">
+    <a routerLink="/" class="flex items-center gap-3">
+      <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-500 text-white">
         <i class="pi pi-building text-lg"></i>
       </div>
-
-      <!-- Application name -->
       <div class="flex flex-col">
-
-        <span
-          class="text-lg font-bold tracking-tight"
-        >
-          {{ appConfig.title() }}
-        </span>
-
-        <span
-          class="text-xs text-gray-500
-                 dark:text-gray-400"
-        >
-          Admin Panel
-        </span>
-
+        <span class="text-lg font-bold tracking-tight">{{ appConfig.title() }}</span>
+        <span class="text-xs text-gray-500 dark:text-gray-400">Admin Panel</span>
       </div>
-
     </a>
+  </div> -->
 
-  </div>
-
-
-  <!-- Navigation Area -->
-  <div
-    class="flex h-[calc(100vh-5rem)] flex-col
-           overflow-y-auto px-3 py-5"
-  >
-
-    <!-- Navigation -->
+  <div class="flex h-[calc(100vh-5rem)] flex-col overflow-y-auto px-3 py-5">
     <nav class="space-y-6">
-
       @for (section of sections; track section.title) {
-
         <div>
-
-          <!-- Section Title -->
-          <h2
-            class="mb-2 px-3 text-[11px] font-semibold
-                   uppercase tracking-wider
-                   text-gray-400
-                   dark:text-gray-500"
-          >
-            {{ section.title }}
-          </h2>
-
-
-          <!-- Section Items -->
+          <h2 class="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">{{ section.title }}</h2>
           <ul class="space-y-1">
-
             @for (item of section.items; track item.name) {
-
               <li>
-
-                <!-- ========================= -->
-                <!-- Dropdown Menu -->
-                <!-- ========================= -->
-
                 @if (item.subItems?.length) {
-
-                  <button
-                    type="button"
-                    (click)="toggleMenu(item.name)"
-                    class="group flex w-full items-center gap-3
-                           rounded-lg px-3 py-2.5
-                           text-sm font-medium
-                           text-gray-600
-                           transition-colors
-                           hover:bg-gray-100
-                           hover:text-gray-900
-                           dark:text-gray-400
-                           dark:hover:bg-gray-800
-                           dark:hover:text-white"
-                  >
-
-                    <!-- Parent Icon -->
-                    <i
-                      [class]="item.icon"
-                      class="w-5 text-center text-base"
-                    ></i>
-
-
-                    <!-- Parent Name -->
-                    <span class="flex-1 text-left">
-                      {{ item.name }}
-                    </span>
-
-
-                    <!-- Arrow -->
-                    <i
-                      class="pi text-xs
-                             transition-transform duration-200"
-                      [class.pi-chevron-down]="
-                        expandedMenu() !== item.name
-                      "
-                      [class.pi-chevron-up]="
-                        expandedMenu() === item.name
-                      "
-                    ></i>
-
+                  <button type="button" (click)="toggleMenu(item.name)"
+                    class="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white">
+                    <i [class]="item.icon" class="w-5 text-center text-base"></i>
+                    <span class="flex-1 text-left">{{ item.name }}</span>
+                    <i class="pi text-xs transition-transform duration-200" [class.pi-chevron-down]="expandedMenu() !== item.name"
+                      [class.pi-chevron-up]="expandedMenu() === item.name"></i>
                   </button>
-
-
-                  <!-- ========================= -->
-                  <!-- Dropdown Items -->
-                  <!-- ========================= -->
-
                   @if (expandedMenu() === item.name) {
-
-                    <ul
-                      class="mt-1 space-y-1 pl-4"
-                    >
-
-                      @for (
-                        subItem of item.subItems;
-                        track subItem.name
-                      ) {
-
+                    <ul class="mt-1 space-y-1 pl-4">
+                      @for (subItem of item.subItems; track subItem.name) {
                         <li>
-
                           <a
-                            [routerLink]="subItem.path"
-                            routerLinkActive="bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-400"
-                            class="group flex items-center gap-3
-                                   rounded-lg px-3 py-2
-                                   text-sm
-                                   text-gray-500
-                                   transition-colors
-                                   hover:bg-gray-100
-                                   hover:text-gray-900
-                                   dark:text-gray-400
-                                   dark:hover:bg-gray-800
-                                   dark:hover:text-white"
-                          >
-
-                            <!-- Sub Item Icon -->
-                            <i
-                              [class]="subItem.icon"
-                              class="w-4 text-center text-sm"
-                            ></i>
-
-
-                            <!-- Sub Item Name -->
-                            <span>
-                              {{ subItem.name }}
-                            </span>
-
+                            [routerLink]="subItem.path" routerLinkActive="bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-400"
+                            class="group flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white">
+                            <i [class]="subItem.icon" class="w-4 text-center text-sm"></i>
+                            <span>{{ subItem.name }}</span>
                           </a>
-
                         </li>
-
                       }
-
                     </ul>
-
                   }
-
                 }
-
-
-                <!-- ========================= -->
-                <!-- Normal Menu Item -->
-                <!-- ========================= -->
-
                 @else {
-
                   <a
-                    [routerLink]="item.path"
-                    routerLinkActive="bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-400"
-                    [routerLinkActiveOptions]="{
-                      exact: item.path === '/'
-                    }"
-                    class="group flex items-center gap-3
-                           rounded-lg px-3 py-2.5
-                           text-sm font-medium
-                           text-gray-600
-                           transition-colors
-                           hover:bg-gray-100
-                           hover:text-gray-900
-                           dark:text-gray-400
-                           dark:hover:bg-gray-800
-                           dark:hover:text-white"
-                  >
-
-                    <!-- Icon -->
-                    <i
-                      [class]="item.icon"
-                      class="w-5 text-center text-base"
-                    ></i>
-
-
-                    <!-- Name -->
-                    <span>
-                      {{ item.name }}
-                    </span>
-
+                    [routerLink]="item.path" routerLinkActive="bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-400"
+                    [routerLinkActiveOptions]="{exact: item.path === '/'}"
+                    class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white">
+                    <i [class]="item.icon" class="w-5 text-center text-base"></i>
+                    <span>{{ item.name }}</span>
                   </a>
-
                 }
-
               </li>
-
             }
-
           </ul>
-
         </div>
-
       }
-
     </nav>
-
-
-    <!-- Sidebar Widget -->
-    <!-- @if (
-      (isExpanded$ | async) ||
-      (isHovered$ | async) ||
-      (isMobileOpen$ | async)
-    ) { -->
-
+    @if ((sidebarService.isExpanded$ | async)) {
       <ras-sidebar-widget />
-
-    <!-- } -->
-
+    }
   </div>
-
 </aside>
