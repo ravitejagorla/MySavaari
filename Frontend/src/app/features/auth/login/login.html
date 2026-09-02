@@ -1,101 +1,166 @@
-<div class="flex min-h-screen items-center justify-center px-4">
-    <div class="w-full max-w-md">
-
-        <div class="mb-8 text-center">
-            <div class="mb-4 flex justify-center">
-                <div class="flex h-16 w-16 items-center justify-center rounded-xl bg-primary">
-                    <i class="pi pi-map-marker text-3xl text-white"></i>
-                </div>
-            </div>
-
-            <h1 class="text-3xl font-bold">Welcome to MySavaari</h1>
-
-            <p class="mt-2 text-surface-500">
-                Sign in to continue your journey
-            </p>
+@if (isLoading) {
+<div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
+    <div class="flex flex-col items-center gap-4">
+        <div
+            class="h-10 w-10 animate-spin rounded-full border-2 border-gray-200 border-t-brand-500 dark:border-gray-800 dark:border-t-brand-400">
         </div>
-
-        <div class="surface-card rounded-xl p-8 shadow-sm">
-
-            <form (ngSubmit)="login()">
-
-                <div class="mb-5">
-                    <label
-                        for="username"
-                        class="mb-2 block font-medium">
-                        Username / Email
-                    </label>
-
-                    <input
-                        id="username"
-                        name="username"
-                        type="text"
-                        pInputText
-                        [(ngModel)]="username"
-                        placeholder="Enter your username or email"
-                        class="w-full"
-                        required />
-                </div>
-
-                <div class="mb-5">
-                    <label
-                        for="password"
-                        class="mb-2 block font-medium">
-                        Password
-                    </label>
-
-                    <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        pInputText
-                        [(ngModel)]="password"
-                        placeholder="Enter your password"
-                        class="w-full"
-                        required />
-                </div>
-
-                <div class="mb-6 flex justify-end">
-                    <a
-                        href="#"
-                        class="text-primary font-medium">
-                        Forgot password?
-                    </a>
-                </div>
-
-                <button
-                    pButton
-                    type="submit"
-                    label="Sign In"
-                    icon="pi pi-sign-in"
-                    class="w-full">
-                </button>
-
-            </form>
-
-            <div class="my-6 flex items-center gap-3">
-                <div class="h-px flex-1 bg-surface-200"></div>
-
-                <span class="text-sm text-surface-500">
-                    OR
-                </span>
-
-                <div class="h-px flex-1 bg-surface-200"></div>
-            </div>
-
-            <div class="text-center">
-                <span class="text-surface-600">
-                    Don't have an account?
-                </span>
-
-                <a
-                    [routerLink]="['/auth/register']"
-                    class="ml-1 font-medium text-primary">
-                    Create account
-                </a>
-            </div>
-
-        </div>
-
+        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+            Logging in...
+        </p>
     </div>
 </div>
+} @else {
+<div class="min-h-screen bg-gray-50 px-4 py-10 dark:bg-gray-950 sm:px-6 lg:px-8">
+    <div class="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-6xl items-center justify-center">
+        <div
+            class="grid w-full max-w-5xl overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xl dark:border-gray-800 dark:bg-gray-900 lg:grid-cols-2">
+
+            <div class="relative hidden overflow-hidden bg-brand-500 p-10 lg:flex lg:flex-col lg:justify-between">
+                <div class="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-white/10"></div>
+                <div class="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-black/10"></div>
+                <div class="relative z-10">
+                    <!-- Logo -->
+                    <div
+                        class="mb-10 flex h-12 w-40 items-center justify-center rounded-xl bg-white/15 px-4 backdrop-blur-sm">
+                        <span class="text-xl font-bold tracking-tight text-white">
+                            {{ appConfig.title() }}
+                        </span>
+                    </div>
+                    <div class="max-w-md">
+                        <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-white/70">Welcome Back</p>
+                        <h1 class="text-4xl font-bold leading-tight text-white">
+                            Sign in to your
+                            <span class="text-white/80">account.</span>
+                        </h1>
+                        <p class="mt-5 text-base leading-7 text-white/75">
+                            Access your {{ appConfig.title() }} dashboard and manage
+                            your account securely from one place.
+                        </p>
+                    </div>
+                </div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-3 text-sm text-white/70">
+                        <div class="h-2 w-2 rounded-full bg-white"></div>
+                        <span>Secure administrator access</span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 sm:p-10 lg:p-12">
+                <div class="mb-8 flex justify-center lg:hidden">
+                    <div
+                        class="flex h-12 w-40 items-center justify-center rounded-xl bg-brand-500 text-white shadow-sm">
+                        <span class="text-xl font-bold">{{ appConfig.title() }}</span>
+                    </div>
+                </div>
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">Welcome back
+                    </h2>
+                    <p class="mt-2 text-sm leading-6 text-gray-500 dark:text-gray-400">Sign in to continue to {{
+                        appConfig.title() }}.</p>
+                </div>
+                <form class="space-y-5" [formGroup]="loginForm" (ngSubmit)="onFormSubmit()">
+                    <div>
+                        <app-label [isRequired]="true">Username</app-label>
+                        <div class="mt-2">
+                            <app-input-field type="text" placeholder="Enter email or phone number"
+                                formControlName="username" [required]="true" />
+                        </div>
+                        @if (getControl('username')?.touched && getControl('username')?.invalid) {
+                        <div class="mt-1.5 text-sm text-error-500">
+                            @if (getControl('username')?.errors?.['required']) {
+                            Please enter your email or phone number.
+                            } @else if (getControl('username')?.errors?.['doubleSpaces']) {
+                            No double spaces are allowed.
+                            }
+                        </div>
+                        }
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <app-label [isRequired]="true">Password</app-label>
+                        </div>
+                        <div class="relative mt-2">
+                            <app-input-field [type]="showPassword ? 'text' : 'password'"
+                                placeholder="Enter your password" formControlName="password" [required]="true" />
+                            <button type="button" (click)="togglePasswordVisibility()"
+                                [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+                                class="absolute right-3 top-1/2 z-30 -translate-y-1/2 rounded-md p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-200">
+                                @if (showPassword) {
+                                <i class="pi pi-eye text-sm"></i>
+                                } @else {
+                                <i class="pi pi-eye-slash text-sm"></i>
+                                }
+                            </button>
+                        </div>
+                        @if (getControl('password')?.touched && getControl('password')?.invalid) {
+                        <div class="mt-1.5 text-sm text-error-500">
+                            @if (getControl('password')?.errors?.['required']) {
+                            Please enter your password.
+                            } @else if (getControl('password')?.errors?.['minlength']) {
+                            Password must be at least 6 characters.
+                            } @else if (getControl('password')?.errors?.['maxlength']) {
+                            Password must be less than 20 characters.
+                            } @else if (getControl('password')?.errors?.['weakPassword']) {
+                            Password must contain uppercase, lowercase, number and special character.
+                            }
+                        </div>
+                        }
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="button"
+                            class="text-sm font-medium text-brand-500 transition-colors hover:text-brand-600 dark:text-brand-400 dark:hover:text-brand-300">
+                            Forgot password?
+                        </button>
+                    </div>
+
+                    <button type="submit" [disabled]="isLoading"
+                        class="flex w-full items-center justify-center rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-brand-600 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus:ring-offset-gray-900">
+                        @if (isLoading) {
+                        <span class="flex items-center gap-2">
+                            <span
+                                class="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
+                            Signing in...
+                        </span>
+                        } @else {
+                        <span class="flex items-center gap-2">
+                            Sign In
+                            <i class="pi pi-arrow-right text-xs"></i>
+                        </span>
+                        }
+                    </button>
+                </form>
+                <div class="my-8 flex items-center gap-4">
+                    <div class="h-px flex-1 bg-gray-200 dark:bg-gray-800"></div>
+                    <span class="text-xs font-medium uppercase tracking-wider text-gray-400">
+                        New here?
+                    </span>
+                    <div class="h-px flex-1 bg-gray-200 dark:bg-gray-800"></div>
+                </div>
+                <div class="text-center">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        Don't have an account?
+                        <a [routerLink]="['/auth/register']"
+                            class="ml-1 font-semibold text-brand-500 transition-colors hover:text-brand-600 dark:text-brand-400 dark:hover:text-brand-300">
+                            Create an account
+                        </a>
+                    </p>
+                </div>
+                <div class="mt-8 flex items-start gap-3 rounded-xl bg-gray-50 p-4 dark:bg-gray-950">
+                    <div
+                        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-500/10 text-brand-500">
+                        <i class="pi pi-shield text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                            Secure login
+                        </p>
+                        <p class="mt-0.5 text-xs leading-5 text-gray-500 dark:text-gray-500">
+                            Your credentials are securely transmitted and protected.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}

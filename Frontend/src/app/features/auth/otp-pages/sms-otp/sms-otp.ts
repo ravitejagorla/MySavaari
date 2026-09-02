@@ -19,6 +19,9 @@ import { LabelComponent } from '../../../../shared/components/form/label/label.c
 export class SmsOtp extends Destroyer implements OnInit {
   private readonly platformId = inject(PLATFORM_ID);
   private userId: string | null = null;
+  resendCountdown = 60;
+  canResend = false;
+  private resendTimer?: ReturnType<typeof setInterval>;
   isLoading = true;
   mobileOtpForm!: FormGroup;
   constructor(
@@ -46,6 +49,7 @@ export class SmsOtp extends Destroyer implements OnInit {
     }
     this.initForm();
     this.isLoading = false;
+    this.startResendTimer();
   }
 
   initForm(): void {
@@ -87,10 +91,29 @@ export class SmsOtp extends Destroyer implements OnInit {
       });
   }
 
+  private startResendTimer(): void {
+    this.resendCountdown = 60;
+    this.canResend = false;
+
+    this.resendTimer = setInterval(() => {
+      this.resendCountdown--;
+
+      if (this.resendCountdown <= 0) {
+        this.canResend = true;
+
+        if (this.resendTimer) {
+          clearInterval(this.resendTimer);
+          this.resendTimer = undefined;
+        }
+      }
+    }, 1000);
+  }
+
   resendOtp(): void {
-    if (!this.userId) {
+    if (!this.userId || !this.canResend) {
       return;
     }
+
     this.apiService
       .post('accounts/resend_otp/', {
         user_id: this.userId,
@@ -99,9 +122,14 @@ export class SmsOtp extends Destroyer implements OnInit {
       .subscribe({
         next: (response) => {
           this.toast.fromResponse(response);
+
+          if (response.status === 'success') {
+            this.startResendTimer();
+          }
         },
         error: (error) => {
           console.error('OTP resend failed:', error);
+
           this.toast.show(
             'error',
             'Error',

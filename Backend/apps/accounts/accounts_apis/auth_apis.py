@@ -239,7 +239,7 @@ def admin_login(request):
             return Response({'status':'error','subject':'Login','message': 'Account is inactive.'}, status=status.HTTP_200_OK)
         if not check_password(password, user.password):
             return Response({'status':'error','subject':'Login','message': 'Invalid username or password.'}, status=status.HTTP_200_OK)
-        if not user.is_email_verified and not user.is_phone_verified:
+        if not user.is_email_verified or not user.is_phone_verified:
             return Response({'status':'error','subject':'Login','message': 'Email or phone verification is required.'}, status=status.HTTP_200_OK)
 
         token = generate_login_jwt(encrypt(str(user.id)))

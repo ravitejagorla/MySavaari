@@ -6,6 +6,7 @@ PROJECT_NAME = config("PROJECT_NAME", default="MySavaari")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
+ALGORITHM = config('ALGORITHM')
 DEBUG = config('PROJECT_PHASE', default='development') == 'development'
 ALLOWED_HOSTS = [host.strip() for host in config('HOST_DOMAIN', default='').split(',') if host]
 

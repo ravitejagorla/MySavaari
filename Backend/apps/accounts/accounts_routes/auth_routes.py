@@ -5,4 +5,5 @@ urlpatterns = [
     path('register/', auth_apis.admin_register, name='register'),
     path('otp_verification/', auth_apis.otp_verification, name='otp_verification'),
     path('resend_otp/', auth_apis.resend_otp, name='resend_otp'),
+    path('login/', auth_apis.admin_login, name='login'),
 ]

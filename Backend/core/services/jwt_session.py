@@ -1,32 +1,27 @@
 import jwt
 from datetime import datetime, timedelta, timezone
 from django.conf import settings
-
 SECRET_KEY = settings.SECRET_KEY
-ALGORITHM = "HS256"
+ALGORITHM = settings.ALGORITHM
 
-def generate_login_jwt(user_id, role, exp_days=14, branch_id=None, branch_uuid=None, employee_id=None):
+def generate_login_jwt(user_id, role="ADMIN", exp_days=14, branch_id=None, employee_id=None):
     payload = {
         "user_id": str(user_id),
         "role": role,
-        "branch_id": str(branch_id),
-        "branch_uuid": str(branch_uuid),
-        "employee_id": str(employee_id),
-        "exp": datetime.now(timezone.utc) + timedelta(days=exp_days)
+        "branch_id": str(branch_id) if branch_id is not None else None,
+        "employee_id": str(employee_id) if employee_id is not None else None,
+        "exp": datetime.now(timezone.utc) + timedelta(days=exp_days),
     }
     token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     return token
 
-
-def generate_otp_jwt(user_id,exp_days=7):
+def generate_otp_jwt(user_id, exp_days=7):
     payload = {
-        'user_id': str(user_id),
-        "exp":datetime.now(timezone.utc) + timedelta(days=exp_days)
+        "user_id": str(user_id),
+        "exp": datetime.now(timezone.utc) + timedelta(days=exp_days),
     }
     token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     return token
-
-
 
 def decode_jwt(token):
     try:
@@ -36,4 +31,3 @@ def decode_jwt(token):
         return None
     except jwt.InvalidTokenError:
         return None
-        

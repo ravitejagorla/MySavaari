@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { Destroyer } from '../../../../reusable/destroyer/destroyer';
@@ -13,7 +13,7 @@ import { InputFieldComponent } from '../../../../shared/components/form/input/in
 
 @Component({
   selector: 'ras-email-otp',
-  imports: [ ButtonModule, LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink],
+  imports: [ButtonModule, LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink],
   templateUrl: './email-otp.html',
   styleUrl: './email-otp.css',
 })
@@ -21,6 +21,9 @@ export class EmailOtp extends Destroyer implements OnInit {
   private readonly platformId = inject(PLATFORM_ID);
   private userId: string | null = null;
   isLoading = true;
+  resendCountdown = 60;
+  canResend = false;
+  private resendTimer?: ReturnType<typeof setInterval>;
   emailOtpForm!: FormGroup;
   constructor(
     protected readonly appConfig: AppConfigService,
@@ -47,6 +50,7 @@ export class EmailOtp extends Destroyer implements OnInit {
     }
     this.initForm();
     this.isLoading = false;
+    this.startResendTimer();
   }
 
   initForm(): void {
@@ -91,10 +95,29 @@ export class EmailOtp extends Destroyer implements OnInit {
       });
   }
 
+  private startResendTimer(): void {
+    this.resendCountdown = 60;
+    this.canResend = false;
+
+    this.resendTimer = setInterval(() => {
+      this.resendCountdown--;
+
+      if (this.resendCountdown <= 0) {
+        this.canResend = true;
+
+        if (this.resendTimer) {
+          clearInterval(this.resendTimer);
+          this.resendTimer = undefined;
+        }
+      }
+    }, 1000);
+  }
+
   resendOtp(): void {
-    if (!this.userId) {
+    if (!this.userId || !this.canResend) {
       return;
     }
+
     this.apiService
       .post('accounts/resend_otp/', {
         user_id: this.userId,
@@ -103,9 +126,14 @@ export class EmailOtp extends Destroyer implements OnInit {
       .subscribe({
         next: (response) => {
           this.toast.fromResponse(response);
+
+          if (response.status === 'success') {
+            this.startResendTimer();
+          }
         },
         error: (error) => {
           console.error('OTP resend failed:', error);
+
           this.toast.show(
             'error',
             'Error',
