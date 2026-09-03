@@ -6,16 +6,32 @@
 
 <p-toast></p-toast>
 
-<p-toast
+<!-- <p-toast
   key="alertToast"
   position="bottom-right">
 
   <ng-template let-message pTemplate="message">
 
-    <div class="custom-alert-toast">
+    <div
+      class="custom-alert-toast"
+      [ngClass]="{
+        'toast-success': message.severity === 'success',
+        'toast-info': message.severity === 'info',
+        'toast-warn': message.severity === 'warn',
+        'toast-error': message.severity === 'error'
+      }">
 
       <div class="header-section">
-        <i class="pi pi-bell"></i>
+        <i
+          class="pi"
+          [ngClass]="{
+            'pi-check-circle': message.severity === 'success',
+            'pi-info-circle': message.severity === 'info',
+            'pi-exclamation-triangle': message.severity === 'warn',
+            'pi-times-circle': message.severity === 'error'
+          }">
+        </i>
+
         <span>{{ message.summary }}</span>
       </div>
 
@@ -27,6 +43,6 @@
 
   </ng-template>
 
-</p-toast>
+</p-toast> -->
 
 <router-outlet></router-outlet>

@@ -21,7 +21,8 @@ export class Header {
 
   protected readonly sidebarService = inject(SidebarService);
   constructor(
-    protected readonly appConfig: AppConfigService
+    protected readonly appConfig: AppConfigService,
+    
   ) {}
 
   isUserMenuOpen = false;

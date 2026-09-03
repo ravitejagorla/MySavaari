@@ -1,0 +1,70 @@
+.custom-alert-toast {
+    width: 360px;
+    border-radius: 8px;
+    padding: 14px 16px;
+    border: 1px solid;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.header-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+}
+
+.header-section i {
+    font-size: 1.2rem;
+}
+
+.body-content {
+    margin-top: 8px;
+}
+
+.body-content p {
+    margin: 0;
+}
+
+/* Success */
+.toast-success {
+    background: #ecfdf3;
+    color: #027a48;
+    border-color: #abefc6;
+}
+
+.toast-success .header-section i {
+    color: #12b76a;
+}
+
+/* Info */
+.toast-info {
+    background: #eff8ff;
+    color: #175cd3;
+    border-color: #b2ddff;
+}
+
+.toast-info .header-section i {
+    color: #2e90fa;
+}
+
+/* Warning */
+.toast-warn {
+    background: #fffaeb;
+    color: #b54708;
+    border-color: #fedf89;
+}
+
+.toast-warn .header-section i {
+    color: #f79009;
+}
+
+/* Error */
+.toast-error {
+    background: #fef3f2;
+    color: #b42318;
+    border-color: #fecdca;
+}
+
+.toast-error .header-section i {
+    color: #f04438;
+}
