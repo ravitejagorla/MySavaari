@@ -5,6 +5,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { AppConfigService } from '../../../core/services/app-config.service';
 import { MyComponent } from "../../../shared/components/common/Full-Screen/full-screen";
 import { SidebarService } from '../../../shared/services/sidebar.service';
+import { GlobalToastService } from '../../../core/services/global-toast.service';
 
 @Component({
   selector: 'ras-header',
@@ -22,6 +23,7 @@ export class Header {
   protected readonly sidebarService = inject(SidebarService);
   constructor(
     protected readonly appConfig: AppConfigService,
+    private toast: GlobalToastService,
     
   ) {}
 
@@ -42,5 +44,7 @@ export class Header {
   logout(): void {
     this.closeUserMenu();
     this.authService.logout();
+
+    this.toast.show('success', 'Logout', 'Logged out successfully');
   }
 }

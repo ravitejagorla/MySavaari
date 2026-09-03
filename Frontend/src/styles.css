@@ -175,7 +175,7 @@
 */
 :root {
 
-  --p-green-500: #22c55e;
+  /* --p-green-500: #22c55e;
 --p-green-600: #16a34a;
 
 --p-yellow-500: #eab308;
@@ -185,7 +185,7 @@
 --p-red-600: #dc2626;
 
 --p-blue-500: #3b82f6;
---p-blue-600: #2563eb;
+--p-blue-600: #2563eb; */
   /* PrimeNG Primary Color Palette */
   --p-primary-50: var(--color-brand-50);
   --p-primary-100: var(--color-brand-100);

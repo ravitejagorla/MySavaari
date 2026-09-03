@@ -43,5 +43,71 @@ export const customPreset = definePreset(Aura, {
         }
       }
     }
+  },
+
+  components: {
+    toast: {
+      colorScheme: {
+        light: {
+          success: {
+            background: '#ecfdf3',
+            borderColor: '#abefc6',
+            color: '#027a48',
+            detailColor: '#027a48'
+          },
+
+          info: {
+            background: '#eff8ff',
+            borderColor: '#b2ddff',
+            color: '#175cd3',
+            detailColor: '#175cd3'
+          },
+
+          warn: {
+            background: '#fffaeb',
+            borderColor: '#fedf89',
+            color: '#b54708',
+            detailColor: '#b54708'
+          },
+
+          error: {
+            background: '#fef3f2',
+            borderColor: '#fecdca',
+            color: '#b42318',
+            detailColor: '#b42318'
+          }
+        },
+
+        dark: {
+          success: {
+            background: '#052e16',
+            borderColor: '#166534',
+            color: '#86efac',
+            detailColor: '#bbf7d0'
+          },
+
+          info: {
+            background: '#172554',
+            borderColor: '#1d4ed8',
+            color: '#93c5fd',
+            detailColor: '#bfdbfe'
+          },
+
+          warn: {
+            background: '#451a03',
+            borderColor: '#92400e',
+            color: '#fcd34d',
+            detailColor: '#fde68a'
+          },
+
+          error: {
+            background: '#450a0a',
+            borderColor: '#991b1b',
+            color: '#fca5a5',
+            detailColor: '#fecaca'
+          }
+        }
+      }
+    }
   }
 });
