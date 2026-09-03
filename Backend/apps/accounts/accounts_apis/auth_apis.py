@@ -11,8 +11,7 @@ from core.utilities.encryption import encrypt, decrypt
 from core.services.sms_services import send_otp_sms
 from core.services.email_services import send_otp_email
 from core.services.generate_global_sequence import generate_sequence_id
-from core.services.jwt_session import generate_login_jwt, generate_otp_jwt, decode_jwt
-from core.services.jwt_session import CJWTUser, CustomJWTAuthentication
+from core.services.jwt_session import generate_login_jwt, generate_otp_jwt, decode_jwt, CJWTUser, CustomJWTAuthentication
 from apps.accounts.models import (
     User,
     UserAdmin,
@@ -247,30 +246,29 @@ def admin_login(request):
     except Exception as e:
         print("Error", str(e))
         return Response({'status':'error','subject':'Login','message': 'Login failed.'}, status=status.HTTP_200_OK)
-
+        
 @api_view(['POST'])
+@authentication_classes([CustomJWTAuthentication])
 @permission_classes([IsAuthenticated])
 @transaction.atomic
 def lock_screen(request):
     try:
-        user = request.user
-        print("================================================================================")
-        print("data", user)
-        print("================================================================================")
-        user_id = decrypt(user.get("user_id", "").strip())
-        if not all([user_id]):
-            return Response({'status':'error','subject':'Lock Screen','message': 'User not found.'}, status=status.HTTP_200_OK)
+        user_info = request.user_info
+        encrypted_user_id = user_info.get('user_id')
+        if not encrypted_user_id:
+            return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'User not found.'}, status=status.HTTP_200_OK)
+        user_id = decrypt(encrypted_user_id)
         user = User.objects.get(id=user_id)
         if not user.is_active:
-            return Response({'status':'error','subject':'Lock Screen','message': 'Account is inactive.'}, status=status.HTTP_200_OK)
+            return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'Account is inactive.'}, status=status.HTTP_200_OK)
         user.is_locked = True
-        user.save()
-        return Response({'status':'success','subject':'Lock Screen','message': 'Lock screen successful.'}, status=status.HTTP_200_OK)
-
+        user.save(update_fields=['is_locked'])
+        return Response({'status': 'success', 'subject': 'Lock Screen', 'message': 'Lock screen successful.'}, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'User not found.'}, status=status.HTTP_200_OK)
     except Exception as e:
-        print("Error", str(e))
-        return Response({'status':'error','subject':'Lock Screen','message': 'Lock screen failed.'}, status=status.HTTP_200_OK)
-
+        print('Error:', str(e))
+        return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'Lock screen failed.'}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @authentication_classes([CustomJWTAuthentication])
@@ -278,21 +276,24 @@ def lock_screen(request):
 @transaction.atomic
 def unlock_screen(request):
     try:
-        data = request.data
-        user = request.user
-        print("================================================================================")
-        print("data", data)
-        print("================================================================================")
-        user_id = decrypt(user.get("user_id", "").strip())
-        entered_pin = data.get("pin", "").strip()
-        if not all([user_id, entered_pin]):
-            return Response({'status':'error','subject':'Lock Screen','message': 'All fields are required.'}, status=status.HTTP_200_OK)
+        user_info = request.user_info
+        encrypted_user_id = user_info.get('user_id')
+        entered_pin = str(request.data.get('pin', '')).strip()
+        if not encrypted_user_id or not entered_pin:
+            return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'PIN is required.'}, status=status.HTTP_200_OK)
+        user_id = decrypt(encrypted_user_id)
         user = User.objects.get(id=user_id)
         if not user.is_active:
-            return Response({'status':'error','subject':'Lock Screen','message': 'Account is inactive.'}, status=status.HTTP_200_OK)
-        if check_password(entered_pin, user.passcode):
-            user.is_locked = False
-            user.save()
+            return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'Account is inactive.'}, status=status.HTTP_200_OK)
+        if not user.passcode:
+            return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'Passcode is not configured.'}, status=status.HTTP_200_OK)
+        if not check_password(entered_pin, user.passcode):
+            return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'Invalid PIN.'}, status=status.HTTP_200_OK)
+        user.is_locked = False
+        user.save(update_fields=['is_locked'])
+        return Response({'status': 'success', 'subject': 'Lock Screen', 'message': 'Unlocked successfully.'}, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'User not found.'}, status=status.HTTP_200_OK)
     except Exception as e:
-        print("Error", str(e))
-        return Response({'status':'error','subject':'Lock Screen','message': 'Lock screen pin verification failed.'}, status=status.HTTP_200_OK)
+        print('Error:', str(e))
+        return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'PIN verification failed.'}, status=status.HTTP_200_OK)
