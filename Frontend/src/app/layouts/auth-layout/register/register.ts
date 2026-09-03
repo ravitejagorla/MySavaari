@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomValidators } from '../../../shared/validators/custom-validators';
 import { Destroyer } from '../../../reusable/destroyer/destroyer';
@@ -9,11 +9,11 @@ import { ButtonModule } from "primeng/button";
 import { AppConfigService } from '../../../core/services/app-config.service';
 import { ApiService } from '../../../core/services/api.service';
 import { GlobalToastService } from '../../../core/services/global-toast.service';
-import { ThemeToggleButtonComponent } from "../../../shared/components/common/theme-toggle/theme-toggle-button.component";
+import { ThemeToggle } from "../../../shared/components/common/theme-toggle/theme-toggle";
 
 @Component({
   standalone: true,
-  imports: [LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink, ButtonModule, ThemeToggleButtonComponent],
+  imports: [LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink, ButtonModule, ThemeToggle],
   selector: 'app-register',
   styleUrl: './register.css',
   templateUrl: './register.html',
@@ -23,13 +23,13 @@ export class Register extends Destroyer implements OnInit {
   showConfirmPassword = false;
   isLoading: boolean = true;
 
-  constructor(
-    protected readonly appConfig: AppConfigService,
-    private fb: FormBuilder,
-    private apiService: ApiService,
-    private router: Router,
-    private toast: GlobalToastService,
-  ) { super(); }
+  protected readonly appConfig = inject(AppConfigService);
+  private fb = inject(FormBuilder);
+  private apiService = inject(ApiService);
+  private router = inject(Router);
+  private toast = inject(GlobalToastService);
+
+  constructor() { super(); }
 
   adminRegisterForm!: FormGroup;
 

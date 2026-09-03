@@ -7,6 +7,7 @@ class User(models.Model):
         ('CUSTOMER', 'Customer'),
     )
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    profile_picture = models.ImageField(upload_to='profile_pictures', blank=True, null=True)
     first_name = models.CharField(max_length=50, blank=True, null=True)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
@@ -17,6 +18,7 @@ class User(models.Model):
     is_phone_verified = models.BooleanField(default=False)
     password = models.CharField(max_length=255, blank=True, null=True)
     passcode = models.CharField(max_length=255, blank=True, null=True)
+    is_locked = models.BooleanField(default=False)
     terms_and_conditions = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)

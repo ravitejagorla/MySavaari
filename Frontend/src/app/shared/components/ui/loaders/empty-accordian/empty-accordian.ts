@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-    selector: 'accordion-no-data',
+    selector: 'empty-accordian',
     template: `
     <div class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 mb-4">
         <img src="icons/no-data.png" alt="No Data" class="w-20 h-20 mb-3 opacity-70">
@@ -10,8 +10,7 @@ import { Component, Input } from '@angular/core';
     </div>
     `
 })
-export class AccordianNoDataComponent {
+export class EmptyAccordian {
     @Input() title: string = 'No Data Found';
     @Input() message: string = 'Please add a new entry.';
-    constructor() { }
 }

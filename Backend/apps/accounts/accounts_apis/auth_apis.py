@@ -12,6 +12,7 @@ from core.services.sms_services import send_otp_sms
 from core.services.email_services import send_otp_email
 from core.services.generate_global_sequence import generate_sequence_id
 from core.services.jwt_session import generate_login_jwt, generate_otp_jwt, decode_jwt
+from core.services.jwt_session import CJWTUser, CustomJWTAuthentication
 from apps.accounts.models import (
     User,
     UserAdmin,
@@ -241,8 +242,57 @@ def admin_login(request):
             return Response({'status':'error','subject':'Login','message': 'Invalid username or password.'}, status=status.HTTP_200_OK)
         if not user.is_email_verified or not user.is_phone_verified:
             return Response({'status':'error','subject':'Login','message': 'Email or phone verification is required.'}, status=status.HTTP_200_OK)
-        token = generate_login_jwt(encrypt(str(user.id)))
+        token = generate_login_jwt(encrypt(str(user.id)), "ADMIN")
         return Response({ "status": "success", "subject": "Login", "message": "Login successful.", "data": {"token": token}})
     except Exception as e:
         print("Error", str(e))
         return Response({'status':'error','subject':'Login','message': 'Login failed.'}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@transaction.atomic
+def lock_screen(request):
+    try:
+        user = request.user
+        print("================================================================================")
+        print("data", user)
+        print("================================================================================")
+        user_id = decrypt(user.get("user_id", "").strip())
+        if not all([user_id]):
+            return Response({'status':'error','subject':'Lock Screen','message': 'User not found.'}, status=status.HTTP_200_OK)
+        user = User.objects.get(id=user_id)
+        if not user.is_active:
+            return Response({'status':'error','subject':'Lock Screen','message': 'Account is inactive.'}, status=status.HTTP_200_OK)
+        user.is_locked = True
+        user.save()
+        return Response({'status':'success','subject':'Lock Screen','message': 'Lock screen successful.'}, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        print("Error", str(e))
+        return Response({'status':'error','subject':'Lock Screen','message': 'Lock screen failed.'}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@authentication_classes([CustomJWTAuthentication])
+@permission_classes([IsAuthenticated])
+@transaction.atomic
+def unlock_screen(request):
+    try:
+        data = request.data
+        user = request.user
+        print("================================================================================")
+        print("data", data)
+        print("================================================================================")
+        user_id = decrypt(user.get("user_id", "").strip())
+        entered_pin = data.get("pin", "").strip()
+        if not all([user_id, entered_pin]):
+            return Response({'status':'error','subject':'Lock Screen','message': 'All fields are required.'}, status=status.HTTP_200_OK)
+        user = User.objects.get(id=user_id)
+        if not user.is_active:
+            return Response({'status':'error','subject':'Lock Screen','message': 'Account is inactive.'}, status=status.HTTP_200_OK)
+        if check_password(entered_pin, user.passcode):
+            user.is_locked = False
+            user.save()
+    except Exception as e:
+        print("Error", str(e))
+        return Response({'status':'error','subject':'Lock Screen','message': 'Lock screen pin verification failed.'}, status=status.HTTP_200_OK)

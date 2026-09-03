@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { ThemeToggleButtonComponent } from '../../../shared/components/common/theme-toggle/theme-toggle-button.component';
+import { ThemeToggle } from '../../../shared/components/common/theme-toggle/theme-toggle';
 import { AuthService } from '../../../core/services/auth.service';
 import { AppConfigService } from '../../../core/services/app-config.service';
 import { MyComponent } from "../../../shared/components/common/Full-Screen/full-screen";
@@ -10,7 +10,7 @@ import { GlobalToastService } from '../../../core/services/global-toast.service'
 @Component({
   selector: 'ras-header',
   standalone: true,
-  imports: [ThemeToggleButtonComponent, MyComponent],
+  imports: [ThemeToggle, MyComponent],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })

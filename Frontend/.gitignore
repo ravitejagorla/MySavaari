@@ -42,3 +42,7 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Frontend
+Frontend/src/environments/environment.*
+!Frontend/src/environments/environment.example.ts

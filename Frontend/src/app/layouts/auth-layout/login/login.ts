@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Destroyer } from '../../../reusable/destroyer/destroyer';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiService } from '../../../core/services/api.service';
@@ -9,11 +9,11 @@ import { CustomValidators } from '../../../shared/validators/custom-validators';
 import { ButtonModule } from 'primeng/button';
 import { InputFieldComponent } from '../../../shared/components/form/input/input-field.component';
 import { LabelComponent } from '../../../shared/components/form/label/label.component';
-import { ThemeToggleButtonComponent } from "../../../shared/components/common/theme-toggle/theme-toggle-button.component";
+import { ThemeToggle } from "../../../shared/components/common/theme-toggle/theme-toggle";
 import { finalize } from 'rxjs';
 @Component({
   standalone: true,
-  imports: [LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink, ButtonModule, ThemeToggleButtonComponent],
+  imports: [LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink, ButtonModule, ThemeToggle],
   selector: 'app-login',
   styleUrl: './login.css',
   templateUrl: './login.html',
@@ -24,13 +24,13 @@ export class Login extends Destroyer implements OnInit {
   isPageLoading: boolean = true;
   loginForm!: FormGroup;
 
-  constructor(
-    protected readonly appConfig: AppConfigService,
-    private fb: FormBuilder,
-    private apiService: ApiService,
-    private router: Router,
-    private toast: GlobalToastService,
-  ) { super(); }
+  protected readonly appConfig = inject(AppConfigService);
+  private fb = inject(FormBuilder);
+  private apiService = inject(ApiService);
+  private router = inject(Router);
+  private toast = inject(GlobalToastService);
+
+  constructor() { super(); }
 
   ngOnInit(): void {
     this.initForm();

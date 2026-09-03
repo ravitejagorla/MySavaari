@@ -17,9 +17,6 @@ import { Component } from '@angular/core';
         </table>
       </div>
       </div>
-
   `,
 })
-export class BasicTable {
-
-}
+export class BasicTable { }

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'tr[rasTableNoData]',
+  selector: 'tr[emptyTable]',
   template: `
     <td [attr.colspan]="colspanNumber" class="px-2 py-10 text-center">
       <div class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
@@ -14,7 +14,7 @@ import { Component, Input } from '@angular/core';
   host: { 'role': 'row' }, 
   standalone: true,
 })
-export class TableNoDataComponent {
+export class EmptyTable {
   @Input() colspanNumber: number = 1;
   @Input() title: string = 'No Data Found';
   @Input() message: string = 'Please add a new entry.';

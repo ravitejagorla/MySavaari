@@ -4,7 +4,7 @@ from django.conf import settings
 SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = settings.ALGORITHM
 
-def generate_login_jwt(user_id, role="ADMIN", exp_days=14, branch_id=None, employee_id=None):
+def generate_login_jwt(user_id, role, exp_days=14, branch_id=None, employee_id=None):
     payload = {
         "user_id": str(user_id),
         "role": role,

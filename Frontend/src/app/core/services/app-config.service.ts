@@ -1,8 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AppConfigService {
   readonly title = signal('MySavaari');
   setTitle(title: string): void {
