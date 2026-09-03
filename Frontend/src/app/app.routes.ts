@@ -14,5 +14,5 @@ export const routes: Routes = [
             { path: '', loadChildren: () => import('./layouts/app-layout/app-layout.routes').then(m => m.APP_LAYOUT_ROUTES) }
         ]
     },
-    { path: '**', redirectTo: 'auth/login' },
+    { path: '**', redirectTo: '' },
 ];
