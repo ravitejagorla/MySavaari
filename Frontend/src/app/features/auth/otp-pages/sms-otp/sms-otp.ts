@@ -9,9 +9,10 @@ import { Destroyer } from '../../../../reusable/destroyer/destroyer';
 import { ButtonModule } from 'primeng/button';
 import { InputFieldComponent } from '../../../../shared/components/form/input/input-field.component';
 import { LabelComponent } from '../../../../shared/components/form/label/label.component';
+import { PageLoader } from "../../../../shared/components/ui/loaders/page-loaders/page-loader";
 
 @Component({
-  imports: [ButtonModule, LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink],
+  imports: [ButtonModule, LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink, PageLoader],
   selector: 'ras-sms-otp',
   styleUrl: './sms-otp.css',
   templateUrl: './sms-otp.html',

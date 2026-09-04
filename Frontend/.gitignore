@@ -43,6 +43,14 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
-# Frontend
-Frontend/src/environments/environment.*
-!Frontend/src/environments/environment.example.ts
+# Angular
+/.angular/
+/dist/
+/coverage/
+
+# Node
+/node_modules/
+
+# Environment files
+/src/environments/environment.*
+!/src/environments/environment.example.ts

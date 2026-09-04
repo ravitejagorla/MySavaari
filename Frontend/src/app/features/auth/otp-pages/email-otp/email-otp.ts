@@ -10,10 +10,11 @@ import { GlobalToastService } from '../../../../core/services/global-toast.servi
 import { AppConfigService } from '../../../../core/services/app-config.service';
 import { LabelComponent } from '../../../../shared/components/form/label/label.component';
 import { InputFieldComponent } from '../../../../shared/components/form/input/input-field.component';
+import { PageLoader } from "../../../../shared/components/ui/loaders/page-loaders/page-loader";
 
 @Component({
   selector: 'ras-email-otp',
-  imports: [ButtonModule, LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink],
+  imports: [ButtonModule, LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink, PageLoader],
   templateUrl: './email-otp.html',
   styleUrl: './email-otp.css',
 })

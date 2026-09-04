@@ -10,10 +10,11 @@ import { AppConfigService } from '../../../core/services/app-config.service';
 import { ApiService } from '../../../core/services/api.service';
 import { GlobalToastService } from '../../../core/services/global-toast.service';
 import { ThemeToggle } from "../../../shared/components/common/theme-toggle/theme-toggle";
+import { PageLoader } from "../../../shared/components/ui/loaders/page-loaders/page-loader";
 
 @Component({
   standalone: true,
-  imports: [LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink, ButtonModule, ThemeToggle],
+  imports: [LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink, ButtonModule, ThemeToggle, PageLoader],
   selector: 'app-register',
   styleUrl: './register.css',
   templateUrl: './register.html',
