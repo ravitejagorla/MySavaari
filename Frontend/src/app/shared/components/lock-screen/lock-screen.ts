@@ -42,7 +42,6 @@ export class LockScreen {
           this.errorMessage =
             response?.message || 'Unable to unlock the application.';
         }
-
         this.isLoading = false;
       },
       error: () => {
