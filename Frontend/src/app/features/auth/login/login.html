@@ -9,10 +9,10 @@
         </p>
     </div>
 </div> -->
-<page-loader/>
+<page-loader />
 } @else {
 <div class="relative min-h-screen bg-gray-50 px-4 py-10 dark:bg-gray-950 sm:px-6 lg:px-8">
-     <div class="absolute right-4 top-4 z-50 sm:right-6 sm:top-6">
+    <div class="absolute right-4 top-4 z-50 sm:right-6 sm:top-6">
         <theme-toggle />
     </div>
     <div class="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-6xl items-center justify-center">
@@ -117,12 +117,11 @@
                         </button>
                     </div>
 
-                    <!-- <button type="submit" [disabled]="isSubmitting" id="login-button"
+                    <button type="submit" [disabled]="isSubmitting"
                         class="flex w-full items-center justify-center rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-brand-600 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus:ring-offset-gray-900">
                         @if (isSubmitting) {
                         <span class="flex items-center gap-2">
-                            <span
-                                class="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
+                            <span class="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
                             Signing in...
                         </span>
                         } @else {
@@ -131,13 +130,6 @@
                             <i class="pi pi-arrow-right text-xs"></i>
                         </span>
                         }
-                    </button> -->
-                    <button type="submit" 
-                        class="flex w-full items-center justify-center rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-brand-600 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus:ring-offset-gray-900">
-                        <span class="flex items-center gap-2">
-                            Sign In
-                            <i class="pi pi-arrow-right text-xs"></i>
-                        </span>
                     </button>
                 </form>
                 <div class="my-8 flex items-center gap-4">

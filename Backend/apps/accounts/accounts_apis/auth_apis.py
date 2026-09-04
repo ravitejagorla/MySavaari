@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth.hashers import make_password, check_password
 from django.db.models import Q
 from django.db import transaction
@@ -11,7 +11,7 @@ from core.utilities.encryption import encrypt, decrypt
 from core.services.sms_services import send_otp_sms
 from core.services.email_services import send_otp_email
 from core.services.generate_global_sequence import generate_sequence_id
-from core.services.jwt_session import generate_login_jwt, generate_otp_jwt, decode_jwt, JWTUser, CustomJWTAuthentication
+from core.services.jwt_session import generate_login_jwt
 from apps.accounts.models import (
     User,
     UserAdmin,
@@ -248,8 +248,6 @@ def admin_login(request):
         return Response({'status':'error','subject':'Login','message': 'Login failed.'}, status=status.HTTP_200_OK)
         
 @api_view(['POST'])
-@authentication_classes([CustomJWTAuthentication])
-@permission_classes([IsAuthenticated])
 @transaction.atomic
 def lock_screen(request):
     try:
@@ -273,8 +271,6 @@ def lock_screen(request):
         return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'Lock screen failed.'}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
-@authentication_classes([CustomJWTAuthentication])
-@permission_classes([IsAuthenticated])
 @transaction.atomic
 def unlock_screen(request):
     try:

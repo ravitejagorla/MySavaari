@@ -2,16 +2,18 @@ import { inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CanActivateFn, Router } from '@angular/router';
 import { PLATFORM_ID } from '@angular/core';
+import { AuthService } from '../services/auth.service';
 
 export const guestGuard: CanActivateFn = () => {
   const router = inject(Router);
   const platformId = inject(PLATFORM_ID);
+  const authService = inject(AuthService);
 
   if (!isPlatformBrowser(platformId)) {
     return true;
   }
-  const token = sessionStorage.getItem('access_token');
-  if (token) {
+
+  if (authService.isLoggedIn()) {
     return router.createUrlTree(['/']);
   }
   return true;
