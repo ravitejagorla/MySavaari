@@ -1,6 +1,6 @@
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth.hashers import make_password, check_password
 from django.db.models import Q
@@ -246,8 +246,123 @@ def admin_login(request):
     except Exception as e:
         print("Error", str(e))
         return Response({'status':'error','subject':'Login','message': 'Login failed.'}, status=status.HTTP_200_OK)
-        
+
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@transaction.atomic
+def set_passcode(request):
+    try:
+        user_info = request.user_info
+        encrypted_user_id = user_info.get('user_id')
+        pin = str(request.data.get('pin', '')).strip()
+        if not encrypted_user_id:
+            return Response({'status': 'error', 'subject': 'PIN Setup', 'message': 'User not found.'}, status=status.HTTP_200_OK)
+        user_id = decrypt(encrypted_user_id)
+        user = User.objects.get(id=user_id)
+        if not user.is_active:
+            return Response({'status': 'error', 'subject': 'PIN Setup', 'message': 'Account is inactive.'}, status=status.HTTP_200_OK)
+        if user.passcode:
+            return Response({'status': 'error', 'subject': 'PIN Setup', 'message': 'PIN already set.'}, status=status.HTTP_200_OK)
+        user.passcode = make_password(pin)
+        user.save(update_fields=['passcode'])
+        return Response({'status': 'success', 'subject': 'PIN Setup', 'message': 'PIN setup successful.'}, status=status.HTTP_200_OK)
+    except Exception as e:
+        print('Error:', str(e))
+        return Response({'status': 'error', 'subject': 'PIN Setup', 'message': 'PIN setup failed.'}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@transaction.atomic
+def change_passcode(request):
+    try:
+        user_info = request.user_info
+        encrypted_user_id = user_info.get('user_id')
+        current_pin = str(request.data.get('current_pin', '')).strip()
+        new_pin = str(request.data.get('new_pin', '')).strip()
+        if not encrypted_user_id:
+            return Response({'status': 'error', 'subject': 'PIN', 'message': 'User not found.'}, status=status.HTTP_200_OK)
+        user_id = decrypt(encrypted_user_id)
+        user = User.objects.get(id=user_id)
+        if not user.is_active:
+            return Response({'status': 'error', 'subject': 'PIN', 'message': 'Account is inactive.'}, status=status.HTTP_200_OK)
+        if not user.passcode:
+            return Response({'status': 'error', 'subject': 'PIN', 'message': 'PIN is not configured.'}, status=status.HTTP_200_OK)
+        if not check_password(current_pin, user.passcode):
+            return Response({'status': 'error', 'subject': 'PIN', 'message': 'Current PIN is incorrect.'}, status=status.HTTP_200_OK)
+        user.passcode = make_password(new_pin)
+        user.save(update_fields=['passcode'])
+        return Response({'status': 'success', 'subject': 'PIN', 'message': 'PIN changed successfully.'}, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({'status': 'error', 'subject': 'PIN', 'message': 'User not found.'}, status=status.HTTP_200_OK)
+    except Exception as e:
+        print('Error:', str(e))
+        return Response({'status': 'error', 'subject': 'PIN', 'message': 'PIN change failed.'}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def passcode_status(request):
+    try:
+        user_info = request.user_info
+        encrypted_user_id = user_info.get('user_id')
+        if not encrypted_user_id:
+            return Response({'status': 'error', 'subject': 'PIN', 'message': 'User not found.'}, status=status.HTTP_200_OK)
+        user_id = decrypt(encrypted_user_id)
+        user = User.objects.get(id=user_id)
+        return Response({
+            'status': 'success',
+            'subject': 'PIN',
+            'message': 'PIN status retrieved.',
+            'data': {
+                'has_pin': bool(user.passcode),
+                'is_lockscreen_enabled': user.is_lockscreen_enabled,
+                'is_locked': user.is_locked
+            }
+        }, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({'status': 'error', 'subject': 'PIN', 'message': 'User not found.'}, status=status.HTTP_200_OK)
+    except Exception as e:
+        print('Error:', str(e))
+        return Response({'status': 'error', 'subject': 'PIN', 'message': 'Unable to retrieve PIN status.'}, status=status.HTTP_200_OK)
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+@transaction.atomic
+def lockscreen_settings(request):
+    try:
+        user_info = request.user_info
+        encrypted_user_id = user_info.get('user_id')
+        enabled = request.data.get('enabled')
+        if not encrypted_user_id:
+            return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'User not found.'}, status=status.HTTP_200_OK)
+        if not isinstance(enabled, bool):
+            return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'Invalid lock screen setting.'}, status=status.HTTP_200_OK)
+        user_id = decrypt(encrypted_user_id)
+        user = User.objects.get(id=user_id)
+        if not user.is_active:
+            return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'Account is inactive.'}, status=status.HTTP_200_OK)
+        if enabled and not user.passcode:
+            return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'Please set up a PIN before enabling lock screen.'}, status=status.HTTP_200_OK)
+        user.is_lockscreen_enabled = enabled
+        if not enabled:
+            user.is_locked = False
+        user.save(update_fields=['is_lockscreen_enabled','is_locked'])
+        return Response({
+            'status': 'success',
+            'subject': 'Lock Screen',
+            'message': 'Lock screen enabled.' if enabled else 'Lock screen disabled.',
+            'data': {
+                'is_lockscreen_enabled': user.is_lockscreen_enabled,
+                'is_locked': user.is_locked
+            }
+        }, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'User not found.'}, status=status.HTTP_200_OK)
+    except Exception as e:
+        print('Error:', str(e))
+        return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'Unable to update lock screen setting.'}, status=status.HTTP_200_OK)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 @transaction.atomic
 def lock_screen(request):
     try:
@@ -261,6 +376,11 @@ def lock_screen(request):
             return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'Account is inactive.'}, status=status.HTTP_200_OK)
         if user.is_locked:
             return Response({'status': 'success', 'subject': 'Lock Screen', 'message': 'Application is already locked.'}, status=status.HTTP_200_OK)
+        if not user.passcode:
+            return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'PIN is not configured.'}, status=status.HTTP_200_OK)
+
+        if not user.is_lockscreen_enabled:
+            return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'Lock screen is disabled.'}, status=status.HTTP_200_OK)
         user.is_locked = True
         user.save(update_fields=['is_locked'])
         return Response({'status': 'success', 'subject': 'Lock Screen', 'message': 'Lock screen successful.'}, status=status.HTTP_200_OK)
@@ -271,6 +391,7 @@ def lock_screen(request):
         return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'Lock screen failed.'}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 @transaction.atomic
 def unlock_screen(request):
     try:

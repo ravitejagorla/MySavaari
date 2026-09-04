@@ -18,6 +18,7 @@ class User(models.Model):
     is_phone_verified = models.BooleanField(default=False)
     password = models.CharField(max_length=255, blank=True, null=True)
     passcode = models.CharField(max_length=255, blank=True, null=True)
+    is_lockscreen_enabled = models.BooleanField(default=False)
     is_locked = models.BooleanField(default=False)
     terms_and_conditions = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
