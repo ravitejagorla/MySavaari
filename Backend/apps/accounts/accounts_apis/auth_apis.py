@@ -428,7 +428,7 @@ def get_current_user(request):
             return Response({'status': 'error', 'subject': 'User', 'message': 'User not found.'}, status=status.HTTP_200_OK)
         user_id = decrypt(encrypted_user_id)
         user = User.objects.get(id=user_id)
-        serializer = CurrentUserSerializer(user)
+        serializer = CurrentUserSerializer(user, context = {'request': request})
         return Response({'status': 'success', 'subject': 'User', 'message': 'User details retrieved.', 'data': serializer.data}, status=status.HTTP_200_OK)
     except User.DoesNotExist:
         return Response({ 'status': 'error', 'subject': 'User', 'message': 'User not found.'}, status=status.HTTP_200_OK)

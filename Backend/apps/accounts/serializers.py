@@ -34,3 +34,9 @@ class CurrentUserSerializer(serializers.ModelSerializer):
             "id", "profile_picture", "first_name", "middle_name", "last_name", 
             "role", "email", "phone", "is_email_verified", "is_phone_verified",
         )
+    def get_profile_picture(self, obj):
+        request = self.context.get('request')
+        if obj.profile_picture and request is not None:
+            relative_url = obj.profile_picture.url
+            return request.build_absolute_uri(relative_url)
+        return None

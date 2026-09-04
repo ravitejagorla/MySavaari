@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { LockScreenService } from './core/services/lock-screen.service';
 import { IdleService } from './core/services/idle.service';
 import { LockScreen } from './shared/components/lock-screen/lock-screen';
+import { UserService } from './core/services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -20,10 +21,13 @@ export class App {
   private readonly appConfig = inject(AppConfigService);
   protected readonly lockScreenService = inject(LockScreenService);
   private readonly idleService = inject(IdleService)
+  private readonly userService = inject(UserService);
   constructor(private titleService: Title,) {
+    this.userService.initializeUser().subscribe();
     effect(() => {
       this.titleService.setTitle(this.appConfig.title());
     });
+
     this.startIdleTimer();
   }
   private lockApplication(): void {

@@ -1,12 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators,}  from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { AppConfigService } from '../../../core/services/app-config.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { GlobalToastService } from '../../../core/services/global-toast.service';
-import { UserService } from '../../../core/services/user.service';
 import { CustomValidators } from '../../../shared/validators/custom-validators';
 import { InputFieldComponent } from '../../../shared/components/form/input/input-field.component';
 import { LabelComponent } from '../../../shared/components/form/label/label.component';
@@ -18,7 +17,7 @@ import { PageLoader } from '../../../shared/components/ui/loaders/page-loaders/p
   selector: 'app-login',
   styleUrl: './login.css',
   templateUrl: './login.html',
-  imports: [ LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink, ButtonModule, ThemeToggle, PageLoader,],
+  imports: [LabelComponent, InputFieldComponent, FormsModule, ReactiveFormsModule, RouterLink, ButtonModule, ThemeToggle, PageLoader,],
 })
 export class Login implements OnInit {
   showPassword = false;
@@ -30,7 +29,6 @@ export class Login implements OnInit {
   protected readonly appConfig = inject(AppConfigService);
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
-  private readonly userService = inject(UserService);
   private readonly router = inject(Router);
   private readonly toast = inject(GlobalToastService);
 
@@ -41,8 +39,8 @@ export class Login implements OnInit {
 
   private initForm(): void {
     this.loginForm = this.fb.group({
-      username: ['', [ Validators.required, CustomValidators.noDoubleSpaces(),],],
-      password: ['', [ Validators.required, Validators.minLength(6), Validators.maxLength(20), CustomValidators.strongPassword(),],],
+      username: ['', [Validators.required, CustomValidators.noDoubleSpaces(),],],
+      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20), CustomValidators.strongPassword(),],],
     });
   }
 
@@ -67,30 +65,18 @@ export class Login implements OnInit {
           }
           const token = response.data?.token;
           if (!token) {
-            this.toast.show( 'error', 'Login', 'Login token was not received.');
+            this.toast.show('error', 'Login', 'Login token was not received.');
             return;
           }
           this.authService.setToken(token);
-          this.userService.loadCurrentUser().subscribe({
-            next: (userResponse) => {
-              if (userResponse?.status === 'success') {
-                this.userService.setUser(userResponse.data);
-                this.loginForm.reset();
-                this.toast.fromResponse(response);
-                this.router.navigate(['/']);
-                return;
-              }
-              this.toast.show( 'error', 'Login', 'Unable to load user details.');
-            },
-            error: (error) => {
-              console.error('Failed to load current user:', error);
-              this.toast.show( 'error', 'Login', 'Unable to load user details.');
-            },
-          });
+
+          this.loginForm.reset();
+          this.toast.fromResponse(response);
+          this.router.navigate(['/']);
         },
         error: (error) => {
           console.error('Login failed:', error);
-          this.toast.show( 'error', 'Error', 'Login failed. Please try again.');
+          this.toast.show('error', 'Error', 'Login failed. Please try again.');
         },
       });
   }
