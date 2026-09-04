@@ -11,7 +11,7 @@ from core.utilities.encryption import encrypt, decrypt
 from core.services.sms_services import send_otp_sms
 from core.services.email_services import send_otp_email
 from core.services.generate_global_sequence import generate_sequence_id
-from core.services.jwt_session import generate_login_jwt, generate_otp_jwt, decode_jwt, CJWTUser, CustomJWTAuthentication
+from core.services.jwt_session import generate_login_jwt, generate_otp_jwt, decode_jwt, JWTUser, CustomJWTAuthentication
 from apps.accounts.models import (
     User,
     UserAdmin,
@@ -261,6 +261,8 @@ def lock_screen(request):
         user = User.objects.get(id=user_id)
         if not user.is_active:
             return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'Account is inactive.'}, status=status.HTTP_200_OK)
+        if user.is_locked:
+            return Response({'status': 'success', 'subject': 'Lock Screen', 'message': 'Application is already locked.'}, status=status.HTTP_200_OK)
         user.is_locked = True
         user.save(update_fields=['is_locked'])
         return Response({'status': 'success', 'subject': 'Lock Screen', 'message': 'Lock screen successful.'}, status=status.HTTP_200_OK)

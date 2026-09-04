@@ -1,0 +1,25 @@
+<div class="lock-screen">
+  <div class="lock-card">
+    <div class="lock-icon">
+      <i class="pi pi-lock"></i>
+    </div>
+    <h1>Application Locked</h1>
+    <p class="subtitle">
+      For your security, the application was locked due to inactivity.
+    </p>
+    <form (ngSubmit)="unlock()">
+      <label for="pin">Enter your 6-digit PIN</label>
+      <input id="pin" type="password" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="••••••" [(ngModel)]="pin" name="pin" (input)="onPinInput()" [disabled]="isLoading" autofocus/>
+      @if (errorMessage) {
+        <p class="error-message">{{ errorMessage }}</p>
+      }
+      <button type="submit" [disabled]="isLoading || pin.length !== 6">
+        @if (isLoading) { <i class="pi pi-spin pi-spinner"></i>
+          <span>Unlocking...</span>
+        } @else {
+          <i class="pi pi-lock-open"></i><span>Unlock</span>
+        }
+      </button>
+    </form>
+  </div>
+</div>
