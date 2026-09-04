@@ -1,11 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AsyncPipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
 import { SidebarWidget } from './sidebar-widget';
 import { AppConfigService } from '../../../core/services/app-config.service';
 import { SidebarService } from '../../../shared/services/sidebar.service';
-
 type SubNavItem = {
   name: string;
   icon: string;
@@ -37,7 +36,9 @@ export class Sidebar {
   readonly expandedMenu = signal<string | null>(null);
   isExpanded = true;
   constructor() {
-    this.sidebarService.isExpanded$.subscribe(value => {
+    this.sidebarService.isExpanded$
+    .pipe(takeUntilDestroyed())
+    .subscribe(value => {
       this.isExpanded = value;
       if (value) {
         this.sidebarService.setHovered(false);
