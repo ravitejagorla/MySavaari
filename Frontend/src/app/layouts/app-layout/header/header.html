@@ -34,24 +34,35 @@
                  hover:bg-gray-100
                  dark:hover:bg-gray-800">
           <!-- Avatar -->
-          <div class="flex h-9 w-9 items-center justify-center
-                   rounded-full bg-brand-100
-                   text-sm font-semibold text-brand-600
-                   dark:bg-brand-500/10 dark:text-brand-400">
-            RT
-          </div>
+          @if (user(); as currentUser) {
+            @if (currentUser.profile_picture) {
+              <img
+                [src]="currentUser.profile_picture"
+                [alt]="currentUser.first_name || 'User'"
+                class="h-9 w-9 rounded-full object-cover"
+              />
+            } @else {
+              <div
+                class="flex h-9 w-9 items-center justify-center rounded-full
+                      bg-brand-100 text-sm font-semibold text-brand-600
+                      dark:bg-brand-500/10 dark:text-brand-400"
+              >
+                {{ currentUser.first_name?.charAt(0) }}{{ currentUser.last_name?.charAt(0) }}
+              </div>
+            }
+          }
 
           <!-- User info -->
           <div class="hidden text-left md:block">
-            <p class="text-sm font-medium text-gray-800
-                     dark:text-white">
-              Ravi Teja
-            </p>
+            @if (user(); as currentUser) {
+              <p class="text-sm font-medium text-gray-800 dark:text-white">
+                {{ currentUser.first_name }} {{ currentUser.last_name }}
+              </p>
 
-            <p class="text-xs text-gray-500
-                     dark:text-gray-400">
-              Administrator
-            </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                {{ currentUser.email }}
+              </p>
+            }
           </div>
 
           <i class="pi pi-chevron-down hidden text-xs text-gray-400 md:block"></i>
@@ -70,15 +81,15 @@
           <!-- User header -->
           <div class="border-b border-gray-100 px-4 py-3
                      dark:border-gray-800">
-            <p class="text-sm font-semibold text-gray-900
-                       dark:text-white">
-              Ravi Teja
-            </p>
+            @if (user(); as currentUser) {
+              <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                {{ currentUser.first_name }} {{ currentUser.last_name }}
+              </p>
 
-            <p class="mt-0.5 text-xs text-gray-500
-                       dark:text-gray-400">
-              Administrator
-            </p>
+              <p class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                {{ currentUser.email }}
+              </p>
+            }
           </div>
 
 

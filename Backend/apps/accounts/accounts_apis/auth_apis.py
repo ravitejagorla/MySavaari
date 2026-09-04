@@ -22,7 +22,8 @@ from apps.accounts.serializers import (
     UserSerializer,
     UserAdminSerializer,
     UserCustomerSerializer,
-    OTPSerializer
+    OTPSerializer,
+    CurrentUserSerializer
 )
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -416,3 +417,22 @@ def unlock_screen(request):
     except Exception as e:
         print('Error:', str(e))
         return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'PIN verification failed.'}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_current_user(request):
+    try:
+        user_info = request.user_info
+        encrypted_user_id = user_info.get('user_id')
+        if not encrypted_user_id:
+            return Response({'status': 'error', 'subject': 'User', 'message': 'User not found.'}, status=status.HTTP_200_OK)
+        user_id = decrypt(encrypted_user_id)
+        user = User.objects.get(id=user_id)
+        serializer = CurrentUserSerializer(user)
+        return Response({'status': 'success', 'subject': 'User', 'message': 'User details retrieved.', 'data': serializer.data}, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({ 'status': 'error', 'subject': 'User', 'message': 'User not found.'}, status=status.HTTP_200_OK)
+    except Exception as e:
+        print('Error:', str(e))
+        return Response({'status': 'error', 'subject': 'User', 'message': 'Unable to retrieve user details.'}, status=status.HTTP_200_OK)
+        
