@@ -7,6 +7,7 @@ import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { GlobalToastService } from './core/services/global-toast.service';
 import { customPreset } from './custom.preset';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,7 +21,8 @@ export const appConfig: ApplicationConfig = {
           darkModeSelector: '.dark',
           prefix: 'p'
         }
-      }
+      },
+      license: environment.primeUiLicense,
     }),
     MessageService,
     GlobalToastService,

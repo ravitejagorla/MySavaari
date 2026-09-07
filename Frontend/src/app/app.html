@@ -1,29 +1,16 @@
-<p-progressbar
-  *ngIf="loading"
-  mode="indeterminate"
-  styleClass="top-progress-bar">
-</p-progressbar>
-
+<p-progressbar *ngIf="loading" mode="indeterminate" styleClass="top-progress-bar"></p-progressbar>
 <p-toast></p-toast>
-
-<p-toast
-  key="alertToast"
-  position="bottom-right">
-
+<p-toast key="alertToast" position="bottom-right">
   <ng-template let-message pTemplate="message">
-
-    <div
-      class="custom-alert-toast"
+    <div class="custom-alert-toast"
       [ngClass]="{
         'toast-success': message.severity === 'success',
         'toast-info': message.severity === 'info',
         'toast-warn': message.severity === 'warn',
         'toast-error': message.severity === 'error'
       }">
-
       <div class="header-section">
-        <i
-          class="pi"
+        <i class="pi"
           [ngClass]="{
             'pi-check-circle': message.severity === 'success',
             'pi-info-circle': message.severity === 'info',
@@ -31,20 +18,14 @@
             'pi-times-circle': message.severity === 'error'
           }">
         </i>
-
         <span>{{ message.summary }}</span>
       </div>
-
       <div class="body-content">
         <p>{{ message.detail }}</p>
       </div>
-
     </div>
-
   </ng-template>
-
 </p-toast>
-
 <router-outlet></router-outlet>
 @if (lockScreenService.isLocked()) {
   <lock-screen></lock-screen>
