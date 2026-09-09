@@ -34,7 +34,7 @@ export class App {
     this.idleService.stop();
     this.lockScreenService.lock().subscribe({
       next: (response) => {
-        console.log('Lock response:', response);
+
       },
       error: (error) => {
         console.error('Lock failed:', error);

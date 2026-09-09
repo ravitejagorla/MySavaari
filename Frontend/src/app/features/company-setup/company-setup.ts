@@ -114,9 +114,9 @@ export class CompanySetup implements OnInit {
         country: [{ value: '', disabled: true, },],
         address: ['', [Validators.required, Validators.maxLength(250),],],
         company_description: [null, [Validators.maxLength(1000)],],
-        company_icon: [null, [Validators.required, CustomValidators.maxImageSize(1 * 1024 * 1024), CustomValidators.imageDimensions(30, 30, 400, 400),],],
-        company_logo: [null, [Validators.required, CustomValidators.maxImageSize(1 * 1024 * 1024), CustomValidators.imageDimensions(30, 30, 400, 400),],],
-        company_cover: [null, [CustomValidators.maxImageSize(1 * 1024 * 1024), CustomValidators.imageDimensions(600, 200, 3200, 800),],],
+        company_icon: [null, [Validators.required, CustomValidators.maxImageSize(1 * 1024 * 1024)], [CustomValidators.imageDimensions(30, 30, 400, 400)]],
+        company_logo: [null, [Validators.required, CustomValidators.maxImageSize(1 * 1024 * 1024)], [CustomValidators.imageDimensions(30, 30, 400, 400)]],
+        company_cover: [null, [CustomValidators.maxImageSize(1 * 1024 * 1024)], [CustomValidators.imageDimensions(600, 200, 3200, 800)]],
         establish_date: ['', [Validators.required],],
         registration_date: ['', [Validators.required],],
         company_website: ['', [CustomValidators.website()],],
@@ -273,11 +273,38 @@ export class CompanySetup implements OnInit {
   }
 
   oneTimeFormSubmit(): void {
+
+    console.log('========== FORM SUBMIT ==========');
+
     console.log('Form Value:', this.oneTimeForm.getRawValue());
+    console.log('Form Valid:', this.oneTimeForm.valid);
+    console.log('Form Status:', this.oneTimeForm.status);
+    console.log('Form Errors:', this.oneTimeForm.errors);
+
+    Object.keys(this.oneTimeForm.controls).forEach((key) => {
+
+      const control = this.oneTimeForm.get(key);
+
+      if (control?.invalid) {
+        console.log(
+          '❌ INVALID:',
+          key,
+          'Value:',
+          control.value,
+          'Errors:',
+          control.errors
+        );
+      }
+
+    });
+
     if (this.oneTimeForm.invalid) {
+      console.log('❌ FORM INVALID - RETURNING');
       this.oneTimeForm.markAllAsTouched();
       return;
     }
+
+    console.log('✅ FORM VALID - CONTINUING');
 
     this.isLoading = true;
 
@@ -285,9 +312,15 @@ export class CompanySetup implements OnInit {
 
     Object.entries(this.oneTimeForm.getRawValue()).forEach(
       ([key, value]) => {
-        if (!(value instanceof File) && value !== null && value !== undefined) {
+
+        if (
+          !(value instanceof File) &&
+          value !== null &&
+          value !== undefined
+        ) {
           formData.append(key, String(value));
         }
+
       }
     );
 
@@ -303,29 +336,12 @@ export class CompanySetup implements OnInit {
       formData.append('company_cover', this.coverFile);
     }
 
-    console.log('Form Data:', formData);
+    console.log('========== FORM DATA ==========');
 
-    // this.api.post('company/one-timeProfile-setup/create/', formData)
-    //   .subscribe({
-    //     next: (res: any) => {
-    //       this.toast.fromResponse(res);
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
 
-    //       if (res.status === 'success') {
-    //         localStorage.clear();
-    //         sessionStorage.clear();
-    //         localStorage.setItem('company_log', JSON.stringify(res.data));
-    //         this.toast.show('success', 'Profile Setup', 'Profile setup successful');
-    //         this.router.navigate(['/']);
-    //       }
-    //       this.isLoading = false;
-    //     },
-
-    //     error: (err) => {
-    //       console.error(err);
-    //       this.isLoading = false;
-    //       this.toast.show('error', 'Submission Failed', 'An error occurred during profile setup.');
-    //     },
-    //   });
   }
 
   onReset(): void {
