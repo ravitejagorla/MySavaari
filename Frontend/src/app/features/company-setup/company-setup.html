@@ -1,7 +1,627 @@
-@if (isPageLoading) {
-<page-loader/>
-}@else {
-<ras-basic-card title="Company Setup">
-    
-</ras-basic-card>
-}
+<div class="m-10 bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg max-w-7xl mx-auto">
+    @if(isLoading){
+    <div class="card flex justify-center">
+        <page-loader />
+    </div>
+    }@else {
+    <div class="flex justify-between items-center">
+        <h2 class="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">
+            <div class="flex items-center space-x-3">
+                <span>🏥 company Profile Setup</span>
+            </div>
+        </h2>
+        <div class="flex items-center space-x-3">
+            <theme-toggle />
+            <p-menu #menu [model]="items" [popup]="true" />
+            <p-button (click)="menu.toggle($event)" icon="pi pi-ellipsis-v" severity="secondary" />
+        </div>
+    </div>
+
+    <form [formGroup]="oneTimeForm" (ngSubmit)="oneTimeFormSubmit()">
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="md:col-span-3">
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 border-b pb-2 mb-4">
+                    <i class="pi pi-id-card text-brand-500 mr-3"></i>
+                    company Information
+                </h3>
+            </div>
+
+            <div class="flex flex-col">
+                <app-label [isRequired]="true">company Registered Name</app-label>
+                <app-input-field type="text" formControlName="company_registered_name" [onlyCaps]="true"
+                    placeholder="Ex: SUNRISE MULTISPECIALITY company" />
+                @if((oneTimeForm.get('company_registered_name')?.touched &&
+                oneTimeForm.get('company_registered_name')?.invalid)){
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('company_registered_name')?.errors?.['required']){
+                    Please enter company registered name
+                    }@else if(getControl('company_registered_name')?.errors?.['doubleSpaces']){
+                    No Double spaces are allowed
+                    }@else if(getControl('company_registered_name')?.errors?.['minlength']){
+                    Please enter at least 3 characters
+                    }@else if(getControl('company_registered_name')?.errors?.['maxlength']){
+                    Please enter at most 70 characters
+                    }@else if(getControl('company_registered_name')?.errors?.['invalidOnlyNumbersOrSpecialChars']){
+                    Please enter atleast one alphabet.
+                    }
+                </div>
+                }
+            </div>
+
+            <div class="flex flex-col">
+                <app-label [isRequired]="true">company Short Name</app-label>
+                <app-input-field type="text" [onlyCaps]="true" [onlyAlphabets]="true"
+                    formControlName="company_short_name" placeholder="Ex: SUNRISE" />
+                @if((oneTimeForm.get('company_short_name')?.touched && oneTimeForm.get('company_short_name')?.invalid)){
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('company_short_name')?.errors?.['required']){
+                    Please enter company short name
+                    }@else if(getControl('company_short_name')?.errors?.['doubleSpaces']){
+                    No Double spaces are allowed
+                    }@else if(getControl('company_short_name')?.errors?.['minlength']){
+                    Please enter at least 3 characters
+                    }@else if(getControl('company_short_name')?.errors?.['maxlength']){
+                    Please enter at most 40 characters
+                    }@else if(getControl('company_short_name')?.errors?.['invalidOnlyNumbersOrSpecialChars']){
+                    Please enter atleast one alphabet.
+                    }
+                </div>
+                }
+            </div>
+
+            <div class="flex flex-col">
+                <app-label [isRequired]="true">License Number</app-label>
+                <app-input-field type="text" formControlName="license_number" [onlyCaps]="true"
+                    placeholder="Ex: 51755/P1/2017" />
+                @if((getControl('license_number')?.touched && getControl('license_number')?.invalid)){
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('license_number')?.errors?.['required']){
+                    Please enter license number
+                    }@else if(getControl('license_number')?.errors?.['doubleSpaces']){
+                    No Double spaces are allowed
+                    }@else if(getControl('license_number')?.errors?.['maxlength']){
+                    Please enter at most 30 characters
+                    }@else if(getControl('license_number')?.errors?.['invalidLicense']){
+                    License number must be like Ex: 51755/P1/2017
+                    }
+                </div>
+                }
+            </div>
+
+            <div class="flex flex-col">
+                <app-label [isRequired]="true">Registration Number</app-label>
+                <app-input-field type="text" formControlName="registration_number" [onlyCaps]="true"
+                    placeholder="Ex: PEHS-2024-2680" />
+                @if((getControl('registration_number')?.touched && getControl('registration_number')?.invalid)){
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('registration_number')?.errors?.['required']){
+                    Please enter registration number
+                    }@else if(getControl('registration_number')?.errors?.['doubleSpaces']){
+                    No Double spaces are allowed
+                    }@else if(getControl('registration_number')?.errors?.['maxlength']){
+                    Please enter at most 30 characters
+                    }@else if(getControl('registration_number')?.errors?.['registrationNumber']){
+                    Registration number must be like Ex: PEHS-2024-2680
+                    }
+                </div>
+                }
+            </div>
+
+
+            <div class="flex flex-col">
+                <app-label [isRequired]="true">State Of Recognitation</app-label>
+                <app-input-field type="text" formControlName="state_of_recognitation" [onlyCaps]="true"
+                    [onlyAlphabets]="true" placeholder="Ex: NABH" />
+                @if((getControl('state_of_recognitation')?.touched && getControl('state_of_recognitation')?.invalid)){
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('state_of_recognitation')?.errors?.['required']){
+                    Please enter state of recognitation
+                    }@else if(getControl('state_of_recognitation')?.errors?.['doubleSpaces']){
+                    No Double spaces are allowed
+                    }@else if(getControl('state_of_recognitation')?.errors?.['minlength']){
+                    Please enter at least 3 characters
+                    }@else if(getControl('state_of_recognitation')?.errors?.['maxlength']){
+                    Please enter at most 40 characters
+                    }@else if(getControl('state_of_recognitation')?.errors?.['lettersOnly']){
+                    No numbers and special characters are allowed.
+                    }
+                </div>
+                }
+            </div>
+
+            <div class="flex flex-col">
+                <app-label [isRequired]="true">Registered date</app-label>
+                <p-datepicker formControlName="registration_date" id="registration_date" selectionMode="single"
+                    dateFormat="dd-mm-yy" appendTo="body" [maxDate]="todayDate" [showIcon]="true" class="w-full"
+                    mask="99-99-9999" placeholder="dd-mm-yyyy"
+                    inputStyleClass="w-full h-[42px] px-3 text-sm rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition" />
+                @if((getControl('registration_date')?.touched && getControl('registration_date')?.invalid)){
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('registration_date')?.errors?.['required']){
+                    Please select registered date.
+                    }@else if(getControl('registration_date')?.errors?.['doubleSpaces']){
+                    No Double spaces are allowed
+                    }@else if(getControl('registration_date')?.errors?.['establishDate']){
+                    Date should not be a future date.
+                    }
+                </div>
+                }
+            </div>
+
+
+            <div class="flex flex-col">
+                <app-label [isRequired]="true">Establish Date</app-label>
+                <p-datepicker formControlName="establish_date" id="establish_date" selectionMode="single"
+                    dateFormat="dd-mm-yy" appendTo="body" [maxDate]="todayDate" [showIcon]="true" class="w-full"
+                    mask="99-99-9999" placeholder="dd-mm-yyyy"
+                    inputStyleClass="w-full h-[42px] px-3 text-sm rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition" />
+                @if((getControl('establish_date')?.touched && getControl('establish_date')?.invalid)){
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('establish_date')?.errors?.['required']){
+                    Please select establish date.
+                    }@else if(getControl('establish_date')?.errors?.['doubleSpaces']){
+                    No Double spaces are allowed
+                    }@else if(getControl('establish_date')?.errors?.['establishDate']){
+                    Date should not be a future date.
+                    }@else if(getControl('establish_date')?.errors?.['establishNotEarlier']){
+                    Date should not be earlier than registered date.
+                    }
+                </div>
+                }
+            </div>
+        </div>
+
+        <!-- Popup Dialog -->
+        <p-dialog header="Main Branch Information" [(visible)]="showMoreInfo" [modal]="true"
+            [style]="{ width: '30vw' }">
+            <p>
+                The <strong>main branch</strong> is the primary company branch created during initial setup.
+                It stores your company’s legal details, registration info, and location.
+                Additional branches can be created later, but this one remains the main point of administration.
+            </p>
+            <ng-template pTemplate="footer">
+                <button pButton label="Got it" icon="pi pi-check" (click)="showMoreInfo = false"></button>
+            </ng-template>
+        </p-dialog>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+            <!-- Branch Info Header -->
+            <div class="md:col-span-3">
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 border-b pb-2 mb-4">
+                    <i class="pi pi-id-card text-brand-500 mr-3"></i>
+                    Branch Information
+                </h3>
+                <p>
+                    This is for creating main branch
+                    <span class="text-brand-500 underline cursor-pointer" (click)="showMoreInfo = true">
+                        more info
+                    </span>
+                </p>
+            </div>
+
+
+
+            <!-- Branch Name -->
+            <div class="flex flex-col">
+                <app-label [isRequired]="true">Branch Name</app-label>
+                <app-input-field type="text" formControlName="branch_identity_name" [onlyCaps]="true"
+                    placeholder="Ex: MAIN BRANCH" />
+                @if(oneTimeForm.get('branch_identity_name')?.touched &&
+                oneTimeForm.get('branch_identity_name')?.invalid){
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('branch_identity_name')?.errors?.['required']){
+                    Please enter company branch name
+                    } @else if(getControl('branch_identity_name')?.errors?.['doubleSpaces']){
+                    No double spaces allowed
+                    } @else if(getControl('branch_identity_name')?.errors?.['minlength']){
+                    Please enter at least 3 characters
+                    } @else if(getControl('branch_identity_name')?.errors?.['maxlength']){
+                    Please enter at most 40 characters
+                    } @else if(getControl('branch_identity_name')?.errors?.['invalidOnlyNumbersOrSpecialChars']){
+                    Please enter atleast one alphabet.
+                    }
+                </div>
+                }
+            </div>
+
+            <!-- Password -->
+            <div class="flex flex-col">
+                <app-label [isRequired]="true">Password</app-label>
+                <div class="relative">
+                    <app-input-field [type]="showPassword ? 'text' : 'password'" placeholder="Enter your password"
+                        formControlName="password" class="form-input w-full" required />
+                    <span (click)="togglePasswordVisibility()"
+                        class="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2">
+                        @if (showPassword) {
+                        <i class="pi pi-eye text-gray-500 dark:text-gray-400"></i>
+                        } @else {
+                        <i class="pi pi-eye-slash text-gray-500 dark:text-gray-400"></i>
+                        }
+                    </span>
+                </div>
+                @if(oneTimeForm.get('password')?.touched && oneTimeForm.get('password')?.invalid){
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('password')?.errors?.['required']){
+                    Please enter the password
+                    } @else if(getControl('password')?.errors?.['weakPassword']){
+                    Password must include upper, lower, number, and special character
+                    }@else if(getControl('password')?.errors?.['minlength']){
+                    Please enter at least 8 characters
+                    } @else if(getControl('password')?.errors?.['maxlength']){
+                    Please enter at most 16 characters
+                    }
+                </div>
+                }
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="flex flex-col">
+                <app-label [isRequired]="true">Confirm Password</app-label>
+                <div class="relative">
+                    <app-input-field [type]="showConfirmPassword ? 'text' : 'password'" placeholder="Re-enter password"
+                        formControlName="confirm_password" class="form-input w-full" required />
+                    <span (click)="toggleConfirmPasswordVisibility()"
+                        class="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2">
+                        @if (showConfirmPassword) {
+                        <i class="pi pi-eye text-gray-500 dark:text-gray-400"></i>
+                        } @else {
+                        <i class="pi pi-eye-slash text-gray-500 dark:text-gray-400"></i>
+                        }
+                    </span>
+                </div>
+                @if(oneTimeForm.get('confirm_password')?.touched && oneTimeForm.get('confirm_password')?.invalid){
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('confirm_password')?.errors?.['required']){
+                    Please enter confirm password.
+                    } @else if(getControl('confirm_password')?.errors?.['passwordsMismatch']){
+                    Passwords do not match
+                    }
+                </div>
+                }
+            </div>
+        </div>
+
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="md:col-span-3">
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 border-b pb-2 mb-4">
+                    <i class="pi pi-address-book text-brand-500 mr-3"></i>
+                    Contact Information
+                </h3>
+            </div>
+
+            <div class="flex flex-col">
+                <app-label [isRequired]="true">Email</app-label>
+                <app-input-field type="email" formControlName="email" placeholder="Ex: info@sunrisecompany.com" />
+                @if((getControl('email')?.touched && getControl('email')?.invalid)){
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('email')?.errors?.['required']){
+                    Please enter an email address
+                    }@else if(getControl('email')?.errors?.['email']){
+                    Please enter a valid email address
+                    }
+                </div>
+                }
+            </div>
+
+            <div class="flex flex-col">
+                <app-label [isRequired]="true">Phone Number</app-label>
+                <app-input-field type="text" [onlyNumbers]="true" formControlName="phone_number"
+                    placeholder="Ex: 9876543210" />
+                @if((getControl('phone_number')?.touched && getControl('phone_number')?.invalid)){
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('phone_number')?.errors?.['required']){
+                    Please enter a phone number
+                    }@else if(getControl('phone_number')?.errors?.['invalidPhoneStart']){
+                    phone number must start with 6, 7, 8, or 9
+                    }@else if(getControl('phone_number')?.errors?.['invalidPhoneLength']){
+                    phone number must be 10 digits
+                    }
+                </div>
+                }
+            </div>
+
+            <div class="flex flex-col">
+                <app-label [isRequired]="true">Emergency Number</app-label>
+                <app-input-field type="text" [onlyNumbers]="true" formControlName="emergency_number"
+                    placeholder="Ex: 9876543999" />
+                @if((getControl('emergency_number')?.touched && getControl('emergency_number')?.invalid)){
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('emergency_number')?.errors?.['required']){
+                    Please enter an emergency number
+                    }@else if(getControl('emergency_number')?.errors?.['pattern']){
+                    Please enter a valid emergency number (10-15 digits)
+                    }@else if(getControl('emergency_number')?.errors?.['altPhone']){
+                    Emergency number should not be same as phone number
+                    }@else if(getControl('emergency_number')?.errors?.['invalidPhoneStart']){
+                    Emergency number must start with 6, 7, 8, or 9
+                    }@else if(getControl('emergency_number')?.errors?.['invalidPhoneLength']){
+                    Emergency number must be 10 digits
+                    }
+                </div>
+                }
+            </div>
+
+            <div class="flex flex-col">
+                <app-label>Offical Website</app-label>
+                <app-input-field type="url" formControlName="company_website"
+                    placeholder="Ex: https://www.sunrisecompany.com" />
+                @if((getControl('company_website')?.touched && getControl('company_website')?.invalid)){
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('company_website')?.errors?.['website']){
+                    Please enter valid website
+                    }
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="md:col-span-3">
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 border-b pb-2 mb-4">
+                    <i class="pi pi-globe text-brand-500 mr-3"></i>
+                    Service Information
+                </h3>
+            </div>
+
+            <!-- <div class="flex flex-col">
+        <app-label [isRequired]="true">Type of company</app-label>
+        <p-select [options]="companyType" optionValue="id" formControlName="company_type" [showClear]="true"
+          placeholder="Select a company type" optionLabel="company_type" />
+        @if((getControl('company_type')?.touched && getControl('company_type')?.invalid)){
+        <div class="text-error-500 text-sm mt-1">
+          @if(getControl('company_type')?.errors?.['required']){
+          Please select the type of company
+          }@else if(getControl('company_type')?.errors?.['doubleSpaces']){
+          No Double spaces are allowed
+          }
+        </div>
+        }
+      </div> -->
+
+            <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div class="flex items-center space-x-3 mt-1">
+                    <p-checkbox inputId="available" binary="true" formControlName="is_available_24_7"></p-checkbox>
+                    <app-label [isRequired]="false">Available 24/7</app-label>
+                </div>
+
+                @if (!oneTimeForm.get('is_available_24_7')?.value) {
+                <div class="flex flex-col">
+                    <app-label [isRequired]="true">From</app-label>
+                    <p-datepicker inputId="time-from" placeholder="hh:mm" formControlName="time_from" [timeOnly]="true"
+                        class="w-full" />
+                    @if((getControl('time_from')?.touched && getControl('time_from')?.invalid)){
+                    @if(getControl('time_from')?.errors?.['required']){
+                    <div class="text-error-500 text-sm mt-1">
+                        Please select from time
+                    </div>
+                    }@else if(getControl('time_from')?.errors?.['invalidTimeRange']){
+                    <div class="text-error-500 text-sm mt-1">
+                        From time must be earlier than To time.
+                    </div>
+                    }
+                    }
+                </div>
+
+                <div class="flex flex-col">
+                    <app-label [isRequired]="true">To</app-label>
+                    <p-datepicker inputId="time-to" placeholder="hh:mm" formControlName="time_to" [timeOnly]="true"
+                        class="w-full" />
+                    @if((getControl('time_to')?.touched && getControl('time_to')?.invalid)){
+                    @if(getControl('time_to')?.errors?.['required']){
+                    <div class="text-error-500 text-sm mt-1">
+                        Please select to time
+                    </div>
+                    }@else if(getControl('time_to')?.errors?.['invalidTimeRange']){
+                    <div class="text-error-500 text-sm mt-1">
+                        To time must be later than From time.
+                    </div>
+                    }
+                    }
+                </div>
+                }
+            </div>
+        </div>
+
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="md:col-span-4">
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 border-b pb-2 mb-4">
+                    <i class="pi pi-map-marker text-brand-500 mr-3"></i>
+                    Location Information
+                </h3>
+            </div>
+
+            <!-- <div class="flex flex-col">
+        <app-label [isRequired]="true">Area</app-label>
+        <app-area-search-input (areaSelected)="handleAreaSelect($event)"
+          (areaCleared)="handleAreaClear()"></app-area-search-input>
+        <input type="hidden" formControlName="area" />
+        @if((getControl('area')?.touched && getControl('area')?.invalid)){
+        <div class="text-error-500 text-sm mt-1">
+          @if(getControl('area')?.errors?.['required']){
+          Please select an area
+          }
+        </div>
+        }
+      </div> -->
+
+            <div class="flex flex-col">
+                <app-label [isDefault]="true">City</app-label>
+                <input pInputText type="text" class="p-inputtext w-full" placeholder="Enter city"
+                    [(ngModel)]="cityValue" name="city" [disabled]="true" [ngModelOptions]="{standalone: true}" />
+            </div>
+
+            <div class="flex flex-col">
+                <app-label [isDefault]="true">State</app-label>
+                <input pInputText type="text" class="p-inputtext w-full" placeholder="Enter state"
+                    [(ngModel)]="stateValue" name="state" [disabled]="true" [ngModelOptions]="{standalone: true}" />
+            </div>
+
+            <div class="flex flex-col">
+                <app-label [isDefault]="true">Country</app-label>
+                <input pInputText type="text" class="p-inputtext w-full" placeholder="Enter country"
+                    [(ngModel)]="countryValue" name="country" [disabled]="true" [ngModelOptions]="{standalone: true}" />
+            </div>
+
+            <div class="flex flex-col md:col-span-4 mt-2">
+                <app-label [isRequired]="true">Address</app-label>
+                <textarea pInputTextarea rows="3" formControlName="address" class="p-inputtextarea w-full"
+                    placeholder="Enter company address"></textarea>
+                @if((getControl('address')?.touched && getControl('address')?.invalid)){
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('address')?.errors?.['required']){
+                    Please enter the company address
+                    }@else if(getControl('address')?.errors?.['maxlength']){
+                    Please enter at most 250 characters
+                    }
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+            <div class="md:col-span-3">
+                <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 border-b pb-2 mb-4">
+                    <i class="pi pi-info-circle text-brand-500 mr-3"></i>
+                    Additional Information
+                </h3>
+            </div>
+
+            <div class="flex flex-col md:col-span-4">
+                <app-label [isRequired]="false">Description</app-label>
+                <p-editor formControlName="company_description" [style]="{ 'height': '200px' }"
+                    placeholder="Enter detailed description..." [modules]="{}">
+                </p-editor>
+                @if((oneTimeForm.get('company_description')?.touched &&
+                oneTimeForm.get('company_description')?.invalid)){
+
+                @if(getControl('company_description')?.errors?.['maxlength']){
+                <small class="text-error-500 text-sm">
+                    Please enter at most 1000 characters
+                </small>
+                }
+                }
+            </div>
+
+            <div class="flex flex-col">
+                <app-label [isRequired]="true">company Icon</app-label>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                    Requirements: Max 1MB, Dimensions 30x30 to 400x400 pixels.
+                </p>
+                <div
+                    class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 flex flex-col items-center justify-center relative h-40">
+                    <input type="file" accept="image/*" id="companyIcon"
+                        class="absolute inset-0 opacity-0 cursor-pointer" formControlName="company_icon"
+                        (change)="onImageSelect($event, 'icon')" />
+
+                    @if (iconPreview) {
+                    <div class="flex flex-col items-center">
+                        <img [src]="iconPreview" alt="Icon Preview" class="h-24 w-24 object-contain rounded-lg mb-2" />
+                        <button pButton type="button" icon="pi pi-times"
+                            class="p-button-rounded p-button-danger p-button-sm" (click)="removeImage('icon')"></button>
+                    </div>
+                    } @else {
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <i class="pi pi-upload text-gray-400 text-3xl mb-2"></i>
+                        <span class="text-sm text-gray-500">Click to upload icon</span>
+                    </div>
+                    }
+                </div>
+                @if (getControl('company_icon')?.touched && getControl('company_icon')?.invalid) {
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('company_icon')?.errors?.['required']){
+                    Please upload a company icon.
+                    }@else if(getControl('company_icon')?.errors?.['maxImageSize']){
+                    Icon size should not exiced 1 MB
+                    } @else if(getControl('company_icon')?.errors?.['imageDimensions']){
+                    Icon size must be in this range 30x30 to 400x400 pixels.
+                    }
+                </div>
+                }
+            </div>
+
+            <div class="flex flex-col">
+                <app-label [isRequired]="true">company Logo</app-label>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                    Requirements: Max 1MB, Dimensions 30x30 to 400x400 pixels.
+                </p>
+                <div
+                    class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 flex flex-col items-center justify-center relative h-40">
+                    <input type="file" accept="image/*" id="companyLogo"
+                        class="absolute inset-0 opacity-0 cursor-pointer" formControlName="company_logo"
+                        (change)="onImageSelect($event, 'logo')" />
+
+                    @if (logoPreview) {
+                    <div class="flex flex-col items-center">
+                        <img [src]="logoPreview" alt="Logo Preview" class="h-24 w-24 object-contain rounded-lg mb-2" />
+                        <button pButton type="button" icon="pi pi-times"
+                            class="p-button-rounded p-button-danger p-button-sm" (click)="removeImage('logo')"></button>
+                    </div>
+                    }@else {
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <i class="pi pi-upload text-gray-400 text-3xl mb-2"></i>
+                        <span class="text-sm text-gray-500">Click to upload logo</span>
+                    </div>
+                    }
+                </div>
+                @if((getControl('company_logo')?.touched && getControl('company_logo')?.invalid)){
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('company_logo')?.errors?.['required']){
+                    Please upload a company logo.
+                    }@else if(getControl('company_logo')?.errors?.['maxImageSize']){
+                    Logo size should not exiced 1 MB
+                    } @else if(getControl('company_logo')?.errors?.['imageDimensions']){
+                    Logo size must be in this range 30x30 to 400x400 pixels.
+                    }
+                </div>
+                }
+            </div>
+
+            <div class="flex flex-col">
+                <app-label>company Cover</app-label>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                    Requirements: Max 1MB, Dimensions 600x200 to 3200x800 pixels.
+                </p>
+                <div
+                    class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 flex flex-col items-center justify-center relative h-40">
+                    <input type="file" accept="image/*" formControlName="company_cover" id="companyCover"
+                        class="absolute inset-0 opacity-0 cursor-pointer" (change)="onImageSelect($event, 'cover')" />
+
+                    @if (coverPreview) {
+                    <div class="flex flex-col items-center">
+                        <img [src]="coverPreview" alt="Cover Preview"
+                            class="h-24 w-24 object-contain rounded-lg mb-2" />
+                        <button pButton type="button" icon="pi pi-times"
+                            class="p-button-rounded p-button-danger p-button-sm"
+                            (click)="removeImage('cover')"></button>
+                    </div>
+                    }@else {
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <i class="pi pi-upload text-gray-400 text-3xl mb-2"></i>
+                        <span class="text-sm text-gray-500">Click to upload cover</span>
+                    </div>
+                    }
+                </div>
+                @if (getControl('company_cover')?.touched && getControl('company_cover')?.invalid) {
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('company_cover')?.errors?.['maxImageSize']){
+                    Cover size should not exiced 1 MB
+                    } @else if(getControl('company_cover')?.errors?.['imageDimensions']){
+                    Cover size must be in this range 600x200 to 3200x800 pixels.
+                    }
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="flex justify-end mt-8 space-x-3">
+            <button pButton label="Reset" class="p-button-outlined p-button-secondary" (click)="onReset()"
+                type="button"></button>
+            <button pButton label="Save" type="submit" icon="pi pi-check" class="p-button-primary"></button>
+        </div>
+    </form>
+    }
+</div>
