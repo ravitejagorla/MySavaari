@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from apps.accounts.models import User, UserAdmin, UserCustomer, OTP
+from apps.accounts.models import ( 
+    User, 
+    # UserAdmin, 
+    # UserCustomer, 
+    OTP
+)
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,15 +16,15 @@ class UserSerializer(serializers.ModelSerializer):
             "is_active", "created_at"
         )
 
-class UserAdminSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserAdmin
-        fields = ("id", "user", "admin_id", "created_at")
+# class UserAdminSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = UserAdmin
+#         fields = ("id", "user", "admin_id", "created_at")
 
-class UserCustomerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserCustomer
-        fields = ("id", "user", "customer_id", "created_at")
+# class UserCustomerSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = UserCustomer
+#         fields = ("id", "user", "customer_id", "created_at")
 
 class OTPSerializer(serializers.ModelSerializer):
     class Meta:

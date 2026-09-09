@@ -1,12 +1,17 @@
 from django.db import models
 from uuid import uuid4
+from apps.company.models import Company
 
 class User(models.Model):
     ROLE_CHOICES = (
         ('ADMIN', 'Admin'),
+        ('BRANCH_ADMIN', 'Branch Admin'),
+        ('EMPLOYEE', 'Employee'),
         ('CUSTOMER', 'Customer'),
     )
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    company_instance = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True, blank=True, related_name='users')
+    user_id = models.CharField(max_length=20, blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profile_pictures', blank=True, null=True)
     first_name = models.CharField(max_length=50, blank=True, null=True)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
@@ -20,6 +25,7 @@ class User(models.Model):
     passcode = models.CharField(max_length=255, blank=True, null=True)
     is_lockscreen_enabled = models.BooleanField(default=False)
     is_locked = models.BooleanField(default=False)
+    is_company_setup_completed = models.BooleanField(default=False)
     terms_and_conditions = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -27,23 +33,23 @@ class User(models.Model):
     def __str__(self):
         return f"{self.phone}"
 
-class UserAdmin(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="admin_profile")
-    admin_id = models.CharField(max_length=20, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+# class UserAdmin(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+#     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="admin_profile")
+#     admin_id = models.CharField(max_length=20, blank=True, null=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-         return f"{self.admin_id}"
+#     def __str__(self):
+#          return f"{self.admin_id}"
 
-class UserCustomer(models.Model):
-        id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-        user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="customer_profile")
-        customer_id = models.CharField(max_length=20, blank=True, null=True)
-        created_at = models.DateTimeField(auto_now_add=True)
+# class UserCustomer(models.Model):
+#         id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+#         user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="customer_profile")
+#         customer_id = models.CharField(max_length=20, blank=True, null=True)
+#         created_at = models.DateTimeField(auto_now_add=True)
 
-        def __str__(self):
-             return f"{self.customer_id}"
+#         def __str__(self):
+#              return f"{self.customer_id}"
     
 class OTP(models.Model):
     OTP_TYPE_CHOICES = (

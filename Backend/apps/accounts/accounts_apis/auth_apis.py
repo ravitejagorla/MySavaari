@@ -14,14 +14,14 @@ from core.services.generate_global_sequence import generate_sequence_id
 from core.services.jwt_session import generate_login_jwt
 from apps.accounts.models import (
     User,
-    UserAdmin,
-    UserCustomer,
+    # UserAdmin,
+    # UserCustomer,
     OTP
 )
 from apps.accounts.serializers import (
     UserSerializer,
-    UserAdminSerializer,
-    UserCustomerSerializer,
+    # UserAdminSerializer,
+    # UserCustomerSerializer,
     OTPSerializer,
     CurrentUserSerializer
 )
@@ -76,10 +76,10 @@ def admin_register(request):
             return Response({'status':'error','subject':'Email','message': 'Email already exists.'}, status=status.HTTP_200_OK)
         if phone_exists:
             return Response({'status':'error','subject':'Phone','message': 'Phone number already exists.'}, status=status.HTTP_200_OK)
-        
         hashed_password = make_password(password)
-
+        user_id=generate_sequence_id(role),
         user = User.objects.create(
+            user_id = user_id,
             first_name=first_name,
             middle_name=middle_name,
             last_name=last_name,
@@ -89,11 +89,11 @@ def admin_register(request):
             password=hashed_password,
             terms_and_conditions=terms_and_conditions
         )
-        admin_id = generate_sequence_id(role)
-        user_admin = UserAdmin.objects.create(
-            user=user,
-            admin_id=admin_id
-        )
+        # admin_id = generate_sequence_id(role)
+        # user_admin = UserAdmin.objects.create(
+        #     user=user,
+        #     admin_id=admin_id
+        # )
         email_otp = generate_otp()
         OTP.objects.create(
             user=user,
