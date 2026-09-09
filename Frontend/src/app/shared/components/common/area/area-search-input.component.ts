@@ -7,7 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, of, Subject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { ApiService } from '../../core/services/api.service';
+import { ApiService } from '../../../../core/services/api.service';
 
 export interface Area {
     id: number;

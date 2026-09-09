@@ -20,7 +20,7 @@ import { EditorModule } from 'primeng/editor';
 import { InputFieldComponent } from '../../shared/components/form/input/input-field.component';
 import { LabelComponent } from '../../shared/components/form/label/label.component';
 import { ThemeToggle } from '../../shared/components/common/theme-toggle/theme-toggle';
-import { AreaSearchInputComponent } from '../../shared/components/area-search-input.component';
+import { AreaSearchInputComponent } from '../../shared/components/common/area/area-search-input.component';
 
 @Component({
   selector: 'ras-company-setup',
