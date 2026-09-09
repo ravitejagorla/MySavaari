@@ -114,7 +114,7 @@ def admin_register(request):
             }
         )
     except Exception as e:
-        print("Error", str(e))
+        print('Error : ', str(e))
         return Response({'status':'error','subject':'Registration','message': 'Registration failed.'}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
@@ -171,7 +171,7 @@ def otp_verification(request):
             return Response({'status':'error','subject':'OTP','message': 'Invalid OTP type.'}, status=status.HTTP_200_OK)
 
     except Exception as e:
-        print("Error", str(e))
+        print('Error : ', str(e))
         return Response({'status':'error','subject':'OTP','message': 'OTP verification failed.'}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
@@ -216,7 +216,7 @@ def resend_otp(request):
             send_otp_sms(recipient_phone=user.phone, otp=otp, purpose="Admin Registration", expiry_minutes=5,)
         return Response({ "status": "success", "subject": "OTP", "message": "OTP resent successfully."}, status=status.HTTP_200_OK)
     except Exception as e:
-        print("Error", str(e))
+        print('Error : ', str(e))
         return Response({'status':'error','subject':'OTP','message': 'OTP resend failed.'}, status=status.HTTP_200_OK)
 
 
@@ -245,7 +245,7 @@ def login(request):
         token = generate_login_jwt(encrypt(str(user.id)), user.role)
         return Response({ "status": "success", "subject": "Login", "message": "Login successful.", "data": {"token": token}})
     except Exception as e:
-        print("Error", str(e))
+        print('Error : ', str(e))
         return Response({'status':'error','subject':'Login','message': 'Login failed.'}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
@@ -268,7 +268,7 @@ def set_passcode(request):
         user.save(update_fields=['passcode'])
         return Response({'status': 'success', 'subject': 'PIN Setup', 'message': 'PIN setup successful.'}, status=status.HTTP_200_OK)
     except Exception as e:
-        print('Error:', str(e))
+        print('Error : ', str(e))
         return Response({'status': 'error', 'subject': 'PIN Setup', 'message': 'PIN setup failed.'}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
@@ -296,7 +296,7 @@ def change_passcode(request):
     except User.DoesNotExist:
         return Response({'status': 'error', 'subject': 'PIN', 'message': 'User not found.'}, status=status.HTTP_200_OK)
     except Exception as e:
-        print('Error:', str(e))
+        print('Error : ', str(e))
         return Response({'status': 'error', 'subject': 'PIN', 'message': 'PIN change failed.'}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
@@ -322,7 +322,7 @@ def passcode_status(request):
     except User.DoesNotExist:
         return Response({'status': 'error', 'subject': 'PIN', 'message': 'User not found.'}, status=status.HTTP_200_OK)
     except Exception as e:
-        print('Error:', str(e))
+        print('Error : ', str(e))
         return Response({'status': 'error', 'subject': 'PIN', 'message': 'Unable to retrieve PIN status.'}, status=status.HTTP_200_OK)
 
 @api_view(['PATCH'])
@@ -359,7 +359,7 @@ def lockscreen_settings(request):
     except User.DoesNotExist:
         return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'User not found.'}, status=status.HTTP_200_OK)
     except Exception as e:
-        print('Error:', str(e))
+        print('Error : ', str(e))
         return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'Unable to update lock screen setting.'}, status=status.HTTP_200_OK)
     
 @api_view(['POST'])
@@ -388,7 +388,7 @@ def lock_screen(request):
     except User.DoesNotExist:
         return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'User not found.'}, status=status.HTTP_200_OK)
     except Exception as e:
-        print('Error:', str(e))
+        print('Error : ', str(e))
         return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'Lock screen failed.'}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
@@ -415,7 +415,7 @@ def unlock_screen(request):
     except User.DoesNotExist:
         return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'User not found.'}, status=status.HTTP_200_OK)
     except Exception as e:
-        print('Error:', str(e))
+        print('Error : ', str(e))
         return Response({'status': 'error', 'subject': 'Lock Screen', 'message': 'PIN verification failed.'}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
@@ -433,6 +433,6 @@ def get_current_user(request):
     except User.DoesNotExist:
         return Response({ 'status': 'error', 'subject': 'User', 'message': 'User not found.'}, status=status.HTTP_200_OK)
     except Exception as e:
-        print('Error:', str(e))
+        print('Error : ', str(e))
         return Response({'status': 'error', 'subject': 'User', 'message': 'Unable to retrieve user details.'}, status=status.HTTP_200_OK)
         

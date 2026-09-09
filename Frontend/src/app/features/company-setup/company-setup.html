@@ -434,19 +434,19 @@
                 </h3>
             </div>
 
-            <!-- <div class="flex flex-col">
-        <app-label [isRequired]="true">Area</app-label>
-        <app-area-search-input (areaSelected)="handleAreaSelect($event)"
-          (areaCleared)="handleAreaClear()"></app-area-search-input>
-        <input type="hidden" formControlName="area" />
-        @if((getControl('area')?.touched && getControl('area')?.invalid)){
-        <div class="text-error-500 text-sm mt-1">
-          @if(getControl('area')?.errors?.['required']){
-          Please select an area
-          }
-        </div>
-        }
-      </div> -->
+            <div class="flex flex-col">
+                <app-label [isRequired]="true">Area</app-label>
+                <app-area-search-input (areaSelected)="handleAreaSelect($event)"
+                    (areaCleared)="handleAreaClear()"></app-area-search-input>
+                <input type="hidden" formControlName="area" />
+                @if((getControl('area')?.touched && getControl('area')?.invalid)){
+                <div class="text-error-500 text-sm mt-1">
+                    @if(getControl('area')?.errors?.['required']){
+                    Please select an area
+                    }
+                </div>
+                }
+            </div>
 
             <div class="flex flex-col">
                 <app-label [isDefault]="true">City</app-label>
@@ -618,8 +618,8 @@
         </div>
 
         <div class="flex justify-end mt-8 space-x-3">
-            <p-button  label="Reset" class="" (click)="onReset()" type="button"></p-button>
-            <p-button  label="Save" type="submit" icon="pi pi-check" class="p-button-primary"></p-button>
+            <p-button label="Reset" class="" (click)="onReset()" type="button"></p-button>
+            <p-button label="Save" type="submit" icon="pi pi-check" class="p-button-primary"></p-button>
         </div>
     </form>
     }
