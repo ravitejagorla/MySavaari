@@ -37,7 +37,8 @@ class CurrentUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ( 
             "id", "profile_picture", "first_name", "middle_name", "last_name", 
-            "role", "email", "phone", "is_email_verified", "is_phone_verified",
+            "role", "email", "phone", "is_email_verified", "is_phone_verified", 
+            "is_company_setup_completed"
         )
     def get_profile_picture(self, obj):
         request = self.context.get('request')

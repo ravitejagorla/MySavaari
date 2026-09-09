@@ -65,20 +65,26 @@ export class Login implements OnInit {
             this.toast.fromResponse(response);
             return;
           }
-
           const token = response.data?.token;
-
           if (!token) {
             this.toast.show('error', 'Login', 'Login token was not received.');
             return;
           }
-
           this.authService.setToken(token);
-
           this.userService.initializeUser().subscribe(() => {
             this.loginForm.reset();
             this.toast.fromResponse(response);
-            this.router.navigate(['/']);
+            const user = this.userService.getUser();
+
+            if (!user) {
+              return;
+            }
+
+            if (!user.is_company_setup_completed) {
+              this.router.navigate(['/company-setup']);
+            } else {
+              this.router.navigate(['/']);
+            }
           });
         },
         error: (error) => {

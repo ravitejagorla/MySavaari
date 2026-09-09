@@ -15,6 +15,7 @@ export interface CurrentUser {
   phone: string | null;
   is_email_verified: boolean;
   is_phone_verified: boolean;
+  is_company_setup_completed: boolean;
 }
 
 @Injectable({ providedIn: 'root', })

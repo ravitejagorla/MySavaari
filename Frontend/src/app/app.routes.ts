@@ -14,5 +14,6 @@ export const routes: Routes = [
             { path: '', loadChildren: () => import('./layouts/app-layout/app-layout.routes').then(m => m.APP_LAYOUT_ROUTES) }
         ]
     },
+    { path: 'company-setup', canActivate: [authGuard], loadComponent: () => import('./features/company-setup/company-setup').then(m => m.CompanySetup) },
     { path: '**', redirectTo: '' },
 ];

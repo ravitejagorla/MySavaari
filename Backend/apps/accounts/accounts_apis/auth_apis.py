@@ -223,7 +223,7 @@ def resend_otp(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 @transaction.atomic
-def admin_login(request):
+def login(request):
     try:
         data = request.data
         print("================================================================================")
@@ -242,7 +242,7 @@ def admin_login(request):
             return Response({'status':'error','subject':'Login','message': 'Invalid username or password.'}, status=status.HTTP_200_OK)
         if not user.is_email_verified or not user.is_phone_verified:
             return Response({'status':'error','subject':'Login','message': 'Email or phone verification is required.'}, status=status.HTTP_200_OK)
-        token = generate_login_jwt(encrypt(str(user.id)), "ADMIN")
+        token = generate_login_jwt(encrypt(str(user.id)), user.role)
         return Response({ "status": "success", "subject": "Login", "message": "Login successful.", "data": {"token": token}})
     except Exception as e:
         print("Error", str(e))

@@ -1,11 +1,11 @@
 from django.db import models
+from uuid import uuid4
 from apps.datamanagement.models import (
     Area,
     City,
     State,
     Country
 )
-from uuid import uuid4
 
 class Company(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
@@ -43,7 +43,7 @@ class Company(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.company_registered_name}"
+        return f"{self.company_registered_name} - {self.company_crn}"
 
     def save(self, *args, **kwargs):
         if self.area_instance and not self.pincode:
