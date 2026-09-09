@@ -3,6 +3,8 @@
 echo "Starting Django Backend..."
 cd Backend
 source venv/bin/activate
+# python manage.py makemigrations
+python manage.py migrate
 python manage.py runserver &
 BACKEND_PID=$!
 

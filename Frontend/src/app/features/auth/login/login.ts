@@ -75,7 +75,6 @@ export class Login implements OnInit {
             this.loginForm.reset();
             this.toast.fromResponse(response);
             const user = this.userService.getUser();
-
             if (!user) {
               return;
             }
