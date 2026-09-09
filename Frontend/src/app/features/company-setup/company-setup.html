@@ -18,19 +18,18 @@
     </div>
 
     <form [formGroup]="oneTimeForm" (ngSubmit)="oneTimeFormSubmit()">
-
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div class="md:col-span-3">
                 <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 border-b pb-2 mb-4">
                     <i class="pi pi-id-card text-brand-500 mr-3"></i>
-                    company Information
+                    Company Information
                 </h3>
             </div>
 
             <div class="flex flex-col">
-                <app-label [isRequired]="true">company Registered Name</app-label>
+                <app-label [isRequired]="true">Company Registered Name</app-label>
                 <app-input-field type="text" formControlName="company_registered_name" [onlyCaps]="true"
-                    placeholder="Ex: SUNRISE MULTISPECIALITY company" />
+                    placeholder="Ex: ABC Raids" />
                 @if((oneTimeForm.get('company_registered_name')?.touched &&
                 oneTimeForm.get('company_registered_name')?.invalid)){
                 <div class="text-error-500 text-sm mt-1">
@@ -50,9 +49,9 @@
             </div>
 
             <div class="flex flex-col">
-                <app-label [isRequired]="true">company Short Name</app-label>
+                <app-label [isRequired]="true">Company Short Name</app-label>
                 <app-input-field type="text" [onlyCaps]="true" [onlyAlphabets]="true"
-                    formControlName="company_short_name" placeholder="Ex: SUNRISE" />
+                    formControlName="company_short_name" placeholder="Ex: ABC" />
                 @if((oneTimeForm.get('company_short_name')?.touched && oneTimeForm.get('company_short_name')?.invalid)){
                 <div class="text-error-500 text-sm mt-1">
                     @if(getControl('company_short_name')?.errors?.['required']){
@@ -326,7 +325,7 @@
             <div class="flex flex-col">
                 <app-label [isRequired]="true">Emergency Number</app-label>
                 <app-input-field type="text" [onlyNumbers]="true" formControlName="emergency_number"
-                    placeholder="Ex: 9876543999" />
+                    placeholder="Ex: 9876543201" />
                 @if((getControl('emergency_number')?.touched && getControl('emergency_number')?.invalid)){
                 <div class="text-error-500 text-sm mt-1">
                     @if(getControl('emergency_number')?.errors?.['required']){
@@ -347,7 +346,7 @@
             <div class="flex flex-col">
                 <app-label>Offical Website</app-label>
                 <app-input-field type="url" formControlName="company_website"
-                    placeholder="Ex: https://www.sunrisecompany.com" />
+                    placeholder="Ex: https://www.abcraids.com" />
                 @if((getControl('company_website')?.touched && getControl('company_website')?.invalid)){
                 <div class="text-error-500 text-sm mt-1">
                     @if(getControl('company_website')?.errors?.['website']){
@@ -436,8 +435,8 @@
 
             <div class="flex flex-col">
                 <app-label [isRequired]="true">Area</app-label>
-                <app-area-search-input (areaSelected)="handleAreaSelect($event)"
-                    (areaCleared)="handleAreaClear()"></app-area-search-input>
+                <ras-area-search-input (areaSelected)="handleAreaSelect($event)"
+                    (areaCleared)="handleAreaClear()"></ras-area-search-input>
                 <input type="hidden" formControlName="area" />
                 @if((getControl('area')?.touched && getControl('area')?.invalid)){
                 <div class="text-error-500 text-sm mt-1">
@@ -468,7 +467,7 @@
 
             <div class="flex flex-col md:col-span-4 mt-2">
                 <app-label [isRequired]="true">Address</app-label>
-                <textarea pInputTextarea rows="3" formControlName="address" class="p-inputtextarea w-full"
+                <textarea pTextarea rows="3" formControlName="address" class="w-full"
                     placeholder="Enter company address"></textarea>
                 @if((getControl('address')?.touched && getControl('address')?.invalid)){
                 <div class="text-error-500 text-sm mt-1">
@@ -513,9 +512,12 @@
                 </p>
                 <div
                     class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 flex flex-col items-center justify-center relative h-40">
-                    <input type="file" accept="image/*" id="companyIcon"
+                    <!-- <input type="file" accept="image/*" id="companyIcon"
                         class="absolute inset-0 opacity-0 cursor-pointer" formControlName="company_icon"
-                        (change)="onImageSelect($event, 'icon')" />
+                        (change)="onImageSelect($event, 'icon')" /> -->
+                    <input type="file" accept="image/*" id="companyIcon"
+                        class="absolute inset-0 opacity-0 cursor-pointer" (change)="onImageSelect($event, 'icon')">
+
 
                     @if (iconPreview) {
                     <div class="flex flex-col items-center">
@@ -550,10 +552,12 @@
                 </p>
                 <div
                     class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 flex flex-col items-center justify-center relative h-40">
-                    <input type="file" accept="image/*" id="companyLogo"
+                    <!-- <input type="file" accept="image/*" id="companyLogo"
                         class="absolute inset-0 opacity-0 cursor-pointer" formControlName="company_logo"
-                        (change)="onImageSelect($event, 'logo')" />
+                        (change)="onImageSelect($event, 'logo')" /> -->
 
+                    <input type="file" accept="image/*" id="companyLogo"
+                        class="absolute inset-0 opacity-0 cursor-pointer" (change)="onImageSelect($event, 'logo')">
                     @if (logoPreview) {
                     <div class="flex flex-col items-center">
                         <img [src]="logoPreview" alt="Logo Preview" class="h-24 w-24 object-contain rounded-lg mb-2" />
@@ -587,8 +591,10 @@
                 </p>
                 <div
                     class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 flex flex-col items-center justify-center relative h-40">
-                    <input type="file" accept="image/*" formControlName="company_cover" id="companyCover"
-                        class="absolute inset-0 opacity-0 cursor-pointer" (change)="onImageSelect($event, 'cover')" />
+                    <!-- <input type="file" accept="image/*" formControlName="company_cover" id="companyCover"
+                        class="absolute inset-0 opacity-0 cursor-pointer" (change)="onImageSelect($event, 'cover')" /> -->
+                    <input type="file" accept="image/*" id="companyIcon"
+                        class="absolute inset-0 opacity-0 cursor-pointer" (change)="onImageSelect($event, 'icon')">
 
                     @if (coverPreview) {
                     <div class="flex flex-col items-center">

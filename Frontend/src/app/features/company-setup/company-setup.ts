@@ -1,25 +1,23 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, } from '@angular/forms';
 import { Router } from '@angular/router';
-
-import { GlobalToastService } from '../../core/services/global-toast.service';
+import { ApiService } from '../../core/services/api.service';
 import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
-import { ApiService } from '../../core/services/api.service';
-
-import { BasicCard } from '../../shared/components/ui/cards/basic-card/basic-card';
-import { PageLoader } from '../../shared/components/ui/loaders/page-loaders/page-loader';
+import { GlobalToastService } from '../../core/services/global-toast.service';
 import { MenuModule } from 'primeng/menu';
 import { DialogModule } from 'primeng/dialog';
-import { CustomValidators } from '../../shared/validators/custom-validators';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DatePicker } from 'primeng/datepicker';
 import { EditorModule } from 'primeng/editor';
-import { InputFieldComponent } from '../../shared/components/form/input/input-field.component';
+import { TextareaModule } from 'primeng/textarea';
+import { CustomValidators } from '../../shared/validators/custom-validators';
 import { LabelComponent } from '../../shared/components/form/label/label.component';
 import { ThemeToggle } from '../../shared/components/common/theme-toggle/theme-toggle';
+import { PageLoader } from '../../shared/components/ui/loaders/page-loaders/page-loader';
+import { InputFieldComponent } from '../../shared/components/form/input/input-field.component';
 import { AreaSearchInputComponent } from '../../shared/components/common/area/area-search-input.component';
 
 @Component({
@@ -30,22 +28,19 @@ import { AreaSearchInputComponent } from '../../shared/components/common/area/ar
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    // InputTextModule,
-    // StepsModule,
     ButtonModule,
     LabelComponent,
     InputFieldComponent,
     ThemeToggle,
-    // StepperModule,
-      CheckboxModule,
-    // TextareaModule,
+    CheckboxModule,
     DatePicker,
+    TextareaModule,
     // Select,
     MenuModule,
     DialogModule,
     EditorModule,
     PageLoader
-],
+  ],
   templateUrl: './company-setup.html',
   styleUrl: './company-setup.css',
 })
@@ -119,9 +114,9 @@ export class CompanySetup implements OnInit {
         country: [{ value: '', disabled: true, },],
         address: ['', [Validators.required, Validators.maxLength(250),],],
         company_description: [null, [Validators.maxLength(1000)],],
-        company_icon: [null, [Validators.required, CustomValidators.maxImageSize(1 * 1024 * 1024),], [CustomValidators.imageDimensions(30, 30, 400, 400),],],
-        company_logo: [null, [Validators.required, CustomValidators.maxImageSize(1 * 1024 * 1024),], [CustomValidators.imageDimensions(30, 30, 400, 400),],],
-        company_cover: [null, [CustomValidators.maxImageSize(1 * 1024 * 1024),], [CustomValidators.imageDimensions(600, 200, 3200, 800),],],
+        company_icon: [null, [Validators.required, CustomValidators.maxImageSize(1 * 1024 * 1024), CustomValidators.imageDimensions(30, 30, 400, 400),],],
+        company_logo: [null, [Validators.required, CustomValidators.maxImageSize(1 * 1024 * 1024), CustomValidators.imageDimensions(30, 30, 400, 400),],],
+        company_cover: [null, [CustomValidators.maxImageSize(1 * 1024 * 1024), CustomValidators.imageDimensions(600, 200, 3200, 800),],],
         establish_date: ['', [Validators.required],],
         registration_date: ['', [Validators.required],],
         company_website: ['', [CustomValidators.website()],],
@@ -197,21 +192,30 @@ export class CompanySetup implements OnInit {
     this.oneTimeForm.get('area')?.setValue('');
   }
 
-  onImageSelect(event: Event, type: 'icon' | 'logo' | 'cover'): void {
+  onImageSelect(
+    event: Event,
+    type: 'icon' | 'logo' | 'cover'
+  ): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
+
     const controlName = `company_${type}`;
     const control = this.oneTimeForm.get(controlName);
 
-    if (!file) {
-      control?.setValue(null);
-      control?.markAsTouched();
-      control?.updateValueAndValidity();
+    if (!control) {
       return;
     }
 
-    control?.setValue(file);
-    control?.markAsTouched();
+    if (!file) {
+      control.setValue(null);
+      control.markAsTouched();
+      control.updateValueAndValidity();
+      return;
+    }
+
+    control.setValue(file);
+    control.markAsTouched();
+    control.updateValueAndValidity();
 
     const reader = new FileReader();
 
@@ -220,22 +224,23 @@ export class CompanySetup implements OnInit {
 
       switch (type) {
         case 'icon':
-          this.iconFile = file;
           this.iconPreview = previewUrl;
           break;
 
         case 'logo':
-          this.logoFile = file;
           this.logoPreview = previewUrl;
           break;
 
         case 'cover':
-          this.coverFile = file;
           this.coverPreview = previewUrl;
           break;
       }
+    };
 
-      control?.updateValueAndValidity();
+    reader.onerror = () => {
+      console.error(`Failed to read company ${type} image`);
+      control.setValue(null);
+      control.updateValueAndValidity();
     };
 
     reader.readAsDataURL(file);
@@ -307,27 +312,29 @@ export class CompanySetup implements OnInit {
       formData.append('company_cover', this.coverFile);
     }
 
-    this.api.post('company/one-timeProfile-setup/create/', formData)
-      .subscribe({
-        next: (res: any) => {
-          this.toast.fromResponse(res);
+    console.log(formData);
 
-          if (res.status === 'success') {
-            localStorage.clear();
-            sessionStorage.clear();
-            localStorage.setItem('company_log', JSON.stringify(res.data));
-            this.toast.show('success', 'Profile Setup', 'Profile setup successful');
-            this.router.navigate(['/']);
-          }
-          this.isLoading = false;
-        },
+    // this.api.post('company/one-timeProfile-setup/create/', formData)
+    //   .subscribe({
+    //     next: (res: any) => {
+    //       this.toast.fromResponse(res);
 
-        error: (err) => {
-          console.error(err);
-          this.isLoading = false;
-          this.toast.show('error', 'Submission Failed', 'An error occurred during profile setup.');
-        },
-      });
+    //       if (res.status === 'success') {
+    //         localStorage.clear();
+    //         sessionStorage.clear();
+    //         localStorage.setItem('company_log', JSON.stringify(res.data));
+    //         this.toast.show('success', 'Profile Setup', 'Profile setup successful');
+    //         this.router.navigate(['/']);
+    //       }
+    //       this.isLoading = false;
+    //     },
+
+    //     error: (err) => {
+    //       console.error(err);
+    //       this.isLoading = false;
+    //       this.toast.show('error', 'Submission Failed', 'An error occurred during profile setup.');
+    //     },
+    //   });
   }
 
   onReset(): void {

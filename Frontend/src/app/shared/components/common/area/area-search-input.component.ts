@@ -12,28 +12,17 @@ import { ApiService } from '../../../../core/services/api.service';
 export interface Area {
     id: number;
     area_name: string;
-    city_instance?: {
-        city_name: string;
-    };
-    state_instance?: {
-        state_name: string;
-    };
-    country_instance?: {
-        country_name: string;
-    };
+    city_instance?: { city_name: string; };
+    state_instance?: { state_name: string; };
+    country_instance?: { country_name: string; };
     pin_code?: string;
     full_label?: string;
 }
 
 @Component({
-    selector: 'app-area-search-input',
+    selector: 'ras-area-search-input',
     standalone: true,
-    imports: [
-        CommonModule,
-        FormsModule,
-        AutoComplete,
-        InputTextModule,
-    ],
+    imports: [CommonModule, FormsModule, AutoComplete, InputTextModule,],
     template: `
     <p-autocomplete class="w-full" [(ngModel)]="selectedArea" [suggestions]="areaList" (completeMethod)="filterArea($event)" (onSelect)="onAreaSelect($event)" 
         (onClear)="onAreaClear()" [showClear]="true" [forceSelection]="true" placeholder="Search for Area" optionLabel="full_label">
@@ -48,7 +37,6 @@ export interface Area {
 })
 export class AreaSearchInputComponent {
     private readonly api = inject(ApiService);
-
     private readonly areaSearch$ = new Subject<string>();
 
     @Input()
@@ -141,7 +129,6 @@ export class AreaSearchInputComponent {
     onAreaClear(): void {
         this.selectedArea = null;
         this.areaList = [];
-
         this.areaCleared.emit();
     }
 }
