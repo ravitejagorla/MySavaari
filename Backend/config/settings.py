@@ -2,7 +2,7 @@ from pathlib import Path
 from decouple import config
 from celery.schedules import crontab
 
-PROJECT_NAME = config("PROJECT_NAME", default="MySavaari")
+PROJECT_NAME = config("PROJECT_NAME", default="RA's Raids")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')

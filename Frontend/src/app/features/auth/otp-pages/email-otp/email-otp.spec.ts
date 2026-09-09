@@ -51,7 +51,7 @@ describe('EmailOtp', () => {
         {
           provide: AppConfigService,
           useValue: {
-            title: vi.fn(() => 'MySavaari'),
+            title: vi.fn(() => 'RA's Raids'),
           },
         },
       ],

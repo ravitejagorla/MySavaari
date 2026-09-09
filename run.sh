@@ -16,7 +16,7 @@ FRONTEND_PID=$!
 
 echo ""
 echo "=================================="
-echo " MySavaari Development Servers"
+echo " RA's Raids Development Servers"
 echo "=================================="
 echo " Django  : http://127.0.0.1:8000"
 echo " Angular : http://localhost:4200"
