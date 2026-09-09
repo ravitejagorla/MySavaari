@@ -512,11 +512,8 @@
                 </p>
                 <div
                     class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 flex flex-col items-center justify-center relative h-40">
-                    <!-- <input type="file" accept="image/*" id="companyIcon"
-                        class="absolute inset-0 opacity-0 cursor-pointer" formControlName="company_icon"
-                        (change)="onImageSelect($event, 'icon')" /> -->
-                    <input type="file" accept="image/*" id="companyIcon"
-                        class="absolute inset-0 opacity-0 cursor-pointer" (change)="onImageSelect($event, 'icon')">
+                    <input type="file" accept="image/*" id="companyIcon" (change)="onImageSelect($event, 'icon')"
+                        class="absolute inset-0 opacity-0 cursor-pointer"  />
 
 
                     @if (iconPreview) {
@@ -552,12 +549,9 @@
                 </p>
                 <div
                     class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 flex flex-col items-center justify-center relative h-40">
-                    <!-- <input type="file" accept="image/*" id="companyLogo"
-                        class="absolute inset-0 opacity-0 cursor-pointer" formControlName="company_logo"
-                        (change)="onImageSelect($event, 'logo')" /> -->
+                    <input type="file" accept="image/*" id="companyLogo" (change)="onImageSelect($event, 'logo')"
+                        class="absolute inset-0 opacity-0 cursor-pointer"  />
 
-                    <input type="file" accept="image/*" id="companyLogo"
-                        class="absolute inset-0 opacity-0 cursor-pointer" (change)="onImageSelect($event, 'logo')">
                     @if (logoPreview) {
                     <div class="flex flex-col items-center">
                         <img [src]="logoPreview" alt="Logo Preview" class="h-24 w-24 object-contain rounded-lg mb-2" />
@@ -591,10 +585,8 @@
                 </p>
                 <div
                     class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-4 flex flex-col items-center justify-center relative h-40">
-                    <!-- <input type="file" accept="image/*" formControlName="company_cover" id="companyCover"
-                        class="absolute inset-0 opacity-0 cursor-pointer" (change)="onImageSelect($event, 'cover')" /> -->
-                    <input type="file" accept="image/*" id="companyIcon"
-                        class="absolute inset-0 opacity-0 cursor-pointer" (change)="onImageSelect($event, 'icon')">
+                    <input type="file" accept="image/*"  id="companyCover"
+                        class="absolute inset-0 opacity-0 cursor-pointer" (change)="onImageSelect($event, 'cover')" />
 
                     @if (coverPreview) {
                     <div class="flex flex-col items-center">

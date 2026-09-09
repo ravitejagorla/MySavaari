@@ -24,8 +24,8 @@ export interface Area {
     standalone: true,
     imports: [CommonModule, FormsModule, AutoComplete, InputTextModule,],
     template: `
-    <p-autocomplete class="w-full" [(ngModel)]="selectedArea" [suggestions]="areaList" (completeMethod)="filterArea($event)" (onSelect)="onAreaSelect($event)" 
-        (onClear)="onAreaClear()" [showClear]="true" [forceSelection]="true" placeholder="Search for Area" optionLabel="full_label">
+    <p-autocomplete class="w-full" [(ngModel)]="selectedArea" [ngModelOptions]="{ standalone: true }" [suggestions]="areaList" (completeMethod)="filterArea($event)"
+        (onSelect)="onAreaSelect($event)" (onClear)="onAreaClear()" [showClear]="true" [forceSelection]="true" placeholder="Search for Area" optionLabel="full_label">
         <ng-template let-area pTemplate="item">
             <div>{{ area.area_name }} - {{ area.pin_code }}</div>
         </ng-template>

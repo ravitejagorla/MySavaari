@@ -192,30 +192,21 @@ export class CompanySetup implements OnInit {
     this.oneTimeForm.get('area')?.setValue('');
   }
 
-  onImageSelect(
-    event: Event,
-    type: 'icon' | 'logo' | 'cover'
-  ): void {
+  onImageSelect(event: Event, type: 'icon' | 'logo' | 'cover'): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
-
     const controlName = `company_${type}`;
     const control = this.oneTimeForm.get(controlName);
 
-    if (!control) {
-      return;
-    }
-
     if (!file) {
-      control.setValue(null);
-      control.markAsTouched();
-      control.updateValueAndValidity();
+      control?.setValue(null);
+      control?.markAsTouched();
+      control?.updateValueAndValidity();
       return;
     }
 
-    control.setValue(file);
-    control.markAsTouched();
-    control.updateValueAndValidity();
+    control?.setValue(file);
+    control?.markAsTouched();
 
     const reader = new FileReader();
 
@@ -224,23 +215,22 @@ export class CompanySetup implements OnInit {
 
       switch (type) {
         case 'icon':
+          this.iconFile = file;
           this.iconPreview = previewUrl;
           break;
 
         case 'logo':
+          this.logoFile = file;
           this.logoPreview = previewUrl;
           break;
 
         case 'cover':
+          this.coverFile = file;
           this.coverPreview = previewUrl;
           break;
       }
-    };
 
-    reader.onerror = () => {
-      console.error(`Failed to read company ${type} image`);
-      control.setValue(null);
-      control.updateValueAndValidity();
+      control?.updateValueAndValidity();
     };
 
     reader.readAsDataURL(file);
@@ -283,6 +273,7 @@ export class CompanySetup implements OnInit {
   }
 
   oneTimeFormSubmit(): void {
+    console.log('Form Value:', this.oneTimeForm.getRawValue());
     if (this.oneTimeForm.invalid) {
       this.oneTimeForm.markAllAsTouched();
       return;
@@ -312,7 +303,7 @@ export class CompanySetup implements OnInit {
       formData.append('company_cover', this.coverFile);
     }
 
-    console.log(formData);
+    console.log('Form Data:', formData);
 
     // this.api.post('company/one-timeProfile-setup/create/', formData)
     //   .subscribe({
