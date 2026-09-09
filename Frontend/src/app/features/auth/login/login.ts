@@ -11,6 +11,7 @@ import { InputFieldComponent } from '../../../shared/components/form/input/input
 import { LabelComponent } from '../../../shared/components/form/label/label.component';
 import { ThemeToggle } from '../../../shared/components/common/theme-toggle/theme-toggle';
 import { PageLoader } from '../../../shared/components/ui/loaders/page-loaders/page-loader';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   standalone: true,
@@ -31,6 +32,7 @@ export class Login implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly toast = inject(GlobalToastService);
+  private readonly userService = inject(UserService);
 
   ngOnInit(): void {
     this.initForm();
@@ -63,16 +65,21 @@ export class Login implements OnInit {
             this.toast.fromResponse(response);
             return;
           }
+
           const token = response.data?.token;
+
           if (!token) {
             this.toast.show('error', 'Login', 'Login token was not received.');
             return;
           }
+
           this.authService.setToken(token);
 
-          this.loginForm.reset();
-          this.toast.fromResponse(response);
-          this.router.navigate(['/']);
+          this.userService.initializeUser().subscribe(() => {
+            this.loginForm.reset();
+            this.toast.fromResponse(response);
+            this.router.navigate(['/']);
+          });
         },
         error: (error) => {
           console.error('Login failed:', error);

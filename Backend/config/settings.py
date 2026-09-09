@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'channels',
     # Apps
     'apps.accounts',
+    'apps.company',
     'apps.datamanagement',
     'apps.generalservices',
 ]
