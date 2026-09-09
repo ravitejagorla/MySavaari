@@ -14,6 +14,7 @@ import { DialogModule } from 'primeng/dialog';
 import { CustomValidators } from '../../shared/validators/custom-validators';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
 import { DatePicker } from 'primeng/datepicker';
 import { EditorModule } from 'primeng/editor';
 import { InputFieldComponent } from '../../shared/components/form/input/input-field.component';
@@ -35,7 +36,7 @@ import { ThemeToggle } from '../../shared/components/common/theme-toggle/theme-t
     InputFieldComponent,
     ThemeToggle,
     // StepperModule,
-    // Checkbox,
+      CheckboxModule,
     // TextareaModule,
     DatePicker,
     // Select,
