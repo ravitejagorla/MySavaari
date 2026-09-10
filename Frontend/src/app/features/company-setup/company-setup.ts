@@ -99,11 +99,11 @@ export class CompanySetup implements OnInit {
 
   getServiceData(): void {
     this.companyTypeService.getCompanyTypes()
-    .pipe(finalize(() => this.isPageLoading = false))
-    .subscribe({
-      next: companyTypes => this.companyTypes = companyTypes,
-      error: error => console.error('Error getting company types:', error),
-    })
+      .pipe(finalize(() => this.isPageLoading = false))
+      .subscribe({
+        next: companyTypes => this.companyTypes = companyTypes,
+        error: error => console.error('Error getting company types:', error),
+      })
   }
 
   private initForm(): void {
@@ -291,36 +291,41 @@ export class CompanySetup implements OnInit {
       return;
     }
     const formData = new FormData();
-    if (this.iconFile) formData.append('company_icon', this.iconFile);
-    if (this.logoFile) formData.append('company_logo', this.logoFile);
-    if (this.coverFile) formData.append('company_cover', this.coverFile);
-    formData.append('registration_date', DateTimeUtility.formatDate(this.oneTimeForm.value.registration_date));
-    formData.append('establish_date', DateTimeUtility.formatDate(this.oneTimeForm.value.establish_date));
-    formData.append('time_from', DateTimeUtility.formatTime(this.oneTimeForm.value.time_from));
-    formData.append('time_to', DateTimeUtility.formatTime(this.oneTimeForm.value.time_to));
+    const formValue = this.oneTimeForm.getRawValue();
+    for (const [key, value] of Object.entries(formValue)) {
+      if (value === null || value === undefined || value === '') continue;
+      if (value instanceof File) {
+        formData.append(key, value);
+        continue;
+      }
+      if (key === 'registration_date' ||key === 'establish_date') {
+        formData.append(key, DateTimeUtility.formatDate(value as Date | string));
+        continue;
+      }
 
-    console.log('========== FORM DATA ==========');
-
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
+      if (key === 'time_from' || key === 'time_to') {
+        formData.append(key, DateTimeUtility.formatTime(value as Date | string));
+        continue;
+      }
+      formData.append(key, String(value));
     }
-    
     this.isLoading = true;
     this.api.post('company/company-setup/', formData)
-    .pipe(finalize(() => this.isLoading = false))
-    .subscribe({
-      next: response => {
-        if (response.status === 'success') {
-          this.toast.show('success', 'Company Setup', 'Company setup successful.');
-          this.router.navigate(['/']);
-        } else {
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe({
+        next: response => {
+          if (response.status === 'success') {
+            this.toast.show('success', 'Company Setup', 'Company setup successful.');
+            this.router.navigate(['/']);
+          } else {
+            this.toast.show('error', 'Company Setup', 'Company setup failed.');
+          }
+        },
+        error: error => {
+          console.error('Company setup error:', error);
           this.toast.show('error', 'Company Setup', 'Company setup failed.');
         }
-      },
-      error: error => {
-        this.toast.show('error', 'Company Setup', 'Company setup failed.');
-      }
-    })
+      });
   }
 
   onReset(): void {
@@ -347,5 +352,5 @@ export class CompanySetup implements OnInit {
     this.oneTimeForm.markAsPristine();
     this.oneTimeForm.markAsUntouched();
   }
-  
+
 }

@@ -59,18 +59,14 @@ def company_setup(request):
         company_website = data.get("company_website", "").strip()
         branch_identity_name = data.get("branch_identity_name", "").strip()
         password = data.get("password", "").strip()
-        confirm_password = data.get("confirm_password", "").strip()
         required_fields = [
             company_registered_name, company_short_name, state_of_recognitation, registration_number, license_number, company_type, phone_number, emergency_number, email, area, address,
-            company_description, company_icon, company_logo, establish_date, registration_date, company_website, branch_identity_name, password, confirm_password,
+            company_description, company_icon, company_logo, establish_date, registration_date, company_website, branch_identity_name, password
         ]
         if not is_available_24_7:
             required_fields.extend([time_from, time_to,])
         if not all(required_fields):
-            return Response(
-                {"status": "error", "subject": "Company Setup", "message": "All required fields must be provided.",}, status=status.HTTP_200_OK,)
-        if password != confirm_password:
-            return Response({"status": "error", "subject": "Company Setup", "message": "Passwords do not match.",}, status=status.HTTP_200_OK,)
+            return Response({"status": "error", "subject": "Company Setup", "message": "All required fields must be provided.",}, status=status.HTTP_200_OK,)
         try:
             company_type_instance = CompanyType.objects.get(id=company_type,is_active=True,)
         except CompanyType.DoesNotExist:
@@ -80,9 +76,6 @@ def company_setup(request):
         except Area.DoesNotExist:
             return Response({"status": "error", "subject": "Company Setup", "message": "Invalid area.",}, status=status.HTTP_200_OK,)
         company_crn = generate_sequence_id("CRN")
-        print("================================================================================")
-        print("Company CRN", company_crn)
-        print("================================================================================")
         company = Company.objects.create(
             company_crn=company_crn,
             company_registered_name=company_registered_name,
@@ -111,9 +104,6 @@ def company_setup(request):
             company_website=company_website,
         )
         branch_id = generate_sequence_id("BRN")
-        print("================================================================================")
-        print("Branch ID", branch_id)
-        print("================================================================================")
         branch = Branch.objects.create(
             company_instance=company,
             branch_id=branch_id,
@@ -144,9 +134,6 @@ def company_setup(request):
             branch_cover=company_cover,
             establish_date=establish_date,
         )
-        print("================================================================================")
-        print("Company ID", company.id)
-        print("================================================================================")
         user.company_instance = company
         user.is_company_setup_completed = True
         user.save()
@@ -164,16 +151,5 @@ def company_setup(request):
             status=status.HTTP_200_OK,
         )
     except Exception as e:
-        print("=" * 80)
-        print("COMPANY SETUP ERROR")
-        print("=" * 80)
-        print(str(e))
-        print("=" * 80)
-        return Response(
-            {
-                "status": "error",
-                "subject": "Company Setup",
-                "message": "Company setup failed.",
-            },
-            status=status.HTTP_200_OK,
-        )
+        print("Error : ", str(e))
+        return Response({ "status": "error", "subject": "Company Setup", "message": "Company setup failed.",},status=status.HTTP_200_OK,)

@@ -56,6 +56,7 @@ class Company(models.Model):
 class Branch(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     branch_id = models.CharField(max_length=20)
+    company_instance = models.ForeignKey(Company,on_delete=models.CASCADE, related_name='branches', null=True, blank=True)
     branch_full_name = models.CharField(max_length=100)
     branch_short_name = models.CharField(max_length=70)
     is_main_branch = models.BooleanField(default=False)
