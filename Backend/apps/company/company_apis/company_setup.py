@@ -80,6 +80,9 @@ def company_setup(request):
         except Area.DoesNotExist:
             return Response({"status": "error", "subject": "Company Setup", "message": "Invalid area.",}, status=status.HTTP_200_OK,)
         company_crn = generate_sequence_id("CRN")
+        print("================================================================================")
+        print("Company CRN", company_crn)
+        print("================================================================================")
         company = Company.objects.create(
             company_crn=company_crn,
             company_registered_name=company_registered_name,
@@ -108,6 +111,9 @@ def company_setup(request):
             company_website=company_website,
         )
         branch_id = generate_sequence_id("BRN")
+        print("================================================================================")
+        print("Branch ID", branch_id)
+        print("================================================================================")
         branch = Branch.objects.create(
             company_instance=company,
             branch_id=branch_id,
@@ -138,6 +144,9 @@ def company_setup(request):
             branch_cover=company_cover,
             establish_date=establish_date,
         )
+        print("================================================================================")
+        print("Company ID", company.id)
+        print("================================================================================")
         user.company_instance = company
         user.is_company_setup_completed = True
         user.save()

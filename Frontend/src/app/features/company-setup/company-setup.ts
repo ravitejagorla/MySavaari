@@ -23,6 +23,7 @@ import { InputFieldComponent } from '../../shared/components/form/input/input-fi
 import { AreaSearchInputComponent } from '../../shared/components/common/area/area-search-input.component';
 import { CompanyType } from '../../core/models/datamanagement/company-type.model';
 import { finalize } from 'rxjs';
+import { DateTimeUtility } from '../../core/utilities/date-time.utility';
 
 @Component({
   selector: 'ras-company-setup',
@@ -285,66 +286,25 @@ export class CompanySetup implements OnInit {
   }
 
   oneTimeFormSubmit(): void {
-
-    console.log('========== FORM SUBMIT ==========');
-
-    console.log('Form Value:', this.oneTimeForm.getRawValue());
-    console.log('Form Valid:', this.oneTimeForm.valid);
-    console.log('Form Status:', this.oneTimeForm.status);
-    console.log('Form Errors:', this.oneTimeForm.errors);
-
-    Object.keys(this.oneTimeForm.controls).forEach((key) => {
-
-      const control = this.oneTimeForm.get(key);
-
-      if (control?.invalid) {
-        console.log(
-          '❌ INVALID:',
-          key,
-          'Value:',
-          control.value,
-          'Errors:',
-          control.errors
-        );
-      }
-
-    });
-
     if (this.oneTimeForm.invalid) {
-      console.log('❌ FORM INVALID - RETURNING');
       this.oneTimeForm.markAllAsTouched();
       return;
     }
-
-    console.log('✅ FORM VALID - CONTINUING');
-
     const formData = new FormData();
-
-    Object.entries(this.oneTimeForm.getRawValue()).forEach(
-      ([key, value]) => {
-
-        if (
-          !(value instanceof File) &&
-          value !== null &&
-          value !== undefined
-        ) {
-          formData.append(key, String(value));
-        }
-
-      }
-    );
-
     if (this.iconFile) formData.append('company_icon', this.iconFile);
-    
     if (this.logoFile) formData.append('company_logo', this.logoFile);
-
     if (this.coverFile) formData.append('company_cover', this.coverFile);
+    formData.append('registration_date', DateTimeUtility.formatDate(this.oneTimeForm.value.registration_date));
+    formData.append('establish_date', DateTimeUtility.formatDate(this.oneTimeForm.value.establish_date));
+    formData.append('time_from', DateTimeUtility.formatTime(this.oneTimeForm.value.time_from));
+    formData.append('time_to', DateTimeUtility.formatTime(this.oneTimeForm.value.time_to));
 
     console.log('========== FORM DATA ==========');
 
     for (const [key, value] of formData.entries()) {
       console.log(key, value);
     }
+    
     this.isLoading = true;
     this.api.post('company/company-setup/', formData)
     .pipe(finalize(() => this.isLoading = false))
@@ -387,4 +347,5 @@ export class CompanySetup implements OnInit {
     this.oneTimeForm.markAsPristine();
     this.oneTimeForm.markAsUntouched();
   }
+  
 }
