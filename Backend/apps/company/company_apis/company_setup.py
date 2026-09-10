@@ -25,11 +25,11 @@ from apps.datamanagement.models import (
 def company_setup(request):
     try:
         user_info = request.user_info
-        encrypted_user_id = user_info.get("user_id")
-        if not encrypted_user_id:
+        user_id = decrypt(user_info.get("user_id"))
+        if not user_id:
             return Response({"status": "error", "subject": "Company Setup", "message": "User not found.",}, status=status.HTTP_200_OK,)
         try:
-            user = User.objects.get(id=encrypted_user_id)
+            user = User.objects.get(id=user_id)
         except User.DoesNotExist:
             return Response({ "status": "error", "subject": "Company Setup", "message": "User not found.",}, status=status.HTTP_200_OK,)
         data = request.data
@@ -79,7 +79,7 @@ def company_setup(request):
             area_instance = (Area.objects.select_related("city_instance", "state_instance", "country_instance").get(id=area,is_active=True,))
         except Area.DoesNotExist:
             return Response({"status": "error", "subject": "Company Setup", "message": "Invalid area.",}, status=status.HTTP_200_OK,)
-        company_crn = generate_sequence_id(role="CRN")
+        company_crn = generate_sequence_id("CRN")
         company = Company.objects.create(
             company_crn=company_crn,
             company_registered_name=company_registered_name,
@@ -107,7 +107,7 @@ def company_setup(request):
             establish_date=establish_date,
             company_website=company_website,
         )
-        branch_id = generate_sequence_id(role="BRN")
+        branch_id = generate_sequence_id("BRN")
         branch = Branch.objects.create(
             company_instance=company,
             branch_id=branch_id,
