@@ -7,7 +7,8 @@ from .models import (
     Genders, 
     AgeGroup, 
     BloodGroup, 
-    Nationality
+    Nationality,
+    CompanyType,
 )
 
 class CountryFKSerializer(serializers.ModelSerializer):
@@ -64,4 +65,9 @@ class BloodGroupSerializer(serializers.ModelSerializer):
 class NationalitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Nationality
+        fields = '__all__'
+
+class CompanyTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompanyType
         fields = '__all__'

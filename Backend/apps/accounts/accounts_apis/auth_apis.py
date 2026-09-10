@@ -14,14 +14,10 @@ from core.services.generate_global_sequence import generate_sequence_id
 from core.services.jwt_session import generate_login_jwt
 from apps.accounts.models import (
     User,
-    # UserAdmin,
-    # UserCustomer,
     OTP
 )
 from apps.accounts.serializers import (
     UserSerializer,
-    # UserAdminSerializer,
-    # UserCustomerSerializer,
     OTPSerializer,
     CurrentUserSerializer
 )
@@ -51,25 +47,6 @@ def admin_register(request):
             return Response({'status':'error','subject':'Terms and Conditions','message': 'You must accept the terms and conditions.'}, status=status.HTTP_200_OK)
         email_exists = User.objects.filter(email=email, role=role).exists()
         phone_exists = User.objects.filter(phone=phone, role=role).exists()
-        # existing_user = User.objects.filter(role="ADMIN").filter(Q(email=email) | Q(phone=phone)).first()
-        # if existing_user:
-        #     if existing_user.is_email_verified and existing_user.is_phone_verified:
-        #         return Response({
-        #             "status": "error",
-        #             "subject": "Already Registered",
-        #             "message": "An account with this email or phone number is already registered."
-        #         }, status=status.HTTP_200_OK)
-
-        #     return Response({
-        #         "status": "success",
-        #         "subject": "Registration",
-        #         "message": "Registration already exists. Continue verification.",
-        #         "data": {
-        #             "user_id": encrypt(str(existing_user.id)),
-        #             "is_email_verified": existing_user.is_email_verified,
-        #             "is_phone_verified": existing_user.is_phone_verified
-        #         }
-        #     }, status=status.HTTP_200_OK)
         if email_exists and phone_exists:
             return Response({'status':'error','subject':'Email and Phone','message': 'Email and Phone number already exists.'}, status=status.HTTP_200_OK)
         if email_exists:
@@ -89,11 +66,6 @@ def admin_register(request):
             password=hashed_password,
             terms_and_conditions=terms_and_conditions
         )
-        # admin_id = generate_sequence_id(role)
-        # user_admin = UserAdmin.objects.create(
-        #     user=user,
-        #     admin_id=admin_id
-        # )
         email_otp = generate_otp()
         OTP.objects.create(
             user=user,

@@ -148,6 +148,15 @@ class BloodGroup(models.Model):
 
     def __str__(self):
         return self.blood_group_name
+
+
+class CompanyType(models.Model):
+    company_type = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.company_type
     
 # class ActionLogs(models.Model):
 #     ACTION_CHOICES = (

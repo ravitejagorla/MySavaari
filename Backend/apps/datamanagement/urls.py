@@ -1,8 +1,8 @@
 from django.urls import path
-from apps.datamanagement.datamanagement_routes import area_routes
+from Backend.apps.datamanagement.datamanagement_routes import core_routes
 
 urlpatterns = [
 
 ]
 
-urlpatterns += area_routes.urlpatterns
+urlpatterns += core_routes.urlpatterns

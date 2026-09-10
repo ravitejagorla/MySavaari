@@ -5,9 +5,11 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from apps.datamanagement.models import (
     Area,
+    CompanyType,
 )
 from apps.datamanagement.serializers import (
     AreaSerializer,
+    CompanyTypeSerializer,
 )
 
 @api_view(["GET"])
@@ -39,3 +41,10 @@ def area_search_api(request):
         serializer.data,
         status=status.HTTP_200_OK,
     )
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def company_type_api(request):
+    queryset = CompanyType.objects.filter(is_active=True)
+    serializer = CompanyTypeSerializer(queryset, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

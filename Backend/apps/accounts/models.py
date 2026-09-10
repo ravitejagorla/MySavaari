@@ -1,6 +1,9 @@
 from django.db import models
 from uuid import uuid4
-from apps.company.models import Company
+from apps.company.models import (
+    Company,
+    Branch
+)
 
 class User(models.Model):
     ROLE_CHOICES = (
@@ -10,7 +13,8 @@ class User(models.Model):
         ('CUSTOMER', 'Customer'),
     )
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    company_instance = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True, blank=True, related_name='users')
+    company_instance = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True, blank=True, related_name='users_company')
+    branch_instance = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True, blank=True, related_name='users_branch')
     user_id = models.CharField(max_length=20, blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profile_pictures', blank=True, null=True)
     first_name = models.CharField(max_length=50, blank=True, null=True)
@@ -32,24 +36,6 @@ class User(models.Model):
 
     def __str__(self):
         return f"{self.phone}"
-
-# class UserAdmin(models.Model):
-#     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-#     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="admin_profile")
-#     admin_id = models.CharField(max_length=20, blank=True, null=True)
-#     created_at = models.DateTimeField(auto_now_add=True)
-
-#     def __str__(self):
-#          return f"{self.admin_id}"
-
-# class UserCustomer(models.Model):
-#         id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-#         user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="customer_profile")
-#         customer_id = models.CharField(max_length=20, blank=True, null=True)
-#         created_at = models.DateTimeField(auto_now_add=True)
-
-#         def __str__(self):
-#              return f"{self.customer_id}"
     
 class OTP(models.Model):
     OTP_TYPE_CHOICES = (

@@ -10,14 +10,16 @@ from apps.datamanagement.models import (
     BloodGroup,
     Nationality,
     Country,
+    CompanyType
 )
 
 
 class Command(BaseCommand):
-    help = "Seed master data (banks, account types, upi, gender, age group, blood group, nationality, countries)"
+    help = "Seed master data (banks, account types, upi, gender, age group, blood group, nationality, countries, company types)"
 
     @transaction.atomic
     def handle(self, *args, **kwargs):
+        created_at = timezone.now()
 
         # ---------------- BANK NAMES ----------------
         bank_names = [
@@ -32,7 +34,7 @@ class Command(BaseCommand):
         for name in bank_names:
             BankNames.objects.get_or_create(
                 bank_name=name,
-                defaults={"is_active": True, "created_at": timezone.now()}
+                defaults={"is_active": True, "created_at": created_at}
             )
 
         # ---------------- BANK ACCOUNT TYPES ----------------
@@ -46,7 +48,7 @@ class Command(BaseCommand):
         for acc_type in account_types:
             BankAccountType.objects.get_or_create(
                 bank_account_type=acc_type,
-                defaults={"is_active": True, "created_at": timezone.now()}
+                defaults={"is_active": True, "created_at": created_at}
             )
 
         # ---------------- UPI NAMES ----------------
@@ -61,7 +63,7 @@ class Command(BaseCommand):
         for upi in upi_names:
             UpiNames.objects.get_or_create(
                 upi_names=upi,
-                defaults={"is_active": True, "created_at": timezone.now()}
+                defaults={"is_active": True, "created_at": created_at}
             )
 
         # ---------------- GENDERS ----------------
@@ -77,7 +79,7 @@ class Command(BaseCommand):
                 defaults={
                     "gender_short_name": short,
                     "is_active": True,
-                    "created_at": timezone.now()
+                    "created_at": created_at
                 }
             )
 
@@ -95,7 +97,7 @@ class Command(BaseCommand):
         for group in age_groups:
             AgeGroup.objects.get_or_create(
                 age_group_name=group,
-                defaults={"is_active": True, "created_at": timezone.now()}
+                defaults={"is_active": True, "created_at": created_at}
             )
 
         # ---------------- BLOOD GROUPS ----------------
@@ -109,24 +111,24 @@ class Command(BaseCommand):
         for bg in blood_groups:
             BloodGroup.objects.get_or_create(
                 blood_group_name=bg,
-                defaults={"is_active": True, "created_at": timezone.now()}
+                defaults={"is_active": True, "created_at": created_at}
             )
 
         # ---------------- NATIONALITY ----------------
-        nationalities = {
+        nationalities = [
             'Indian', 'Pakistani', 'Bangladeshi', 'Nepali', 'Sri Lankan',
             'Maldivian', 'Singaporean', 'Malaysian', 'Filipino', 'Thai',
             'Vietnamese', 'Cambodian', 'Laotian', 'Burmese',
             'Indonesian', 'Japanese', 'Korean', 'Chinese',
             'Taiwanese', 'Hong Konger', 'Macanese'
-        }
+        ]
 
         for name in nationalities:
             Nationality.objects.get_or_create(
                 nationality_name=name,
                 defaults={
                     "is_active": True,
-                    "created_at": timezone.now()
+                    "created_at": created_at
                 }
             )
 
@@ -163,8 +165,29 @@ class Command(BaseCommand):
                     "country_iso_code": iso_code,
                     "country_phone_code": phone_code,
                     "is_active": True,
-                    "created_at": timezone.now(),
+                    "created_at": created_at,
                 }
+            )
+
+        # ---------------- COMPANY TYPES ----------------
+        company_types = [
+            "Private Limited",
+            "Public Limited",
+            "Cooperative",
+            "Sole Proprietorship",
+            "Partnership",
+            "Limited Liability Partnership",
+            "General Partnership",
+            "Limited Partnership",
+            "General Limited Partnership",
+            "Unlimited Liability Company",
+            "Other",
+        ]
+
+        for company_type in company_types:
+            CompanyType.objects.get_or_create(
+                company_type=company_type,
+                defaults={"is_active": True, "created_at": created_at}
             )
 
         self.stdout.write(
