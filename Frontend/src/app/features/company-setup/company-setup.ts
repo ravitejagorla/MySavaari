@@ -5,6 +5,8 @@ import { ApiService } from '../../core/services/api.service';
 import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
 import { GlobalToastService } from '../../core/services/global-toast.service';
+import { CompanyTypeService } from '../../core/services/company-type.service';
+import { Select } from 'primeng/select';
 import { MenuModule } from 'primeng/menu';
 import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
@@ -19,6 +21,8 @@ import { ThemeToggle } from '../../shared/components/common/theme-toggle/theme-t
 import { PageLoader } from '../../shared/components/ui/loaders/page-loaders/page-loader';
 import { InputFieldComponent } from '../../shared/components/form/input/input-field.component';
 import { AreaSearchInputComponent } from '../../shared/components/common/area/area-search-input.component';
+import { CompanyType } from '../../core/models/datamanagement/company-type.model';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'ras-company-setup',
@@ -35,7 +39,7 @@ import { AreaSearchInputComponent } from '../../shared/components/common/area/ar
     CheckboxModule,
     DatePicker,
     TextareaModule,
-    // Select,
+    Select,
     MenuModule,
     DialogModule,
     EditorModule,
@@ -45,18 +49,20 @@ import { AreaSearchInputComponent } from '../../shared/components/common/area/ar
   styleUrl: './company-setup.css',
 })
 export class CompanySetup implements OnInit {
-  private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
-  private readonly toast = inject(GlobalToastService);
+  private readonly api = inject(ApiService);
+  private readonly fb = inject(FormBuilder);
   private readonly userService = inject(UserService);
   private readonly authService = inject(AuthService);
-  private readonly api = inject(ApiService);
+  private readonly toast = inject(GlobalToastService);
+  private readonly companyTypeService = inject(CompanyTypeService);
 
   isPageLoading = true;
   isLoading = false;
   showMoreInfo = false;
   showPassword = false;
   showConfirmPassword = false;
+  companyTypes: CompanyType[] = [];
 
   oneTimeForm!: FormGroup;
 
@@ -76,8 +82,6 @@ export class CompanySetup implements OnInit {
   countryValue = '';
   areaList: unknown[] = [];
 
-  companyType: unknown[] = [];
-
   iconPreview: string | null = null;
   logoPreview: string | null = null;
   coverPreview: string | null = null;
@@ -89,8 +93,16 @@ export class CompanySetup implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.setup24HourAvailabilityListener();
+    this.getServiceData();
+  }
 
-    this.isPageLoading = false;
+  getServiceData(): void {
+    this.companyTypeService.getCompanyTypes()
+    .pipe(finalize(() => this.isPageLoading = false))
+    .subscribe({
+      next: companyTypes => this.companyTypes = companyTypes,
+      error: error => console.error('Error getting company types:', error),
+    })
   }
 
   private initForm(): void {
@@ -101,7 +113,7 @@ export class CompanySetup implements OnInit {
         state_of_recognitation: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(40), CustomValidators.noDoubleSpaces(), CustomValidators.lettersOnly(),],],
         registration_number: ['', [Validators.required, Validators.maxLength(30), CustomValidators.noDoubleSpaces(), CustomValidators.registrationNumber(),],],
         license_number: ['', [Validators.required, Validators.maxLength(30), CustomValidators.noDoubleSpaces(), CustomValidators.licenseNumber(),],],
-        // company_type: ['',[  Validators.required,  CustomValidators.noDoubleSpaces(),],],
+        company_type: ['', [Validators.required, CustomValidators.noDoubleSpaces(),],],
         phone_number: ['', [Validators.required, CustomValidators.phoneValidator(),],],
         emergency_number: ['', [Validators.required, CustomValidators.phoneValidator(),],],
         email: ['', [Validators.required, Validators.email,],],
@@ -306,8 +318,6 @@ export class CompanySetup implements OnInit {
 
     console.log('✅ FORM VALID - CONTINUING');
 
-    this.isLoading = true;
-
     const formData = new FormData();
 
     Object.entries(this.oneTimeForm.getRawValue()).forEach(
@@ -324,24 +334,33 @@ export class CompanySetup implements OnInit {
       }
     );
 
-    if (this.iconFile) {
-      formData.append('company_icon', this.iconFile);
-    }
+    if (this.iconFile) formData.append('company_icon', this.iconFile);
+    
+    if (this.logoFile) formData.append('company_logo', this.logoFile);
 
-    if (this.logoFile) {
-      formData.append('company_logo', this.logoFile);
-    }
-
-    if (this.coverFile) {
-      formData.append('company_cover', this.coverFile);
-    }
+    if (this.coverFile) formData.append('company_cover', this.coverFile);
 
     console.log('========== FORM DATA ==========');
 
     for (const [key, value] of formData.entries()) {
       console.log(key, value);
     }
-
+    this.isLoading = true;
+    this.api.post('company/company-setup/', formData)
+    .pipe(finalize(() => this.isLoading = false))
+    .subscribe({
+      next: response => {
+        if (response.status === 'success') {
+          this.toast.show('success', 'Company Setup', 'Company setup successful.');
+          this.router.navigate(['/']);
+        } else {
+          this.toast.show('error', 'Company Setup', 'Company setup failed.');
+        }
+      },
+      error: error => {
+        this.toast.show('error', 'Company Setup', 'Company setup failed.');
+      }
+    })
   }
 
   onReset(): void {

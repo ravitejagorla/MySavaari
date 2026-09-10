@@ -1,5 +1,5 @@
 from django.urls import path
-from Backend.apps.datamanagement.datamanagement_routes import core_routes
+from apps.datamanagement.datamanagement_routes import core_routes
 
 urlpatterns = [
 

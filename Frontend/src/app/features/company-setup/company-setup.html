@@ -365,20 +365,20 @@
                 </h3>
             </div>
 
-            <!-- <div class="flex flex-col">
-        <app-label [isRequired]="true">Type of company</app-label>
-        <p-select [options]="companyType" optionValue="id" formControlName="company_type" [showClear]="true"
-          placeholder="Select a company type" optionLabel="company_type" />
-        @if((getControl('company_type')?.touched && getControl('company_type')?.invalid)){
-        <div class="text-error-500 text-sm mt-1">
-          @if(getControl('company_type')?.errors?.['required']){
-          Please select the type of company
-          }@else if(getControl('company_type')?.errors?.['doubleSpaces']){
-          No Double spaces are allowed
-          }
-        </div>
-        }
-      </div> -->
+            <div class="flex flex-col">
+                <app-label [isRequired]="true">Type of company</app-label>
+                <p-select [options]="companyTypes" optionValue="id" formControlName="company_type" [showClear]="true"
+                placeholder="Select a company type" optionLabel="company_type" [filter]="true" />
+                @if((getControl('company_type')?.touched && getControl('company_type')?.invalid)){
+                <div class="text-error-500 text-sm mt-1">
+                @if(getControl('company_type')?.errors?.['required']){
+                Please select the type of company
+                }@else if(getControl('company_type')?.errors?.['doubleSpaces']){
+                No Double spaces are allowed
+                }
+                </div>
+                }
+            </div>
 
             <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <div class="flex items-center space-x-3 mt-1">

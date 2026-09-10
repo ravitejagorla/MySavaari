@@ -1,5 +1,5 @@
 from django.urls import path
-from Backend.apps.datamanagement.datamanagement_apis import core_apis
+from apps.datamanagement.datamanagement_apis import core_apis
 
 urlpatterns = [
     path('areas/', core_apis.area_search_api, name='area-search'),
